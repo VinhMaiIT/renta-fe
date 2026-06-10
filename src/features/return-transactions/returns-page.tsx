@@ -2,19 +2,19 @@
 
 import { useRouter } from 'next/navigation';
 import { Plus } from 'lucide-react';
-import { PageHeader } from '@/components/common/page-header';
-import { ListToolbar } from '@/components/common/list-toolbar';
-import { ListView, type Column } from '@/components/tables/list-view';
-import { PaginationBar } from '@/components/tables/pagination-bar';
+import { ListPageHeader } from '@/components/common/list-page-header';
+import { DataTableView, type Column } from '@/components/tables/data-table-view';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { usePagination } from '@/hooks/use-pagination';
 import { formatCurrency, formatDate } from '@/lib/format';
+import { useT } from '@/i18n/locale-provider';
 import { useReturnTransactions } from './use-returns';
 import type { ReturnTransaction } from '@/types/models';
 
 export function ReturnsPage() {
   const router = useRouter();
+  const { t } = useT();
   const pagination = usePagination();
   const list = useReturnTransactions(pagination.queryParams);
 
@@ -26,111 +26,75 @@ export function ReturnsPage() {
   const columns: Column<ReturnTransaction>[] = [
     {
       id: 'code',
-      header: 'Return',
-      primary: true,
+      header: t('returns.list.returnCol'),
       cell: (r) => <span className="font-medium">#{r.id}</span>,
     },
     {
       id: 'rentalOrderId',
-      header: 'Rental order',
+      header: t('returns.list.rentalOrder'),
       cell: (r) => <span className="font-mono text-sm">#{r.rentalOrderId}</span>,
     },
-    { id: 'returnDate', header: 'Return date', cell: (r) => formatDate(r.returnDate) },
-    { id: 'items', header: 'Items', cell: (r) => r.items.length },
+    { id: 'returnDate', header: t('returns.list.returnDate'), cell: (r) => formatDate(r.returnDate) },
+    { id: 'items', header: t('returns.list.items'), cell: (r) => r.items.length },
     {
       id: 'lateFee',
-      header: 'Late fee',
+      header: t('returns.list.lateFee'),
       hideBelow: 'md',
       cell: (r) => formatCurrency(r.lateFee),
     },
     {
       id: 'damageFee',
-      header: 'Damage fee',
+      header: t('returns.list.damageFee'),
       hideBelow: 'md',
       cell: (r) => formatCurrency(r.damageFee),
     },
     {
       id: 'total',
-      header: 'Total',
+      header: t('returns.list.total'),
       cell: (r) => <span className="font-medium">{formatCurrency(r.totalAmount)}</span>,
     },
   ];
 
   return (
     <div className="space-y-5">
-      <PageHeader
-        title="Return transactions"
-        description="Record and review item returns against rental orders."
-        actions={
-          <Button onClick={openNew}>
-            <Plus className="size-4" />
-            New return
-          </Button>
-        }
-      />
-
-      <ListToolbar
+      <ListPageHeader
+        title={t('returns.list.title')}
+        description={t('returns.list.subtitle')}
         search={pagination.search}
         onSearchChange={pagination.setSearch}
-        searchPlaceholder="Search returns…"
+        searchPlaceholder={t('returns.list.searchPlaceholder')}
         filters={
           <Input
             value={pagination.filters.rentalOrderId ?? ''}
             onChange={(e) => pagination.setFilter('rentalOrderId', e.target.value || undefined)}
-            placeholder="Filter by rental order id"
-            aria-label="Filter by rental order id"
-            className="w-full sm:w-56"
+            placeholder={t('returns.list.filterByOrder')}
+            aria-label={t('returns.list.filterByOrder')}
+            className="bg-card w-full sm:w-56"
           />
+        }
+        actions={
+          <Button onClick={openNew}>
+            <Plus className="size-4" />
+            {t('returns.list.newReturn')}
+          </Button>
         }
       />
 
-      <ListView
+      <DataTableView
         columns={columns}
         rows={data?.items ?? []}
-        getRowId={(r) => r.id}
         isLoading={list.isLoading}
         isError={list.isError}
         error={list.error}
         onRetry={() => list.refetch()}
         onRowClick={openDetail}
-        emptyTitle="No returns yet"
-        emptyDescription="Record your first return to get started."
-        emptyAction={
-          <Button onClick={openNew} size="sm">
-            <Plus className="size-4" />
-            New return
-          </Button>
-        }
-        mobileCard={(r) => (
-          <div className="space-y-2 text-sm">
-            <div className="flex items-center justify-between">
-              <span className="font-medium">#{r.id}</span>
-              <span className="font-medium">{formatCurrency(r.totalAmount)}</span>
-            </div>
-            <div className="text-muted-foreground flex items-center justify-between">
-              <span>Order #{r.rentalOrderId}</span>
-              <span>{formatDate(r.returnDate)}</span>
-            </div>
-            <div className="text-muted-foreground flex items-center justify-between">
-              <span>{r.items.length} item(s)</span>
-              <span>
-                Late {formatCurrency(r.lateFee)} · Damage {formatCurrency(r.damageFee)}
-              </span>
-            </div>
-          </div>
-        )}
+        emptyTitle={t('returns.list.emptyTitle')}
+        page={data?.page ?? pagination.page}
+        pageSize={data?.pageSize ?? pagination.pageSize}
+        total={data?.total ?? 0}
+        onPageChange={pagination.setPage}
+        onPageSizeChange={pagination.setPageSize}
       />
-
-      {data ? (
-        <PaginationBar
-          page={data.page}
-          pageSize={data.pageSize}
-          total={data.total}
-          totalPages={data.totalPages}
-          onPageChange={pagination.setPage}
-          onPageSizeChange={pagination.setPageSize}
-        />
-      ) : null}
     </div>
   );
 }

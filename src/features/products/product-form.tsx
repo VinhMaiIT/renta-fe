@@ -12,30 +12,34 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { SelectField } from '@/components/forms/select-field';
 import { FormLabel } from '@/components/ui/form-label';
 import { FormErrorMessage } from '@/components/ui/form-error-message';
+import { useT } from '@/i18n/locale-provider';
 import type { Product } from '@/types/models';
 import type { ProductFormInput } from './use-products';
 import type { ProductLookups } from './use-products';
 
-const imageSchema = z.object({
-  url: z.string().min(1, 'URL is required'),
-  sortOrder: z.coerce.number().int().min(0).optional(),
-  isPrimary: z.boolean().optional(),
-});
-
-const schema = z.object({
-  productTypeId: z.string().min(1, 'Product type is required'),
-  productGroupId: z.string().min(1, 'Product group is required'),
-  unitId: z.string().min(1, 'Unit is required'),
-  code: z.string().min(1, 'Code is required').max(100),
-  name: z.string().min(1, 'Name is required').max(255),
+// Static schema used only for type inference — messages are overridden inside the component.
+const _staticSchema = z.object({
+  productTypeId: z.string().min(1),
+  productGroupId: z.string().min(1),
+  unitId: z.string().min(1),
+  code: z.string().min(1).max(100),
+  name: z.string().min(1).max(255),
   description: z.string().max(2000).optional(),
-  rentalPrice: z.coerce.number().min(0, 'Rental price must be ≥ 0'),
-  depositPrice: z.coerce.number().min(0, 'Deposit price must be ≥ 0'),
+  rentalPrice: z.coerce.number().min(0),
+  depositPrice: z.coerce.number().min(0),
   sizeIds: z.array(z.string()).optional(),
-  images: z.array(imageSchema).optional(),
+  images: z
+    .array(
+      z.object({
+        url: z.string().min(1),
+        sortOrder: z.coerce.number().int().min(0).optional(),
+        isPrimary: z.boolean().optional(),
+      }),
+    )
+    .optional(),
 });
 
-type FormValues = z.input<typeof schema>;
+type FormValues = z.input<typeof _staticSchema>;
 
 interface ProductFormProps {
   initial?: Product | null;
@@ -46,6 +50,27 @@ interface ProductFormProps {
 }
 
 export function ProductForm({ initial, lookups, loading, onSubmit, onCancel }: ProductFormProps) {
+  const { t } = useT();
+
+  const imageSchema = z.object({
+    url: z.string().min(1, t('products.form.urlRequired')),
+    sortOrder: z.coerce.number().int().min(0).optional(),
+    isPrimary: z.boolean().optional(),
+  });
+
+  const schema = z.object({
+    productTypeId: z.string().min(1, t('products.form.typeRequired')),
+    productGroupId: z.string().min(1, t('products.form.groupRequired')),
+    unitId: z.string().min(1, t('products.form.unitRequired')),
+    code: z.string().min(1, t('products.form.codeRequired')).max(100),
+    name: z.string().min(1, t('products.form.nameRequired')).max(255),
+    description: z.string().max(2000).optional(),
+    rentalPrice: z.coerce.number().min(0, t('products.form.rentalPriceMin')),
+    depositPrice: z.coerce.number().min(0, t('products.form.depositPriceMin')),
+    sizeIds: z.array(z.string()).optional(),
+    images: z.array(imageSchema).optional(),
+  });
+
   const {
     register,
     handleSubmit,
@@ -146,29 +171,29 @@ export function ProductForm({ initial, lookups, loading, onSubmit, onCancel }: P
       {/* Classification */}
       <div className="grid gap-4 sm:grid-cols-3">
         <SelectField
-          label="Product type"
+          label={t('products.productType')}
           required
           id="productTypeId"
           options={lookups.productTypeOptions}
-          placeholder="Select type…"
+          placeholder={t('products.form.selectType')}
           error={errors.productTypeId?.message}
           {...register('productTypeId')}
         />
         <SelectField
-          label="Product group"
+          label={t('products.productGroup')}
           required
           id="productGroupId"
           options={lookups.productGroupOptions}
-          placeholder="Select group…"
+          placeholder={t('products.form.selectGroup')}
           error={errors.productGroupId?.message}
           {...register('productGroupId')}
         />
         <SelectField
-          label="Unit"
+          label={t('products.unit')}
           required
           id="unitId"
           options={lookups.unitOptions}
-          placeholder="Select unit…"
+          placeholder={t('products.form.selectUnit')}
           error={errors.unitId?.message}
           {...register('unitId')}
         />
@@ -176,12 +201,24 @@ export function ProductForm({ initial, lookups, loading, onSubmit, onCancel }: P
 
       {/* Identity */}
       <div className="grid gap-4 sm:grid-cols-2">
-        <Input label="Code" required id="code" error={errors.code?.message} {...register('code')} />
-        <Input label="Name" required id="name" error={errors.name?.message} {...register('name')} />
+        <Input
+          label={t('products.code')}
+          required
+          id="code"
+          error={errors.code?.message}
+          {...register('code')}
+        />
+        <Input
+          label={t('products.name')}
+          required
+          id="name"
+          error={errors.name?.message}
+          {...register('name')}
+        />
       </div>
 
       <Textarea
-        label="Description"
+        label={t('products.description')}
         id="description"
         rows={3}
         error={errors.description?.message}
@@ -191,7 +228,7 @@ export function ProductForm({ initial, lookups, loading, onSubmit, onCancel }: P
       {/* Pricing */}
       <div className="grid gap-4 sm:grid-cols-2">
         <Input
-          label="Rental price (VND)"
+          label={t('products.rentalPriceVnd')}
           required
           id="rentalPrice"
           type="number"
@@ -200,7 +237,7 @@ export function ProductForm({ initial, lookups, loading, onSubmit, onCancel }: P
           {...register('rentalPrice')}
         />
         <Input
-          label="Deposit price (VND)"
+          label={t('products.depositPriceVnd')}
           required
           id="depositPrice"
           type="number"
@@ -213,7 +250,7 @@ export function ProductForm({ initial, lookups, loading, onSubmit, onCancel }: P
       {/* Sizes */}
       {lookups.sizeOptions.length > 0 && (
         <div>
-          <FormLabel label="Sizes" htmlFor={undefined} />
+          <FormLabel label={t('products.sizes')} htmlFor={undefined} />
           <div className="mt-1 flex flex-wrap gap-x-4 gap-y-2">
             {lookups.sizeOptions.map((opt) => (
               <label key={opt.value} className="flex cursor-pointer items-center gap-2 text-sm">
@@ -231,14 +268,14 @@ export function ProductForm({ initial, lookups, loading, onSubmit, onCancel }: P
       {/* Images */}
       <div>
         <div className="flex items-center justify-between">
-          <FormLabel label="Images" htmlFor={undefined} />
+          <FormLabel label={t('products.images')} htmlFor={undefined} />
           <Button type="button" variant="outline" size="sm" onClick={handleAddImage}>
             <Plus className="size-3.5" />
-            Add image
+            {t('products.addImage')}
           </Button>
         </div>
         {imageFields.length === 0 && (
-          <p className="text-muted-foreground mt-1 text-sm">No images added yet.</p>
+          <p className="text-muted-foreground mt-1 text-sm">{t('products.noImages')}</p>
         )}
         <div className="mt-2 space-y-3">
           {imageFields.map((field, index) => {
@@ -271,7 +308,7 @@ export function ProductForm({ initial, lookups, loading, onSubmit, onCancel }: P
                   size="icon-sm"
                   className="text-destructive hover:text-destructive mt-1"
                   onClick={() => removeImage(index)}
-                  aria-label="Remove image"
+                  aria-label={t('common.action.remove')}
                 >
                   <Trash2 className="size-4" />
                 </Button>
@@ -286,11 +323,11 @@ export function ProductForm({ initial, lookups, loading, onSubmit, onCancel }: P
       <div className="border-border flex justify-end gap-3 border-t pt-4">
         {onCancel && (
           <Button type="button" variant="outline" onClick={onCancel} disabled={loading}>
-            Cancel
+            {t('common.action.cancel')}
           </Button>
         )}
         <Button type="submit" loading={loading}>
-          {initial ? 'Save changes' : 'Create product'}
+          {initial ? t('common.action.saveChanges') : t('products.form.createProduct')}
         </Button>
       </div>
     </form>

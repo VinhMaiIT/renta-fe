@@ -129,7 +129,22 @@ function seed(): MockDb {
   });
 
   const sizes: Size[] = ['S', 'M', 'L', 'XL'].map((n, i) => mkActive(n, i));
-  const units: Unit[] = ['Piece', 'Set', 'Pair'].map((n, i) => mkActive(n, i));
+
+  // 25 units for pagination/filter testing (every 5th is INACTIVE).
+  const UNIT_NAMES = [
+    'Piece', 'Set', 'Pair', 'Box', 'Dozen', 'Roll', 'Pack', 'Bundle', 'Meter', 'Kilogram',
+    'Liter', 'Sheet', 'Carton', 'Bag', 'Bottle', 'Can', 'Tube', 'Jar', 'Tray', 'Crate',
+    'Pallet', 'Bar', 'Reel', 'Spool', 'Unit',
+  ];
+  const units: Unit[] = UNIT_NAMES.map((name, i) => ({
+    id: next(),
+    tenantId: TENANT_ID,
+    name,
+    order: i,
+    status: i % 5 === 4 ? 'INACTIVE' : 'ACTIVE',
+    createdAt: ts(80 - i),
+    updatedAt: ts((i % 7) + 1),
+  }));
   const productTypes: ProductType[] = ['Suit', 'Dress', 'Camera', 'Tent'].map((n, i) =>
     mkActive(n, i),
   );

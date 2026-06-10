@@ -14,10 +14,11 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useT } from '@/i18n/locale-provider';
 import type { MasterInput, MasterRecord } from './api';
 
 const schema = z.object({
-  name: z.string().min(1, 'Name is required').max(255),
+  name: z.string().min(1).max(255),
   order: z.coerce.number().int().min(0),
 });
 
@@ -26,6 +27,7 @@ type FormValues = z.input<typeof schema>;
 interface MasterDataFormProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  /** Translated singular noun for this resource (e.g. "size"). */
   singular: string;
   initial?: MasterRecord | null;
   loading?: boolean;
@@ -40,6 +42,7 @@ export function MasterDataForm({
   loading,
   onSubmit,
 }: MasterDataFormProps) {
+  const { t } = useT();
   const {
     register,
     handleSubmit,
@@ -59,10 +62,12 @@ export function MasterDataForm({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            {initial ? `Edit ${singular.toLowerCase()}` : `New ${singular.toLowerCase()}`}
+            {initial
+              ? t('masterData.editItem', { item: singular })
+              : t('masterData.newItem', { item: singular })}
           </DialogTitle>
           <DialogDescription>
-            {initial ? 'Update the details below.' : `Create a new ${singular.toLowerCase()}.`}
+            {initial ? t('masterData.editDesc') : t('masterData.createDesc', { item: singular })}
           </DialogDescription>
         </DialogHeader>
         <form
@@ -72,9 +77,14 @@ export function MasterDataForm({
           )}
           className="space-y-4"
         >
-          <Input label="Name" required error={errors.name?.message} {...register('name')} />
           <Input
-            label="Sort order"
+            label={t('masterData.name')}
+            required
+            error={errors.name ? t('common.field.required') : undefined}
+            {...register('name')}
+          />
+          <Input
+            label={t('masterData.sortOrder')}
             type="number"
             min={0}
             error={errors.order?.message}
@@ -83,10 +93,10 @@ export function MasterDataForm({
         </form>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)} disabled={loading}>
-            Cancel
+            {t('common.action.cancel')}
           </Button>
           <Button type="submit" form="master-data-form" loading={loading}>
-            {initial ? 'Save changes' : 'Create'}
+            {initial ? t('common.action.saveChanges') : t('common.action.create')}
           </Button>
         </DialogFooter>
       </DialogContent>

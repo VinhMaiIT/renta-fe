@@ -12,7 +12,9 @@ import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Textarea } from '@/components/ui/textarea';
 import { SelectField } from '@/components/forms/select-field';
-import { CONDITION_STATUS_META, toOptions } from '@/constants/enum-labels';
+import { CONDITION_STATUS_META } from '@/constants/enum-labels';
+import { useEnumOptions } from '@/hooks/use-enum-options';
+import { useT } from '@/i18n/locale-provider';
 import { toast } from '@/lib/toast';
 import { formatDate } from '@/lib/format';
 import type { InventoryItemConditionStatus } from '@/types/enums';
@@ -24,7 +26,6 @@ import {
 } from './use-returns';
 import type { ReturnItemInput } from './api';
 
-const CONDITION_OPTIONS = toOptions(CONDITION_STATUS_META);
 const DEFAULT_CONDITION: InventoryItemConditionStatus = 'GOOD';
 
 /** Per-row editable state in the return form. */
@@ -51,6 +52,7 @@ function isUnreturned(item: RentalOrderItem): boolean {
 
 export function ReturnCreate({ initialOrderId }: ReturnCreateProps) {
   const router = useRouter();
+  const { t } = useT();
   const [selectedOrderId, setSelectedOrderId] = useState<string>(initialOrderId ?? '');
 
   const orderQuery = useRentalOrderForReturn(selectedOrderId || undefined);
@@ -59,15 +61,15 @@ export function ReturnCreate({ initialOrderId }: ReturnCreateProps) {
   const backButton = (
     <Button variant="outline" size="sm" onClick={() => router.push('/return-transactions')}>
       <ArrowLeft className="size-4" />
-      Back
+      {t('returns.create.back')}
     </Button>
   );
 
   return (
     <div className="space-y-5 pb-24 md:pb-0">
       <PageHeader
-        title="New return"
-        description="Record returned items against a rental order."
+        title={t('returns.create.title')}
+        description={t('returns.create.subtitle')}
         actions={backButton}
       />
 
@@ -77,7 +79,7 @@ export function ReturnCreate({ initialOrderId }: ReturnCreateProps) {
         <Skeleton className="h-64 w-full" />
       ) : orderQuery.isError || !order ? (
         <ErrorState
-          title="Could not load rental order"
+          title={t('returns.create.couldNotLoadOrder')}
           description={orderQuery.error instanceof Error ? orderQuery.error.message : undefined}
           onRetry={() => orderQuery.refetch()}
         />
@@ -92,6 +94,7 @@ export function ReturnCreate({ initialOrderId }: ReturnCreateProps) {
 }
 
 function OrderSelector({ onSelect }: { onSelect: (id: string) => void }) {
+  const { t } = useT();
   const [value, setValue] = useState('');
   const ordersQuery = useReturnableOrders({ pageSize: 100 });
 
@@ -107,25 +110,28 @@ function OrderSelector({ onSelect }: { onSelect: (id: string) => void }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Select a rental order</CardTitle>
+        <CardTitle>{t('returns.create.selectOrder')}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
         {ordersQuery.isLoading ? (
           <Skeleton className="h-9 w-full" />
         ) : ordersQuery.isError ? (
-          <ErrorState title="Could not load orders" onRetry={() => ordersQuery.refetch()} />
+          <ErrorState
+            title={t('returns.create.noReturnableOrders')}
+            onRetry={() => ordersQuery.refetch()}
+          />
         ) : (
           <>
             <SelectField
-              label="Rental order"
+              label={t('returns.create.rentalOrder')}
               required
-              placeholder="Choose a returnable order…"
+              placeholder={t('returns.create.choosePlaceholder')}
               options={options}
               value={value}
               onChange={(e) => setValue(e.target.value)}
             />
             <Button disabled={!value} onClick={() => onSelect(value)}>
-              Continue
+              {t('returns.create.continue')}
             </Button>
           </>
         )}
@@ -136,7 +142,9 @@ function OrderSelector({ onSelect }: { onSelect: (id: string) => void }) {
 
 function ReturnForm({ order, onChangeOrder }: { order: RentalOrder; onChangeOrder?: () => void }) {
   const router = useRouter();
+  const { t } = useT();
   const create = useCreateReturnTransaction();
+  const conditionOptions = useEnumOptions(CONDITION_STATUS_META);
 
   const returnableItems = useMemo(() => order.items.filter(isUnreturned), [order.items]);
 
@@ -173,7 +181,7 @@ function ReturnForm({ order, onChangeOrder }: { order: RentalOrder; onChangeOrde
       });
 
     if (items.length === 0) {
-      toast.error('Select at least one item to return');
+      toast.error(t('returns.create.selectAtLeastOne'));
       return;
     }
 
@@ -198,7 +206,7 @@ function ReturnForm({ order, onChangeOrder }: { order: RentalOrder; onChangeOrde
 
   const actions = (
     <Button onClick={submit} loading={create.isPending} disabled={selectedCount === 0}>
-      Record return ({selectedCount})
+      {t('returns.create.submit', { count: selectedCount })}
     </Button>
   );
 
@@ -207,18 +215,18 @@ function ReturnForm({ order, onChangeOrder }: { order: RentalOrder; onChangeOrde
       <Card>
         <CardHeader>
           <CardTitle>
-            Order {order.orderCode}{' '}
+            {order.orderCode}{' '}
             <span className="text-muted-foreground font-normal">#{order.id}</span>
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-1 text-sm">
           <p className="text-muted-foreground">
-            Rented {formatDate(order.rentDate)} · Expected return{' '}
-            {formatDate(order.expectedReturnDate)}
+            {t('returns.create.rented', { date: formatDate(order.rentDate) })} ·{' '}
+            {t('returns.create.expectedReturn', { date: formatDate(order.expectedReturnDate) })}
           </p>
           {onChangeOrder ? (
             <Button variant="link" size="sm" className="px-0" onClick={onChangeOrder}>
-              Choose a different order
+              {t('returns.create.chooseDifferentOrder')}
             </Button>
           ) : null}
         </CardContent>
@@ -226,11 +234,11 @@ function ReturnForm({ order, onChangeOrder }: { order: RentalOrder; onChangeOrde
 
       <Card>
         <CardHeader>
-          <CardTitle>Items to return</CardTitle>
+          <CardTitle>{t('returns.create.unreturnedItems')}</CardTitle>
         </CardHeader>
         <CardContent>
           {returnableItems.length === 0 ? (
-            <p className="text-muted-foreground text-sm">This order has no items left to return.</p>
+            <p className="text-muted-foreground text-sm">{t('returns.create.noItemsLeft')}</p>
           ) : (
             <div className="space-y-4">
               {returnableItems.map((item) => {
@@ -243,12 +251,14 @@ function ReturnForm({ order, onChangeOrder }: { order: RentalOrder; onChangeOrde
                         onCheckedChange={(checked) =>
                           update(item.id, { selected: checked === true })
                         }
-                        aria-label={`Include inventory item ${item.inventoryItemId}`}
+                        aria-label={t('returns.create.include', { id: item.inventoryItemId })}
                       />
                       <div className="text-sm">
-                        <p className="font-medium">Inventory item #{item.inventoryItemId}</p>
+                        <p className="font-medium">
+                          {t('returns.create.inventoryItem', { id: item.inventoryItemId })}
+                        </p>
                         <p className="text-muted-foreground font-mono text-xs">
-                          Order item #{item.id}
+                          {t('returns.create.orderItem', { id: item.id })}
                         </p>
                       </div>
                     </div>
@@ -256,8 +266,8 @@ function ReturnForm({ order, onChangeOrder }: { order: RentalOrder; onChangeOrde
                     {row.selected ? (
                       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                         <SelectField
-                          label="Condition"
-                          options={CONDITION_OPTIONS}
+                          label={t('returns.create.condition')}
+                          options={conditionOptions}
                           value={row.conditionStatus}
                           onChange={(e) =>
                             update(item.id, {
@@ -266,7 +276,7 @@ function ReturnForm({ order, onChangeOrder }: { order: RentalOrder; onChangeOrde
                           }
                         />
                         <Input
-                          label="Damage fee"
+                          label={t('returns.create.damageFee')}
                           type="number"
                           min={0}
                           inputMode="decimal"
@@ -275,11 +285,11 @@ function ReturnForm({ order, onChangeOrder }: { order: RentalOrder; onChangeOrde
                           placeholder="0"
                         />
                         <Textarea
-                          label="Note"
+                          label={t('returns.create.note')}
                           className="sm:col-span-2"
                           value={row.note}
                           onChange={(e) => update(item.id, { note: e.target.value })}
-                          placeholder="Optional note"
+                          placeholder={t('returns.create.notePlaceholder')}
                         />
                       </div>
                     ) : null}
@@ -293,18 +303,18 @@ function ReturnForm({ order, onChangeOrder }: { order: RentalOrder; onChangeOrde
 
       <Card>
         <CardHeader>
-          <CardTitle>Return details</CardTitle>
+          <CardTitle>{t('returns.create.returnDetails')}</CardTitle>
         </CardHeader>
         <CardContent className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <Input
-            label="Return date"
+            label={t('returns.create.returnDate')}
             required
             type="datetime-local"
             value={returnDate}
             onChange={(e) => setReturnDate(e.target.value)}
           />
           <Input
-            label="Late fee"
+            label={t('returns.create.lateFee')}
             type="number"
             min={0}
             inputMode="decimal"
@@ -313,11 +323,11 @@ function ReturnForm({ order, onChangeOrder }: { order: RentalOrder; onChangeOrde
             placeholder="0"
           />
           <Textarea
-            label="Note"
+            label={t('returns.create.note')}
             className="sm:col-span-2"
             value={orderNote}
             onChange={(e) => setOrderNote(e.target.value)}
-            placeholder="Optional note for this return"
+            placeholder={t('returns.create.returnNotePlaceholder')}
           />
         </CardContent>
       </Card>
@@ -328,7 +338,9 @@ function ReturnForm({ order, onChangeOrder }: { order: RentalOrder; onChangeOrde
       {/* Sticky mobile action bar */}
       <div className="border-border bg-background fixed inset-x-0 bottom-0 z-10 border-t p-4 md:hidden">
         <div className="flex items-center justify-between gap-3">
-          <span className="text-muted-foreground text-sm">{selectedCount} selected</span>
+          <span className="text-muted-foreground text-sm">
+            {t('returns.create.selected', { count: selectedCount })}
+          </span>
           {actions}
         </div>
       </div>

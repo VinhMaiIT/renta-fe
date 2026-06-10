@@ -5,6 +5,7 @@ import { productsApi, type ProductUpdateInput } from './api';
 import { makeMasterApi } from '@/features/master-data/api';
 import { useTenantContext } from '@/hooks/use-tenant-context';
 import { toast, toastError } from '@/lib/toast';
+import { useT } from '@/i18n/locale-provider';
 import type { Id } from '@/types/models';
 import type { ActiveStatus } from '@/types/enums';
 import type { SelectOption } from '@/components/forms/select-field';
@@ -60,6 +61,7 @@ export function useProduct(id: Id) {
 export function useCreateProduct() {
   const queryClient = useQueryClient();
   const { tenantId } = useTenantContext();
+  const { t } = useT();
 
   return useMutation({
     mutationFn: (input: ProductFormInput) =>
@@ -68,51 +70,54 @@ export function useCreateProduct() {
         ...input,
       }),
     onSuccess: () => {
-      toast.success('Product created');
+      toast.success(t('products.toast.created'));
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY] });
     },
-    onError: (error) => toastError(error, 'Could not create product'),
+    onError: (error) => toastError(error, t('products.toast.createFailed')),
   });
 }
 
 export function useUpdateProduct() {
   const queryClient = useQueryClient();
+  const { t } = useT();
 
   return useMutation({
     mutationFn: ({ id, input }: { id: Id; input: ProductUpdateInput }) =>
       productsApi.update(id, input),
     onSuccess: () => {
-      toast.success('Product updated');
+      toast.success(t('products.toast.updated'));
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY] });
     },
-    onError: (error) => toastError(error, 'Could not update product'),
+    onError: (error) => toastError(error, t('products.toast.updateFailed')),
   });
 }
 
 export function useDeleteProduct() {
   const queryClient = useQueryClient();
+  const { t } = useT();
 
   return useMutation({
     mutationFn: (id: Id) => productsApi.remove(id),
     onSuccess: () => {
-      toast.success('Product deleted');
+      toast.success(t('products.toast.deleted'));
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY] });
     },
-    onError: (error) => toastError(error, 'Could not delete product'),
+    onError: (error) => toastError(error, t('products.toast.deleteFailed')),
   });
 }
 
 export function useSetProductStatus() {
   const queryClient = useQueryClient();
+  const { t } = useT();
 
   return useMutation({
     mutationFn: ({ id, status }: { id: Id; status: ActiveStatus }) =>
       productsApi.setStatus(id, status),
     onSuccess: () => {
-      toast.success('Status updated');
+      toast.success(t('products.toast.statusUpdated'));
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY] });
     },
-    onError: (error) => toastError(error, 'Could not update status'),
+    onError: (error) => toastError(error, t('products.toast.statusFailed')),
   });
 }
 

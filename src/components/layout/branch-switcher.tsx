@@ -14,10 +14,12 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useBranchContext } from '@/features/branches/use-branches';
 import { toast } from '@/lib/toast';
 import { cn } from '@/lib/utils';
+import { useT } from '@/i18n/locale-provider';
 
 /** Header control to switch the active working branch. */
 export function BranchSwitcher() {
   const { branches, activeBranch, activeBranchId, isLoading, setBranch } = useBranchContext();
+  const { t } = useT();
 
   if (isLoading) return <Skeleton className="h-9 w-40" />;
   if (branches.length === 0) return null;
@@ -28,20 +30,22 @@ export function BranchSwitcher() {
         render={
           <Button variant="outline" size="sm" className="max-w-[200px] justify-start gap-2">
             <Building2 className="size-4 shrink-0" />
-            <span className="truncate">{activeBranch?.name ?? 'Select branch'}</span>
+            <span className="truncate">
+              {activeBranch?.name ?? t('common.action.selectPlaceholder')}
+            </span>
             <ChevronsUpDown className="text-muted-foreground ml-auto size-4 shrink-0" />
           </Button>
         }
       />
       <DropdownMenuContent align="start" className="w-56">
-        <DropdownMenuLabel>Working branch</DropdownMenuLabel>
+        <DropdownMenuLabel>{t('settings.branch.title')}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {branches.map((branch) => (
           <DropdownMenuItem
             key={branch.id}
             onClick={() => {
               setBranch(branch.id);
-              toast.success('Branch switched', branch.name);
+              toast.success(t('common.toast.updated'), branch.name);
             }}
           >
             <Building2 className="size-4" />

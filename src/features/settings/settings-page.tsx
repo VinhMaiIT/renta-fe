@@ -8,20 +8,23 @@ import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { useTenantContext } from '@/hooks/use-tenant-context';
+import { useT } from '@/i18n/locale-provider';
+import { LOCALES, LOCALE_LABELS } from '@/i18n/config';
 import { BranchSettings } from './branch-settings';
 import { ChangePasswordForm } from './change-password-form';
 
 function ProfileSection() {
   const { tenantId, username } = useTenantContext();
+  const { t } = useT();
   return (
     <div className="space-y-4">
       <div className="grid gap-3 sm:grid-cols-2">
         <div className="space-y-1">
-          <p className="text-muted-foreground text-sm font-medium">Username</p>
+          <p className="text-muted-foreground text-sm font-medium">{t('settings.profile.username')}</p>
           <p className="font-medium">{username || '—'}</p>
         </div>
         <div className="space-y-1">
-          <p className="text-muted-foreground text-sm font-medium">Tenant ID</p>
+          <p className="text-muted-foreground text-sm font-medium">{t('settings.profile.tenant')}</p>
           <p className="font-mono text-sm">{tenantId || '—'}</p>
         </div>
       </div>
@@ -31,60 +34,80 @@ function ProfileSection() {
 
 function AppearanceSection() {
   const { theme, setTheme } = useTheme();
+  const { t, locale, setLocale } = useT();
   return (
-    <div className="space-y-3">
-      <p className="text-muted-foreground text-sm">Choose your preferred color theme.</p>
-      <div className="flex flex-wrap gap-2">
-        <Button
-          variant={theme === 'light' ? 'default' : 'outline'}
-          size="sm"
-          onClick={() => setTheme('light')}
-        >
-          <Sun className="size-4" />
-          Light
-        </Button>
-        <Button
-          variant={theme === 'dark' ? 'default' : 'outline'}
-          size="sm"
-          onClick={() => setTheme('dark')}
-        >
-          <Moon className="size-4" />
-          Dark
-        </Button>
-        <Button
-          variant={theme === 'system' ? 'default' : 'outline'}
-          size="sm"
-          onClick={() => setTheme('system')}
-        >
-          <Monitor className="size-4" />
-          System
-        </Button>
+    <div className="space-y-6">
+      <div className="space-y-3">
+        <p className="text-muted-foreground text-sm font-medium">{t('settings.appearance.themeLabel')}</p>
+        <div className="flex flex-wrap gap-2">
+          <Button
+            variant={theme === 'light' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setTheme('light')}
+          >
+            <Sun className="size-4" />
+            {t('settings.appearance.light')}
+          </Button>
+          <Button
+            variant={theme === 'dark' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setTheme('dark')}
+          >
+            <Moon className="size-4" />
+            {t('settings.appearance.dark')}
+          </Button>
+          <Button
+            variant={theme === 'system' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setTheme('system')}
+          >
+            <Monitor className="size-4" />
+            {t('settings.appearance.system')}
+          </Button>
+        </div>
+      </div>
+
+      <div className="space-y-3">
+        <p className="text-muted-foreground text-sm font-medium">{t('settings.appearance.languageLabel')}</p>
+        <div className="flex flex-wrap gap-2">
+          {LOCALES.map((code) => (
+            <Button
+              key={code}
+              variant={locale === code ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setLocale(code)}
+            >
+              {LOCALE_LABELS[code]}
+            </Button>
+          ))}
+        </div>
       </div>
     </div>
   );
 }
 
 export function SettingsPage() {
+  const { t } = useT();
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Settings"
-        description="Manage your profile, appearance, and account settings."
+        title={t('settings.title')}
+        description={t('settings.subtitle')}
       />
 
       <Tabs defaultValue="profile">
         <TabsList>
-          <TabsTrigger value="profile">Profile</TabsTrigger>
-          <TabsTrigger value="appearance">Appearance</TabsTrigger>
-          <TabsTrigger value="branch">Branch</TabsTrigger>
-          <TabsTrigger value="security">Security</TabsTrigger>
+          <TabsTrigger value="profile">{t('settings.tabs.profile')}</TabsTrigger>
+          <TabsTrigger value="appearance">{t('settings.tabs.appearance')}</TabsTrigger>
+          <TabsTrigger value="branch">{t('settings.tabs.branch')}</TabsTrigger>
+          <TabsTrigger value="security">{t('settings.tabs.security')}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="profile">
           <Card>
             <CardHeader>
-              <CardTitle>Profile</CardTitle>
-              <CardDescription>Your account information (read-only).</CardDescription>
+              <CardTitle>{t('settings.profile.title')}</CardTitle>
+              <CardDescription>{t('settings.profile.desc')}</CardDescription>
             </CardHeader>
             <Separator />
             <CardContent className="pt-6">
@@ -96,8 +119,8 @@ export function SettingsPage() {
         <TabsContent value="appearance">
           <Card>
             <CardHeader>
-              <CardTitle>Appearance</CardTitle>
-              <CardDescription>Customize how RENTA looks for you.</CardDescription>
+              <CardTitle>{t('settings.appearance.title')}</CardTitle>
+              <CardDescription>{t('settings.appearance.desc')}</CardDescription>
             </CardHeader>
             <Separator />
             <CardContent className="pt-6">
@@ -109,8 +132,8 @@ export function SettingsPage() {
         <TabsContent value="branch">
           <Card>
             <CardHeader>
-              <CardTitle>Active Branch</CardTitle>
-              <CardDescription>Switch the branch you are currently working in.</CardDescription>
+              <CardTitle>{t('settings.branch.activeBranch')}</CardTitle>
+              <CardDescription>{t('settings.branch.switchDesc')}</CardDescription>
             </CardHeader>
             <Separator />
             <CardContent className="pt-6">
@@ -122,8 +145,8 @@ export function SettingsPage() {
         <TabsContent value="security">
           <Card>
             <CardHeader>
-              <CardTitle>Security</CardTitle>
-              <CardDescription>Update your password to keep your account safe.</CardDescription>
+              <CardTitle>{t('settings.security.title')}</CardTitle>
+              <CardDescription>{t('settings.security.desc')}</CardDescription>
             </CardHeader>
             <Separator />
             <CardContent className="max-w-sm pt-6">

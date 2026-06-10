@@ -1,0 +1,37 @@
+const auth = {
+  welcomeBack: 'Chào mừng trở lại',
+  subtitle: 'Đăng nhập vào không gian làm việc {app} của bạn.',
+  tenantId: 'Mã đơn vị',
+  username: 'Tên đăng nhập',
+  password: 'Mật khẩu',
+  signIn: 'Đăng nhập',
+  demoMode: 'Chế độ demo',
+  demoHint: 'đơn vị {tenant}, tài khoản {user}, mật khẩu bất kỳ.',
+  terms: 'Bằng việc đăng nhập, bạn đồng ý với chính sách sử dụng.',
+  loginSuccess: 'Chào mừng trở lại',
+  loginSuccessDesc: 'Bạn đã đăng nhập thành công.',
+  loginFailed: 'Đăng nhập thất bại',
+  secureAccess: 'Truy cập an toàn theo đơn vị',
+  heroEyebrow: 'Cổng quản lý cửa hàng',
+  heroHeadline: 'Quản lý việc cho thuê thật dễ dàng.',
+  heroSubtitle:
+    'Một cổng duy nhất cho kho hàng, khách hàng, đơn thuê và trả hàng — nhanh, tin cậy và dành cho cả đội ngũ.',
+  highlight: {
+    inventory: 'Kho & sản phẩm',
+    inventoryDesc: 'Theo dõi từng món tại mọi chi nhánh.',
+    orders: 'Đơn thuê',
+    ordersDesc: 'Tạo nháp, xác nhận và cho thuê trong vài giây.',
+    returns: 'Trả hàng',
+    returnsDesc: 'Trả toàn bộ hoặc một phần kèm phí.',
+  },
+  changePassword: {
+    title: 'Đổi mật khẩu',
+    current: 'Mật khẩu hiện tại',
+    new: 'Mật khẩu mới',
+    confirm: 'Xác nhận mật khẩu mới',
+    submit: 'Cập nhật mật khẩu',
+    mismatch: 'Mật khẩu không khớp',
+    success: 'Đã đổi mật khẩu',
+  },
+} as const;
+export default auth;

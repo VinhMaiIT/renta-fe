@@ -6,6 +6,57 @@
 :root {
   --radius: 0.625rem;
 
+  /* Form-control sizing scale consumed by the design-system components
+     (Input/Button/Select/etc. via `h-[var(--form-size-*-height)]`, etc.). */
+  --form-size-xxs-height: 1.25rem;
+  --form-size-xxs-text: 0.6875rem;
+  --form-size-xxs-padding-x: 0.375rem;
+  --form-size-xxs-padding-y: 0.125rem;
+  --form-size-xxs-icon: 0.75rem;
+  --form-size-xxs-icon-button: 1.25rem;
+
+  --form-size-xs-height: 1.5rem;
+  --form-size-xs-text: 0.75rem;
+  --form-size-xs-padding-x: 0.5rem;
+  --form-size-xs-padding-y: 0.125rem;
+  --form-size-xs-icon: 0.875rem;
+  --form-size-xs-icon-button: 1.5rem;
+
+  --form-size-sm-height: 2rem;
+  --form-size-sm-text: 0.8125rem;
+  --form-size-sm-padding-x: 0.625rem;
+  --form-size-sm-padding-y: 0.25rem;
+  --form-size-sm-icon: 1rem;
+  --form-size-sm-icon-button: 2rem;
+
+  --form-size-md-height: 2.25rem;
+  --form-size-md-text: 0.875rem;
+  --form-size-md-padding-x: 0.75rem;
+  --form-size-md-padding-y: 0.375rem;
+  --form-size-md-icon: 1rem;
+  --form-size-md-icon-button: 2.25rem;
+
+  --form-size-lg-height: 2.5rem;
+  --form-size-lg-text: 0.9375rem;
+  --form-size-lg-padding-x: 0.875rem;
+  --form-size-lg-padding-y: 0.5rem;
+  --form-size-lg-icon: 1.125rem;
+  --form-size-lg-icon-button: 2.5rem;
+
+  --form-size-xl-height: 2.75rem;
+  --form-size-xl-text: 1rem;
+  --form-size-xl-padding-x: 1rem;
+  --form-size-xl-padding-y: 0.625rem;
+  --form-size-xl-icon: 1.25rem;
+  --form-size-xl-icon-button: 2.75rem;
+
+  --form-size-xxl-height: 3rem;
+  --form-size-xxl-text: 1.0625rem;
+  --form-size-xxl-padding-x: 1.25rem;
+  --form-size-xxl-padding-y: 0.75rem;
+  --form-size-xxl-icon: 1.375rem;
+  --form-size-xxl-icon-button: 3rem;
+
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);

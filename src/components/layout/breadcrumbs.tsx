@@ -12,6 +12,7 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { NAV_LOOKUP } from '@/constants/navigation';
+import { useT } from '@/i18n/locale-provider';
 
 function humanize(segment: string): string {
   if (/^\d+$/.test(segment)) return `#${segment}`;
@@ -23,13 +24,15 @@ function humanize(segment: string): string {
 
 export function Breadcrumbs() {
   const pathname = usePathname();
+  const { t } = useT();
   const segments = pathname.split('/').filter(Boolean);
 
   const crumbs = segments.map((segment, index) => {
     const href = `/${segments.slice(0, index + 1).join('/')}`;
+    const key = NAV_LOOKUP[href];
     return {
       href,
-      label: NAV_LOOKUP[href] ?? humanize(segment),
+      label: key ? t(key) : humanize(segment),
       isLast: index === segments.length - 1,
     };
   });

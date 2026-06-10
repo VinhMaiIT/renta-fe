@@ -19,6 +19,7 @@ import {
 } from '@/components/ui/table';
 import { CONDITION_STATUS_META } from '@/constants/enum-labels';
 import { formatCurrency, formatDateTime } from '@/lib/format';
+import { useT } from '@/i18n/locale-provider';
 import { useReturnTransaction } from './use-returns';
 import type { ReturnTransaction } from '@/types/models';
 
@@ -28,19 +29,20 @@ interface ReturnDetailProps {
 
 export function ReturnDetail({ id }: ReturnDetailProps) {
   const router = useRouter();
+  const { t } = useT();
   const query = useReturnTransaction(id);
 
   const backButton = (
     <Button variant="outline" size="sm" onClick={() => router.push('/return-transactions')}>
       <ArrowLeft className="size-4" />
-      Back
+      {t('returns.detail.back')}
     </Button>
   );
 
   if (query.isLoading) {
     return (
       <div className="space-y-5">
-        <PageHeader title="Return" actions={backButton} />
+        <PageHeader title={t('returns.detail.title')} actions={backButton} />
         <Card>
           <CardContent className="space-y-3">
             <Skeleton className="h-5 w-1/3" />
@@ -56,7 +58,7 @@ export function ReturnDetail({ id }: ReturnDetailProps) {
   if (query.isError || !query.data) {
     return (
       <div className="space-y-5">
-        <PageHeader title="Return" actions={backButton} />
+        <PageHeader title={t('returns.detail.title')} actions={backButton} />
         <ErrorState
           description={query.error instanceof Error ? query.error.message : undefined}
           onRetry={() => query.refetch()}
@@ -70,18 +72,18 @@ export function ReturnDetail({ id }: ReturnDetailProps) {
   return (
     <div className="space-y-5">
       <PageHeader
-        title={`Return #${tx.id}`}
-        description={`Recorded ${formatDateTime(tx.createdAt)}`}
+        title={`${t('returns.detail.title')} #${tx.id}`}
+        description={t('returns.detail.recorded', { datetime: formatDateTime(tx.createdAt) })}
         actions={backButton}
       />
 
       <Card>
         <CardHeader>
-          <CardTitle>Summary</CardTitle>
+          <CardTitle>{t('returns.detail.summary')}</CardTitle>
         </CardHeader>
         <CardContent>
           <dl className="grid grid-cols-1 gap-x-8 gap-y-3 sm:grid-cols-2">
-            <Field label="Rental order">
+            <Field label={t('returns.detail.rentalOrder')}>
               <Link
                 href={`/rental-orders/${tx.rentalOrderId}`}
                 className="text-primary font-medium underline-offset-4 hover:underline"
@@ -89,33 +91,33 @@ export function ReturnDetail({ id }: ReturnDetailProps) {
                 #{tx.rentalOrderId}
               </Link>
             </Field>
-            <Field label="Branch">#{tx.branchId}</Field>
-            <Field label="Created by">#{tx.createdBy}</Field>
-            <Field label="Return date">{formatDateTime(tx.returnDate)}</Field>
-            <Field label="Late fee">{formatCurrency(tx.lateFee)}</Field>
-            <Field label="Damage fee">{formatCurrency(tx.damageFee)}</Field>
-            <Field label="Total">
+            <Field label={t('returns.detail.branch')}>#{tx.branchId}</Field>
+            <Field label={t('returns.detail.createdBy')}>#{tx.createdBy}</Field>
+            <Field label={t('returns.detail.returnDate')}>{formatDateTime(tx.returnDate)}</Field>
+            <Field label={t('returns.detail.lateFee')}>{formatCurrency(tx.lateFee)}</Field>
+            <Field label={t('returns.detail.damageFee')}>{formatCurrency(tx.damageFee)}</Field>
+            <Field label={t('returns.detail.total')}>
               <span className="font-semibold">{formatCurrency(tx.totalAmount)}</span>
             </Field>
-            {tx.note ? <Field label="Note">{tx.note}</Field> : null}
+            {tx.note ? <Field label={t('returns.detail.note')}>{tx.note}</Field> : null}
           </dl>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle>Returned items ({tx.items.length})</CardTitle>
+          <CardTitle>{t('returns.detail.returnedItems', { count: tx.items.length })}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="border-border overflow-hidden rounded-lg border">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Order item</TableHead>
-                  <TableHead>Inventory item</TableHead>
-                  <TableHead>Condition</TableHead>
-                  <TableHead>Damage fee</TableHead>
-                  <TableHead>Note</TableHead>
+                  <TableHead>{t('returns.detail.orderItem')}</TableHead>
+                  <TableHead>{t('returns.detail.inventoryItem')}</TableHead>
+                  <TableHead>{t('returns.detail.condition')}</TableHead>
+                  <TableHead>{t('returns.detail.damageFee')}</TableHead>
+                  <TableHead>{t('returns.detail.note')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>

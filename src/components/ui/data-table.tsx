@@ -164,6 +164,7 @@ export function DataColumnHeader<TData>({
               ) : (
                 filteredOptions.map((option) => (
                   <button
+                    title={option.name}
                     key={option.code}
                     type="button"
                     className={cn(
@@ -239,6 +240,10 @@ interface DataTableProps<TData> {
   rowSelection?: RowSelectionState;
   onRowSelectionChange?: OnChangeFn<RowSelectionState>;
   totalCount?: number | null;
+  onRowClick?: (row: TData) => void;
+  emptyMessage?: string;
+  emptyFilterMessage?: string;
+  pageSizeLabel?: (size: number) => string;
 }
 
 export function DataTable<TData>({
@@ -255,6 +260,10 @@ export function DataTable<TData>({
   rowSelection,
   onRowSelectionChange,
   totalCount,
+  onRowClick,
+  emptyMessage,
+  emptyFilterMessage,
+  pageSizeLabel = (size) => `${size}/trang`,
 }: DataTableProps<TData>) {
   const selectionColumn: ColumnDef<TData> = {
     id: 'select',
@@ -325,11 +334,16 @@ export function DataTable<TData>({
         </TableHeader>
         <TableBody>
           {table.getRowModel().rows.map((row) => (
-            <TableRow key={row.id} className="group">
+            <TableRow
+              key={row.id}
+              className={cn('group', onRowClick && 'cursor-pointer')}
+              onClick={onRowClick ? () => onRowClick(row.original) : undefined}
+            >
               {row.getVisibleCells().map((cell) => (
                 <TableCell
                   key={cell.id}
                   className={cn(
+                    cell.column.columnDef.meta?.className,
                     cell.column.getIsPinned() === 'right' &&
                       'pinned-right-column sticky right-0 w-0',
                   )}
@@ -342,7 +356,13 @@ export function DataTable<TData>({
         </TableBody>
       </Table>
 
-      {data.length === 0 && !loading && <EmptyState hasFilters={columnFilters.length > 0} />}
+      {data.length === 0 && !loading && (
+        <EmptyState
+          hasFilters={columnFilters.length > 0}
+          emptyMessage={emptyMessage}
+          emptyFilterMessage={emptyFilterMessage}
+        />
+      )}
 
       {hasValue(totalCount) && totalCount > DEFAULT_PAGE_SIZE_OPTIONS[0] && (
         <div className="flex items-center justify-end gap-4">
@@ -388,7 +408,7 @@ export function DataTable<TData>({
             <DropdownMenuTrigger
               render={
                 <Button size="sm" variant="outline" className="w-fit shrink-0 gap-1">
-                  {table.getState().pagination.pageSize}/trang
+                  {pageSizeLabel(table.getState().pagination.pageSize)}
                   <ChevronDown className="size-4" />
                 </Button>
               }
@@ -403,7 +423,7 @@ export function DataTable<TData>({
                     table.getState().pagination.pageSize === size && 'bg-accent',
                   )}
                 >
-                  {size}/trang
+                  {pageSizeLabel(size)}
                   <Check
                     className={cn(
                       'text-primary ml-auto size-4 opacity-0',

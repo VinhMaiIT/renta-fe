@@ -16,10 +16,12 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { RENTAL_ORDER_STATUS_META } from '@/constants/enum-labels';
 import { formatCurrency, formatDate } from '@/lib/format';
+import { useT } from '@/i18n/locale-provider';
 import { useDashboardStats } from './use-dashboard';
 import { StatCard } from './stat-card';
 
 export function DashboardPage() {
+  const { t } = useT();
   const {
     activeRentals,
     overdueRentals,
@@ -35,11 +37,11 @@ export function DashboardPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Dashboard"
+        title={t('dashboard.title')}
         actions={
           <Button variant="outline" size="sm" onClick={refetch} disabled={isLoading}>
             <RefreshCw className={isLoading ? 'size-4 animate-spin' : 'size-4'} />
-            Refresh
+            {t('common.action.refresh')}
           </Button>
         }
       />
@@ -50,12 +52,12 @@ export function DashboardPage() {
             <AlertTriangle className="size-5" />
           </div>
           <div className="space-y-1">
-            <p className="font-medium">Failed to load dashboard data</p>
-            <p className="text-muted-foreground text-sm">Please try again.</p>
+            <p className="font-medium">{t('dashboard.errorTitle')}</p>
+            <p className="text-muted-foreground text-sm">{t('dashboard.errorDesc')}</p>
           </div>
           <Button variant="outline" size="sm" onClick={refetch}>
             <RefreshCw className="size-4" />
-            Try again
+            {t('common.action.retry')}
           </Button>
         </div>
       ) : (
@@ -63,35 +65,35 @@ export function DashboardPage() {
           {/* Stats grid */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <StatCard
-              label="Active Rentals"
+              label={t('dashboard.activeRentals')}
               value={activeRentals}
               icon={<ActivitySquare className="size-5" />}
               accentClassName="bg-primary/10 text-primary"
               isLoading={isLoading}
             />
             <StatCard
-              label="Overdue Rentals"
+              label={t('dashboard.overdueRentals')}
               value={overdueRentals}
               icon={<AlertTriangle className="size-5" />}
               accentClassName="bg-destructive/10 text-destructive"
               isLoading={isLoading}
             />
             <StatCard
-              label="Total Customers"
+              label={t('dashboard.totalCustomers')}
               value={totalCustomers}
               icon={<Users className="size-5" />}
               accentClassName="bg-blue-500/10 text-blue-600 dark:text-blue-400"
               isLoading={isLoading}
             />
             <StatCard
-              label="Total Inventory"
+              label={t('dashboard.totalInventory')}
               value={totalInventory}
               icon={<Package className="size-5" />}
               accentClassName="bg-purple-500/10 text-purple-600 dark:text-purple-400"
               isLoading={isLoading}
             />
             <StatCard
-              label="Available Inventory"
+              label={t('dashboard.availableInventory')}
               value={availableInventory}
               icon={<CheckCircle2 className="size-5" />}
               accentClassName="bg-success/10 text-success"
@@ -102,7 +104,7 @@ export function DashboardPage() {
           {/* Recent Rental Orders */}
           <Card>
             <CardHeader className="border-b pb-4">
-              <CardTitle>Recent Rental Orders</CardTitle>
+              <CardTitle>{t('dashboard.recentOrders')}</CardTitle>
             </CardHeader>
             <CardContent className="p-0">
               {isLoading ? (
@@ -119,7 +121,7 @@ export function DashboardPage() {
               ) : recentOrders.length === 0 ? (
                 <div className="text-muted-foreground flex flex-col items-center justify-center gap-2 py-12 text-sm">
                   <ActivitySquare className="size-8 opacity-40" />
-                  <p>No rental orders yet</p>
+                  <p>{t('dashboard.noRecentOrders')}</p>
                 </div>
               ) : (
                 <div className="divide-border divide-y">

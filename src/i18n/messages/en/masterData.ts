@@ -1,0 +1,19 @@
+const masterData = {
+  sizes: { title: 'Sizes', description: 'Manage the sizes products can be offered in.', singular: 'size' },
+  units: { title: 'Units', description: 'Manage units of measurement for products.', singular: 'unit' },
+  productTypes: { title: 'Product Types', description: 'Categorize products by type.', singular: 'product type' },
+  productGroups: { title: 'Product Groups', description: 'Group related products together.', singular: 'product group' },
+  newItem: 'New {item}',
+  editItem: 'Edit {item}',
+  createDesc: 'Create a new {item}.',
+  editDesc: 'Update the details below.',
+  name: 'Name',
+  sortOrder: 'Sort order',
+  emptyTitle: 'No {items} yet',
+  emptyDesc: 'Create your first {item} to get started.',
+  searchPlaceholder: 'Search {items}…',
+  deleteDesc: '{name} will be permanently removed. This cannot be undone.',
+  activate: 'Activate',
+  deactivate: 'Deactivate',
+} as const;
+export default masterData;

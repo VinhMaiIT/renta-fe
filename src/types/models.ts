@@ -202,4 +202,17 @@ export interface AuthTokens {
   expiresIn: string;
 }
 
+/** Current authenticated principal returned by `GET /auth/me`. */
+export interface AuthUser {
+  id: Id;
+  username: string;
+  fullName: string;
+  phone: string | null;
+  status: ActiveStatus;
+  userType: string;
+  tenantId: Id | null;
+  isAdmin: boolean;
+  permissions: string[];
+}
+
 export type { ActiveStatus };

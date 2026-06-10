@@ -1,8 +1,12 @@
+'use client';
+
 import { cn } from '@/lib/utils';
+import { useT } from '@/i18n/locale-provider';
 import type { StatusMeta } from '@/constants/enum-labels';
 
-/** Renders a colored status pill from a {@link StatusMeta} entry. */
+/** Renders a colored, translated status pill from a {@link StatusMeta} entry. */
 export function StatusBadge({ meta, className }: { meta: StatusMeta; className?: string }) {
+  const { t } = useT();
   return (
     <span
       className={cn(
@@ -11,7 +15,7 @@ export function StatusBadge({ meta, className }: { meta: StatusMeta; className?:
         className,
       )}
     >
-      {meta.label}
+      {t(meta.key)}
     </span>
   );
 }

@@ -15,12 +15,13 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { useT } from '@/i18n/locale-provider';
 import type { Customer } from '@/types/models';
 import type { CustomerFormInput } from './use-customers';
 
 const schema = z.object({
-  name: z.string().min(1, 'Name is required').max(255),
-  phone: z.string().min(1, 'Phone is required').max(50),
+  name: z.string().min(1).max(255),
+  phone: z.string().min(1).max(50),
   address: z.string().max(500).optional(),
   note: z.string().max(1000).optional(),
 });
@@ -42,6 +43,7 @@ export function CustomerForm({
   loading,
   onSubmit,
 }: CustomerFormProps) {
+  const { t } = useT();
   const {
     register,
     handleSubmit,
@@ -67,9 +69,11 @@ export function CustomerForm({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{initial ? 'Edit customer' : 'New customer'}</DialogTitle>
+          <DialogTitle>
+            {initial ? t('customers.form.editTitle') : t('customers.form.createTitle')}
+          </DialogTitle>
           <DialogDescription>
-            {initial ? 'Update the customer details below.' : 'Create a new customer.'}
+            {initial ? t('customers.form.editDesc') : t('customers.form.createDesc')}
           </DialogDescription>
         </DialogHeader>
         <form
@@ -84,17 +88,35 @@ export function CustomerForm({
           )}
           className="space-y-4"
         >
-          <Input label="Name" required error={errors.name?.message} {...register('name')} />
-          <Input label="Phone" required error={errors.phone?.message} {...register('phone')} />
-          <Input label="Address" error={errors.address?.message} {...register('address')} />
-          <Textarea label="Note" error={errors.note?.message} {...register('note')} />
+          <Input
+            label={t('common.table.name')}
+            required
+            error={errors.name ? t('customers.form.nameRequired') : undefined}
+            {...register('name')}
+          />
+          <Input
+            label={t('customers.phone')}
+            required
+            error={errors.phone ? t('customers.form.phoneRequired') : undefined}
+            {...register('phone')}
+          />
+          <Input
+            label={t('customers.address')}
+            error={errors.address?.message}
+            {...register('address')}
+          />
+          <Textarea
+            label={t('customers.note')}
+            error={errors.note?.message}
+            {...register('note')}
+          />
         </form>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)} disabled={loading}>
-            Cancel
+            {t('common.action.cancel')}
           </Button>
           <Button type="submit" form="customer-form" loading={loading}>
-            {initial ? 'Save changes' : 'Create'}
+            {initial ? t('common.action.saveChanges') : t('common.action.create')}
           </Button>
         </DialogFooter>
       </DialogContent>

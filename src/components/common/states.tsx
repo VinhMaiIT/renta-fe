@@ -1,11 +1,14 @@
+'use client';
+
 import type { ReactNode } from 'react';
 import { AlertTriangle, Inbox, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { useT } from '@/i18n/locale-provider';
 
 /** Centered empty placeholder. */
 export function EmptyState({
-  title = 'Nothing here yet',
+  title,
   description,
   icon,
   action,
@@ -17,6 +20,7 @@ export function EmptyState({
   action?: ReactNode;
   className?: string;
 }) {
+  const { t } = useT();
   return (
     <div
       className={cn(
@@ -28,7 +32,7 @@ export function EmptyState({
         {icon ?? <Inbox className="size-5" />}
       </div>
       <div className="space-y-1">
-        <p className="font-medium">{title}</p>
+        <p className="font-medium">{title ?? t('common.state.empty')}</p>
         {description ? <p className="text-muted-foreground text-sm">{description}</p> : null}
       </div>
       {action}
@@ -38,7 +42,7 @@ export function EmptyState({
 
 /** Error placeholder with optional retry. */
 export function ErrorState({
-  title = 'Failed to load',
+  title,
   description,
   onRetry,
   className,
@@ -48,6 +52,7 @@ export function ErrorState({
   onRetry?: () => void;
   className?: string;
 }) {
+  const { t } = useT();
   return (
     <div
       className={cn(
@@ -59,13 +64,13 @@ export function ErrorState({
         <AlertTriangle className="size-5" />
       </div>
       <div className="space-y-1">
-        <p className="font-medium">{title}</p>
+        <p className="font-medium">{title ?? t('common.state.error')}</p>
         {description ? <p className="text-muted-foreground text-sm">{description}</p> : null}
       </div>
       {onRetry ? (
         <Button variant="outline" size="sm" onClick={onRetry}>
           <RefreshCw className="size-4" />
-          Try again
+          {t('common.action.retry')}
         </Button>
       ) : null}
     </div>

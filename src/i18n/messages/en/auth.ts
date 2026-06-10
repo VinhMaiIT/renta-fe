@@ -1,0 +1,37 @@
+const auth = {
+  welcomeBack: 'Welcome back',
+  subtitle: 'Sign in to your {app} tenant workspace.',
+  tenantId: 'Tenant ID',
+  username: 'Username',
+  password: 'Password',
+  signIn: 'Sign in',
+  demoMode: 'Demo mode',
+  demoHint: 'tenant {tenant}, username {user}, any password.',
+  terms: 'By signing in you agree to the acceptable-use policy.',
+  loginSuccess: 'Welcome back',
+  loginSuccessDesc: 'You are now signed in.',
+  loginFailed: 'Login failed',
+  secureAccess: 'Secure tenant access',
+  heroEyebrow: 'Tenant Portal',
+  heroHeadline: 'Run your rental business with ease.',
+  heroSubtitle:
+    'One portal for inventory, customers, rental orders, and returns — fast, reliable, and built for your whole team.',
+  highlight: {
+    inventory: 'Inventory & products',
+    inventoryDesc: 'Track every item across branches.',
+    orders: 'Rental orders',
+    ordersDesc: 'Draft, confirm, and rent in seconds.',
+    returns: 'Returns',
+    returnsDesc: 'Full and partial returns with fees.',
+  },
+  changePassword: {
+    title: 'Change password',
+    current: 'Current password',
+    new: 'New password',
+    confirm: 'Confirm new password',
+    submit: 'Update password',
+    mismatch: 'Passwords do not match',
+    success: 'Password changed',
+  },
+} as const;
+export default auth;

@@ -21,6 +21,7 @@ import {
 } from '@/components/ui/table';
 import { RENTAL_ORDER_ITEM_STATUS_META, RENTAL_ORDER_STATUS_META } from '@/constants/enum-labels';
 import { formatCurrency, formatDateTime } from '@/lib/format';
+import { useT } from '@/i18n/locale-provider';
 import type { Id, RentalOrder } from '@/types/models';
 import {
   useCancelRentalOrder,
@@ -36,6 +37,7 @@ interface RentalOrderDetailProps {
 const ACTIVE_STATUSES = new Set(['RENTING', 'PARTIALLY_RETURNED', 'OVERDUE']);
 
 export function RentalOrderDetail({ id }: RentalOrderDetailProps) {
+  const { t } = useT();
   const router = useRouter();
   const query = useRentalOrder(id);
   const confirm = useConfirmRentalOrder();
@@ -53,7 +55,7 @@ export function RentalOrderDetail({ id }: RentalOrderDetailProps) {
       <div className="space-y-5">
         <Button variant="ghost" size="sm" onClick={() => router.push('/rental-orders')}>
           <ArrowLeft className="size-4" />
-          Back to orders
+          {t('rentalOrders.detail.backToOrders')}
         </Button>
         <ErrorState
           description={query.error instanceof Error ? query.error.message : undefined}
@@ -72,30 +74,30 @@ export function RentalOrderDetail({ id }: RentalOrderDetailProps) {
     <div className="space-y-5 pb-20 md:pb-0">
       <Button variant="ghost" size="sm" onClick={() => router.push('/rental-orders')}>
         <ArrowLeft className="size-4" />
-        Back to orders
+        {t('rentalOrders.detail.backToOrders')}
       </Button>
 
       <PageHeader
         title={order.orderCode}
-        description={`Created ${formatDateTime(order.createdAt)}`}
+        description={t('rentalOrders.detail.createdAt', { dateTime: formatDateTime(order.createdAt) })}
         actions={<StatusBadge meta={RENTAL_ORDER_STATUS_META[order.status]} />}
       />
 
       <div className="grid gap-5 lg:grid-cols-3">
         <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle>Order details</CardTitle>
+            <CardTitle>{t('rentalOrders.detail.orderDetails')}</CardTitle>
           </CardHeader>
           <CardContent className="grid grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-2">
-            <Field label="Customer ID" value={order.customerId} />
-            <Field label="Branch" value={order.branchId} />
-            <Field label="Created by" value={order.createdBy} />
-            <Field label="Rent date" value={formatDateTime(order.rentDate)} />
-            <Field label="Expected return" value={formatDateTime(order.expectedReturnDate)} />
-            <Field label="Actual return" value={formatDateTime(order.actualReturnDate)} />
+            <Field label={t('rentalOrders.detail.customer')} value={order.customerId} />
+            <Field label={t('rentalOrders.detail.branch')} value={order.branchId} />
+            <Field label={t('rentalOrders.detail.createdBy')} value={order.createdBy} />
+            <Field label={t('rentalOrders.detail.rentDate')} value={formatDateTime(order.rentDate)} />
+            <Field label={t('rentalOrders.detail.expectedReturn')} value={formatDateTime(order.expectedReturnDate)} />
+            <Field label={t('rentalOrders.detail.actualReturn')} value={formatDateTime(order.actualReturnDate)} />
             {order.note ? (
               <div className="sm:col-span-2">
-                <Field label="Note" value={order.note} />
+                <Field label={t('rentalOrders.detail.note')} value={order.note} />
               </div>
             ) : null}
           </CardContent>
@@ -103,16 +105,16 @@ export function RentalOrderDetail({ id }: RentalOrderDetailProps) {
 
         <Card>
           <CardHeader>
-            <CardTitle>Amounts</CardTitle>
+            <CardTitle>{t('rentalOrders.detail.amounts')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2 text-sm">
-            <AmountRow label="Deposit" value={order.depositAmount} />
-            <AmountRow label="Discount" value={order.discountAmount} />
-            <AmountRow label="Late fee" value={order.lateFee} />
-            <AmountRow label="Damage fee" value={order.damageFee} />
+            <AmountRow label={t('rentalOrders.detail.deposit')} value={order.depositAmount} />
+            <AmountRow label={t('rentalOrders.detail.discount')} value={order.discountAmount} />
+            <AmountRow label={t('rentalOrders.detail.lateFee')} value={order.lateFee} />
+            <AmountRow label={t('rentalOrders.detail.damageFee')} value={order.damageFee} />
             <Separator className="my-2" />
             <div className="flex items-center justify-between font-semibold">
-              <span>Total</span>
+              <span>{t('rentalOrders.detail.total')}</span>
               <span>{formatCurrency(order.totalAmount)}</span>
             </div>
           </CardContent>
@@ -121,17 +123,17 @@ export function RentalOrderDetail({ id }: RentalOrderDetailProps) {
 
       <Card>
         <CardHeader>
-          <CardTitle>Items ({order.items.length})</CardTitle>
+          <CardTitle>{t('rentalOrders.detail.itemsCard', { count: order.items.length })}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="border-border overflow-hidden rounded-lg border">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Inventory item</TableHead>
-                  <TableHead>Product</TableHead>
-                  <TableHead>Price</TableHead>
-                  <TableHead>Status</TableHead>
+                  <TableHead>{t('rentalOrders.detail.inventoryItem')}</TableHead>
+                  <TableHead>{t('rentalOrders.detail.product')}</TableHead>
+                  <TableHead>{t('rentalOrders.detail.price')}</TableHead>
+                  <TableHead>{t('rentalOrders.list.status')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -159,11 +161,11 @@ export function RentalOrderDetail({ id }: RentalOrderDetailProps) {
               onClick={() => router.push(`/rental-orders/${order.id}/edit`)}
             >
               <Pencil className="size-4" />
-              Edit
+              {t('rentalOrders.detail.edit')}
             </Button>
             <Button onClick={() => setConfirmOpen(true)}>
               <CheckCircle2 className="size-4" />
-              Confirm
+              {t('rentalOrders.detail.confirm')}
             </Button>
           </>
         ) : null}
@@ -172,11 +174,11 @@ export function RentalOrderDetail({ id }: RentalOrderDetailProps) {
           <>
             <Button onClick={() => router.push(`/return-transactions/new?orderId=${order.id}`)}>
               <RotateCcw className="size-4" />
-              Process return
+              {t('rentalOrders.detail.processReturn')}
             </Button>
             <Button variant="outline" onClick={() => setCancelOpen(true)}>
               <XCircle className="size-4" />
-              Cancel
+              {t('rentalOrders.detail.cancel')}
             </Button>
           </>
         ) : null}
@@ -184,7 +186,7 @@ export function RentalOrderDetail({ id }: RentalOrderDetailProps) {
         {canDelete ? (
           <Button variant="destructive" onClick={() => setDeleteOpen(true)}>
             <Trash2 className="size-4" />
-            Delete
+            {t('rentalOrders.detail.delete')}
           </Button>
         ) : null}
       </div>
@@ -192,9 +194,9 @@ export function RentalOrderDetail({ id }: RentalOrderDetailProps) {
       <ConfirmDialog
         open={confirmOpen}
         onOpenChange={setConfirmOpen}
-        title="Confirm rental order?"
-        description="This will move the order from Draft to Renting and mark the items as rented."
-        confirmText="Confirm order"
+        title={t('rentalOrders.detail.confirmTitle')}
+        description={t('rentalOrders.detail.confirmDesc')}
+        confirmText={t('rentalOrders.detail.confirmText')}
         loading={confirm.isPending}
         onConfirm={() => confirm.mutate(order.id, { onSuccess: () => setConfirmOpen(false) })}
       />
@@ -202,10 +204,10 @@ export function RentalOrderDetail({ id }: RentalOrderDetailProps) {
       <ConfirmDialog
         open={cancelOpen}
         onOpenChange={setCancelOpen}
-        title="Cancel rental order?"
-        description="The order will be marked as cancelled. This cannot be undone."
+        title={t('rentalOrders.detail.cancelTitle')}
+        description={t('rentalOrders.detail.cancelDesc')}
         destructive
-        confirmText="Cancel order"
+        confirmText={t('rentalOrders.detail.cancelText')}
         loading={cancel.isPending}
         onConfirm={() => cancel.mutate(order.id, { onSuccess: () => setCancelOpen(false) })}
       />
@@ -213,14 +215,15 @@ export function RentalOrderDetail({ id }: RentalOrderDetailProps) {
       <ConfirmDialog
         open={deleteOpen}
         onOpenChange={setDeleteOpen}
-        title="Delete rental order?"
+        title={t('rentalOrders.detail.deleteTitle')}
         description={
           <>
-            <strong>{order.orderCode}</strong> will be permanently removed. This cannot be undone.
+            <strong>{order.orderCode}</strong>{' '}
+            {t('common.confirm.deleteDesc')}
           </>
         }
         destructive
-        confirmText="Delete"
+        confirmText={t('rentalOrders.detail.deleteText')}
         loading={remove.isPending}
         onConfirm={() =>
           remove.mutate(order.id, { onSuccess: () => router.push('/rental-orders') })

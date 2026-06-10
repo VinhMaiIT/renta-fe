@@ -14,52 +14,54 @@ import {
 } from 'lucide-react';
 
 export interface NavItem {
-  label: string;
+  /** i18n key under `nav.item.*`. */
+  labelKey: string;
   href: string;
   icon: LucideIcon;
 }
 
 export interface NavSection {
-  label: string;
+  /** i18n key under `nav.section.*`. */
+  labelKey: string;
   items: NavItem[];
 }
 
 export const NAV_SECTIONS: NavSection[] = [
   {
-    label: 'Overview',
-    items: [{ label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard }],
+    labelKey: 'nav.section.overview',
+    items: [{ labelKey: 'nav.item.dashboard', href: '/dashboard', icon: LayoutDashboard }],
   },
   {
-    label: 'Operations',
+    labelKey: 'nav.section.operations',
     items: [
-      { label: 'Rental Orders', href: '/rental-orders', icon: Receipt },
-      { label: 'Return Transactions', href: '/return-transactions', icon: RotateCcw },
-      { label: 'Customers', href: '/customers', icon: Users },
+      { labelKey: 'nav.item.rentalOrders', href: '/rental-orders', icon: Receipt },
+      { labelKey: 'nav.item.returnTransactions', href: '/return-transactions', icon: RotateCcw },
+      { labelKey: 'nav.item.customers', href: '/customers', icon: Users },
     ],
   },
   {
-    label: 'Catalog',
+    labelKey: 'nav.section.catalog',
     items: [
-      { label: 'Products', href: '/products', icon: Package },
-      { label: 'Inventory Items', href: '/inventory-items', icon: PackageOpen },
+      { labelKey: 'nav.item.products', href: '/products', icon: Package },
+      { labelKey: 'nav.item.inventoryItems', href: '/inventory-items', icon: PackageOpen },
     ],
   },
   {
-    label: 'Master Data',
+    labelKey: 'nav.section.masterData',
     items: [
-      { label: 'Sizes', href: '/sizes', icon: Ruler },
-      { label: 'Units', href: '/units', icon: Boxes },
-      { label: 'Product Types', href: '/product-types', icon: Shapes },
-      { label: 'Product Groups', href: '/product-groups', icon: Tags },
+      { labelKey: 'nav.item.sizes', href: '/sizes', icon: Ruler },
+      { labelKey: 'nav.item.units', href: '/units', icon: Boxes },
+      { labelKey: 'nav.item.productTypes', href: '/product-types', icon: Shapes },
+      { labelKey: 'nav.item.productGroups', href: '/product-groups', icon: Tags },
     ],
   },
   {
-    label: 'System',
-    items: [{ label: 'Settings', href: '/settings', icon: Settings }],
+    labelKey: 'nav.section.system',
+    items: [{ labelKey: 'nav.item.settings', href: '/settings', icon: Settings }],
   },
 ];
 
-/** Flat lookup used by breadcrumbs / page titles. */
+/** Map a route href to its i18n label key (for breadcrumbs/titles). */
 export const NAV_LOOKUP: Record<string, string> = Object.fromEntries(
-  NAV_SECTIONS.flatMap((s) => s.items).map((i) => [i.href, i.label]),
+  NAV_SECTIONS.flatMap((s) => s.items).map((i) => [i.href, i.labelKey]),
 );

@@ -3,12 +3,10 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { MoreHorizontal, Plus } from 'lucide-react';
-import { PageHeader } from '@/components/common/page-header';
-import { ListToolbar } from '@/components/common/list-toolbar';
+import { ListPageHeader } from '@/components/common/list-page-header';
 import { ConfirmDialog } from '@/components/common/confirm-dialog';
 import { StatusBadge } from '@/components/common/status-badge';
-import { ListView, type Column } from '@/components/tables/list-view';
-import { PaginationBar } from '@/components/tables/pagination-bar';
+import { DataTableView, type Column } from '@/components/tables/data-table-view';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -21,6 +19,7 @@ import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select'
 import { usePagination } from '@/hooks/use-pagination';
 import { ACTIVE_STATUS_META } from '@/constants/enum-labels';
 import { formatCurrency } from '@/lib/format';
+import { useT } from '@/i18n/locale-provider';
 import {
   useProducts,
   useDeleteProduct,
@@ -31,6 +30,7 @@ import type { Product } from '@/types/models';
 
 export function ProductsPage() {
   const router = useRouter();
+  const { t } = useT();
   const pagination = usePagination();
   const lookups = useProductLookups();
   const list = useProducts(pagination.queryParams);
@@ -44,35 +44,34 @@ export function ProductsPage() {
   const columns: Column<Product>[] = [
     {
       id: 'code',
-      header: 'Code',
+      header: t('products.code'),
       cell: (r) => <span className="font-mono text-sm">{r.code}</span>,
     },
     {
       id: 'name',
-      header: 'Name',
-      primary: true,
+      header: t('products.name'),
       cell: (r) => <span className="font-medium">{r.name}</span>,
     },
     {
       id: 'type',
-      header: 'Type',
+      header: t('products.type'),
       cell: (r) => lookups.productTypeMap[r.productTypeId] ?? '—',
     },
     {
       id: 'group',
-      header: 'Group',
+      header: t('products.group'),
       hideBelow: 'md',
       cell: (r) => lookups.productGroupMap[r.productGroupId] ?? '—',
     },
     {
       id: 'rentalPrice',
-      header: 'Rental price',
+      header: t('products.rentalPrice'),
       hideBelow: 'md',
       cell: (r) => formatCurrency(r.rentalPrice),
     },
     {
       id: 'status',
-      header: 'Status',
+      header: t('common.table.status'),
       cell: (r) => <StatusBadge meta={ACTIVE_STATUS_META[r.status]} />,
     },
     {
@@ -89,23 +88,23 @@ export function ProductsPage() {
       <DropdownMenu>
         <DropdownMenuTrigger
           render={
-            <Button variant="ghost" size="icon-sm" aria-label="Actions">
+            <Button variant="ghost" size="icon-sm" aria-label={t('common.table.actions')}>
               <MoreHorizontal className="size-4" />
             </Button>
           }
         />
         <DropdownMenuContent align="end">
           <DropdownMenuItem onClick={() => router.push(`/products/${product.id}/edit`)}>
-            Edit
+            {t('common.action.edit')}
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => setStatus.mutate({ id: product.id, status: nextStatus })}
           >
-            {product.status === 'ACTIVE' ? 'Deactivate' : 'Activate'}
+            {product.status === 'ACTIVE' ? t('products.deactivate') : t('products.activate')}
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem className="text-destructive" onClick={() => setDeleting(product)}>
-            Delete
+            {t('common.action.delete')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -114,38 +113,31 @@ export function ProductsPage() {
 
   return (
     <div className="space-y-5">
-      <PageHeader
-        title="Products"
-        description="Manage your rental product catalog."
-        actions={
-          <Button onClick={() => router.push('/products/new')}>
-            <Plus className="size-4" />
-            New product
-          </Button>
-        }
-      />
-
-      <ListToolbar
+      <ListPageHeader
+        title={t('products.title')}
+        description={t('products.subtitle')}
         search={pagination.search}
         onSearchChange={pagination.setSearch}
-        searchPlaceholder="Search by name or code…"
+        searchPlaceholder={t('products.searchPlaceholder')}
         filters={
           <>
             <NativeSelect
               value={pagination.filters.status ?? ''}
               onChange={(e) => pagination.setFilter('status', e.target.value || undefined)}
-              aria-label="Status filter"
+              aria-label={t('common.table.status')}
+              className="bg-card"
             >
-              <NativeSelectOption value="">All statuses</NativeSelectOption>
-              <NativeSelectOption value="ACTIVE">Active</NativeSelectOption>
-              <NativeSelectOption value="INACTIVE">Inactive</NativeSelectOption>
+              <NativeSelectOption value="">{t('common.table.allStatuses')}</NativeSelectOption>
+              <NativeSelectOption value="ACTIVE">{t('common.table.active')}</NativeSelectOption>
+              <NativeSelectOption value="INACTIVE">{t('common.table.inactive')}</NativeSelectOption>
             </NativeSelect>
             <NativeSelect
               value={pagination.filters.productTypeId ?? ''}
               onChange={(e) => pagination.setFilter('productTypeId', e.target.value || undefined)}
-              aria-label="Product type filter"
+              aria-label={t('products.productType')}
+              className="bg-card"
             >
-              <NativeSelectOption value="">All types</NativeSelectOption>
+              <NativeSelectOption value="">{t('products.allTypes')}</NativeSelectOption>
               {lookups.productTypeOptions.map((opt) => (
                 <NativeSelectOption key={opt.value} value={opt.value}>
                   {opt.label}
@@ -155,9 +147,10 @@ export function ProductsPage() {
             <NativeSelect
               value={pagination.filters.productGroupId ?? ''}
               onChange={(e) => pagination.setFilter('productGroupId', e.target.value || undefined)}
-              aria-label="Product group filter"
+              aria-label={t('products.productGroup')}
+              className="bg-card"
             >
-              <NativeSelectOption value="">All groups</NativeSelectOption>
+              <NativeSelectOption value="">{t('products.allGroups')}</NativeSelectOption>
               {lookups.productGroupOptions.map((opt) => (
                 <NativeSelectOption key={opt.value} value={opt.value}>
                   {opt.label}
@@ -166,61 +159,39 @@ export function ProductsPage() {
             </NativeSelect>
           </>
         }
+        actions={
+          <Button onClick={() => router.push('/products/new')}>
+            <Plus className="size-4" />
+            {t('products.newProduct')}
+          </Button>
+        }
       />
 
-      <ListView
+      <DataTableView
         columns={columns}
         rows={data?.items ?? []}
-        getRowId={(r) => r.id}
         isLoading={list.isLoading}
         isError={list.isError}
         error={list.error}
         onRetry={() => list.refetch()}
-        emptyTitle="No products yet"
-        emptyDescription="Create your first product to get started."
-        emptyAction={
-          <Button onClick={() => router.push('/products/new')} size="sm">
-            <Plus className="size-4" />
-            New product
-          </Button>
-        }
+        emptyTitle={t('products.emptyTitle')}
         onRowClick={(r) => router.push(`/products/${r.id}`)}
-        mobileCard={(r) => (
-          <div className="space-y-1.5">
-            <div className="flex items-start justify-between gap-2">
-              <p className="font-medium">{r.name}</p>
-              <StatusBadge meta={ACTIVE_STATUS_META[r.status]} />
-            </div>
-            <p className="text-muted-foreground font-mono text-sm">{r.code}</p>
-            <p className="text-sm">{formatCurrency(r.rentalPrice)}</p>
-          </div>
-        )}
+        page={data?.page ?? pagination.page}
+        pageSize={data?.pageSize ?? pagination.pageSize}
+        total={data?.total ?? 0}
+        onPageChange={pagination.setPage}
+        onPageSizeChange={pagination.setPageSize}
       />
-
-      {data ? (
-        <PaginationBar
-          page={data.page}
-          pageSize={data.pageSize}
-          total={data.total}
-          totalPages={data.totalPages}
-          onPageChange={pagination.setPage}
-          onPageSizeChange={pagination.setPageSize}
-        />
-      ) : null}
 
       <ConfirmDialog
         open={Boolean(deleting)}
         onOpenChange={(open) => !open && setDeleting(null)}
-        title="Delete product?"
+        title={t('common.confirm.deleteTitle', { item: t('products.title').toLowerCase() })}
         description={
-          deleting ? (
-            <>
-              <strong>{deleting.name}</strong> will be permanently removed. This cannot be undone.
-            </>
-          ) : null
+          deleting ? t('products.deleteDesc', { name: deleting.name }) : null
         }
         destructive
-        confirmText="Delete"
+        confirmText={t('common.action.delete')}
         loading={deleteMutation.isPending}
         onConfirm={() => {
           if (!deleting) return;

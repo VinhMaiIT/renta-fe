@@ -8,6 +8,7 @@ import {
   type ReturnListParams,
 } from './api';
 import { useTenantContext } from '@/hooks/use-tenant-context';
+import { useT } from '@/i18n/locale-provider';
 import { toast, toastError } from '@/lib/toast';
 import type { Id } from '@/types/models';
 
@@ -76,6 +77,7 @@ export function useReturnableOrders(params: Omit<ReturnableOrdersParams, 'tenant
 export function useCreateReturnTransaction() {
   const queryClient = useQueryClient();
   const { tenantId, branchId, userId } = useTenantContext();
+  const { t } = useT();
 
   return useMutation({
     mutationFn: (input: CreateReturnFormInput) =>
@@ -90,24 +92,25 @@ export function useCreateReturnTransaction() {
         items: input.items,
       }),
     onSuccess: () => {
-      toast.success('Return recorded');
+      toast.success(t('returns.toast.created'));
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY] });
       queryClient.invalidateQueries({ queryKey: [RENTAL_ORDERS_KEY] });
     },
-    onError: (error) => toastError(error, 'Could not record return'),
+    onError: (error) => toastError(error, t('returns.toast.createFailed')),
   });
 }
 
 export function useDeleteReturnTransaction() {
   const queryClient = useQueryClient();
+  const { t } = useT();
 
   return useMutation({
     mutationFn: (id: Id) => returnsApi.remove(id),
     onSuccess: () => {
-      toast.success('Return deleted');
+      toast.success(t('returns.toast.deleted'));
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY] });
       queryClient.invalidateQueries({ queryKey: [RENTAL_ORDERS_KEY] });
     },
-    onError: (error) => toastError(error, 'Could not delete return'),
+    onError: (error) => toastError(error, t('returns.toast.deleteFailed')),
   });
 }

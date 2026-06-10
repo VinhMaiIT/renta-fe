@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card } from '@/components/ui/card';
 import { Spinner } from '@/components/ui/spinner';
+import { useT } from '@/i18n/locale-provider';
 import { cn } from '@/lib/utils';
 import type { Customer } from '@/types/models';
 import type { PaginatedResponse } from '@/types/api';
@@ -20,6 +21,7 @@ interface StepCustomerProps {
 }
 
 export function StepCustomer({ state, update }: StepCustomerProps) {
+  const { t } = useT();
   const { tenantId } = useTenantContext();
   const [search, setSearch] = useState('');
 
@@ -41,29 +43,29 @@ export function StepCustomer({ state, update }: StepCustomerProps) {
           active={state.customerMode === 'EXISTING'}
           onClick={() => update({ customerMode: 'EXISTING' })}
         >
-          Existing customer
+          {t('rentalOrders.wizard.existingCustomer')}
         </ModeButton>
         <ModeButton
           active={state.customerMode === 'NEW'}
           onClick={() => update({ customerMode: 'NEW' })}
         >
-          New customer
+          {t('rentalOrders.wizard.newCustomer')}
         </ModeButton>
       </div>
 
       {state.customerMode === 'EXISTING' ? (
         <div className="space-y-3">
           <Input
-            placeholder="Search by name or phone…"
+            placeholder={t('rentalOrders.wizard.searchCustomerPlaceholder')}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
           {customersQuery.isLoading ? (
             <div className="text-muted-foreground flex items-center gap-2 p-4 text-sm">
-              <Spinner /> Loading customers…
+              <Spinner /> {t('rentalOrders.wizard.loadingCustomers')}
             </div>
           ) : customers.length === 0 ? (
-            <p className="text-muted-foreground p-4 text-sm">No customers found.</p>
+            <p className="text-muted-foreground p-4 text-sm">{t('rentalOrders.wizard.noCustomersFound')}</p>
           ) : (
             <div className="flex max-h-72 flex-col gap-2 overflow-y-auto">
               {customers.map((customer) => {
@@ -93,7 +95,7 @@ export function StepCustomer({ state, update }: StepCustomerProps) {
       ) : (
         <div className="space-y-4">
           <Input
-            label="Name"
+            label={t('rentalOrders.wizard.customerName')}
             required
             value={state.newCustomer.name}
             onChange={(e) =>
@@ -101,7 +103,7 @@ export function StepCustomer({ state, update }: StepCustomerProps) {
             }
           />
           <Input
-            label="Phone"
+            label={t('rentalOrders.wizard.customerPhone')}
             required
             value={state.newCustomer.phone}
             onChange={(e) =>
@@ -109,14 +111,14 @@ export function StepCustomer({ state, update }: StepCustomerProps) {
             }
           />
           <Input
-            label="Address"
+            label={t('rentalOrders.wizard.customerAddress')}
             value={state.newCustomer.address ?? ''}
             onChange={(e) =>
               update({ newCustomer: { ...state.newCustomer, address: e.target.value } })
             }
           />
           <Textarea
-            label="Note"
+            label={t('rentalOrders.wizard.customerNote')}
             value={state.newCustomer.note ?? ''}
             onChange={(e) =>
               update({ newCustomer: { ...state.newCustomer, note: e.target.value } })

@@ -6,6 +6,7 @@ import { useTenantContext } from '@/hooks/use-tenant-context';
 import { useBranches } from '@/features/branches/use-branches';
 import { toast, toastError } from '@/lib/toast';
 import { http } from '@/lib/api/http';
+import { useT } from '@/i18n/locale-provider';
 import type { InventoryItemStatus, InventoryItemConditionStatus } from '@/types/enums';
 import type { PaginatedResponse } from '@/types/api';
 import type { Product } from '@/types/models';
@@ -43,65 +44,70 @@ export function useInventoryItem(id: string) {
 export function useCreateInventoryItem() {
   const queryClient = useQueryClient();
   const { tenantId, branchId } = useTenantContext();
+  const { t } = useT();
 
   return useMutation({
     mutationFn: (input: Omit<InventoryCreateInput, 'tenantId'>) =>
       inventoryApi.create({ ...input, tenantId, branchId: input.branchId ?? branchId ?? '' }),
     onSuccess: () => {
-      toast.success('Inventory item created');
+      toast.success(t('inventory.toast.created'));
       queryClient.invalidateQueries({ queryKey: ROOT_KEY });
     },
-    onError: (error) => toastError(error, 'Could not create inventory item'),
+    onError: (error) => toastError(error, t('inventory.toast.createFailed')),
   });
 }
 
 /** Update mutation. */
 export function useUpdateInventoryItem() {
   const queryClient = useQueryClient();
+  const { t } = useT();
 
   return useMutation({
     mutationFn: ({ id, input }: { id: string; input: InventoryUpdateInput }) =>
       inventoryApi.update(id, input),
     onSuccess: () => {
-      toast.success('Inventory item updated');
+      toast.success(t('inventory.toast.updated'));
       queryClient.invalidateQueries({ queryKey: ROOT_KEY });
     },
-    onError: (error) => toastError(error, 'Could not update inventory item'),
+    onError: (error) => toastError(error, t('inventory.toast.updateFailed')),
   });
 }
 
 /** Delete mutation. */
 export function useDeleteInventoryItem() {
   const queryClient = useQueryClient();
+  const { t } = useT();
 
   return useMutation({
     mutationFn: (id: string) => inventoryApi.remove(id),
     onSuccess: () => {
-      toast.success('Inventory item deleted');
+      toast.success(t('inventory.toast.deleted'));
       queryClient.invalidateQueries({ queryKey: ROOT_KEY });
     },
-    onError: (error) => toastError(error, 'Could not delete inventory item'),
+    onError: (error) => toastError(error, t('inventory.toast.deleteFailed')),
   });
 }
 
 /** Set inventory item status. */
 export function useSetInventoryStatus() {
   const queryClient = useQueryClient();
+  const { t } = useT();
 
   return useMutation({
     mutationFn: ({ id, status }: { id: string; status: InventoryItemStatus }) =>
       inventoryApi.setStatus(id, status),
     onSuccess: () => {
-      toast.success('Status updated');
+      toast.success(t('inventory.toast.statusUpdated'));
       queryClient.invalidateQueries({ queryKey: ROOT_KEY });
     },
-    onError: (error) => toastError(error, 'Could not update status'),
+    onError: (error) => toastError(error, t('inventory.toast.statusFailed')),
   });
 }
 
 /** Set inventory item condition. */
 export function useSetInventoryCondition() {
   const queryClient = useQueryClient();
+  const { t } = useT();
 
   return useMutation({
     mutationFn: ({
@@ -112,10 +118,10 @@ export function useSetInventoryCondition() {
       conditionStatus: InventoryItemConditionStatus;
     }) => inventoryApi.setCondition(id, conditionStatus),
     onSuccess: () => {
-      toast.success('Condition updated');
+      toast.success(t('inventory.toast.conditionUpdated'));
       queryClient.invalidateQueries({ queryKey: ROOT_KEY });
     },
-    onError: (error) => toastError(error, 'Could not update condition'),
+    onError: (error) => toastError(error, t('inventory.toast.conditionFailed')),
   });
 }
 

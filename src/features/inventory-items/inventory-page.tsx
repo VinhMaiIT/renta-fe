@@ -3,12 +3,10 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { MoreHorizontal, Plus } from 'lucide-react';
-import { PageHeader } from '@/components/common/page-header';
-import { ListToolbar } from '@/components/common/list-toolbar';
+import { ListPageHeader } from '@/components/common/list-page-header';
 import { ConfirmDialog } from '@/components/common/confirm-dialog';
 import { StatusBadge } from '@/components/common/status-badge';
-import { ListView, type Column } from '@/components/tables/list-view';
-import { PaginationBar } from '@/components/tables/pagination-bar';
+import { DataTableView, type Column } from '@/components/tables/data-table-view';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -19,7 +17,9 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select';
 import { usePagination } from '@/hooks/use-pagination';
-import { INVENTORY_STATUS_META, CONDITION_STATUS_META, toOptions } from '@/constants/enum-labels';
+import { useEnumOptions } from '@/hooks/use-enum-options';
+import { INVENTORY_STATUS_META, CONDITION_STATUS_META } from '@/constants/enum-labels';
+import { useT } from '@/i18n/locale-provider';
 import type { InventoryItem } from '@/types/models';
 import type { InventoryItemStatus } from '@/types/enums';
 import {
@@ -32,12 +32,13 @@ import {
 import { InventoryForm } from './inventory-form';
 import type { InventoryCreateInput } from './api';
 
-const statusOptions = toOptions(INVENTORY_STATUS_META);
-const conditionOptions = toOptions(CONDITION_STATUS_META);
-
 export function InventoryPage() {
+  const { t } = useT();
   const router = useRouter();
   const pagination = usePagination();
+
+  const statusOptions = useEnumOptions(INVENTORY_STATUS_META);
+  const conditionOptions = useEnumOptions(CONDITION_STATUS_META);
 
   const { productMap, sizeMap, branchMap, branchOptions, productOptions, sizeOptions } =
     useInventoryLookups();
@@ -55,35 +56,34 @@ export function InventoryPage() {
   const columns: Column<InventoryItem>[] = [
     {
       id: 'serialCode',
-      header: 'Serial',
-      primary: true,
+      header: t('inventory.serial'),
       cell: (r) => <span className="font-medium">{r.serialCode}</span>,
     },
     {
       id: 'product',
-      header: 'Product',
+      header: t('inventory.product'),
       cell: (r) => productMap[r.productId] ?? r.productId,
     },
     {
       id: 'size',
-      header: 'Size',
+      header: t('inventory.size'),
       hideBelow: 'md',
       cell: (r) => sizeMap[r.sizeId] ?? r.sizeId,
     },
     {
       id: 'branch',
-      header: 'Branch',
+      header: t('inventory.branch'),
       hideBelow: 'lg',
       cell: (r) => branchMap[r.branchId] ?? r.branchId,
     },
     {
       id: 'status',
-      header: 'Status',
+      header: t('inventory.status'),
       cell: (r) => <StatusBadge meta={INVENTORY_STATUS_META[r.status]} />,
     },
     {
       id: 'condition',
-      header: 'Condition',
+      header: t('inventory.condition'),
       hideBelow: 'sm',
       cell: (r) => <StatusBadge meta={CONDITION_STATUS_META[r.conditionStatus]} />,
     },
@@ -100,14 +100,14 @@ export function InventoryPage() {
       <DropdownMenu>
         <DropdownMenuTrigger
           render={
-            <Button variant="ghost" size="icon-sm" aria-label="Actions">
+            <Button variant="ghost" size="icon-sm" aria-label={t('common.table.actions')}>
               <MoreHorizontal className="size-4" />
             </Button>
           }
         />
         <DropdownMenuContent align="end">
           <DropdownMenuItem onClick={() => router.push(`/inventory-items/${record.id}`)}>
-            View
+            {t('common.action.view')}
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           {statusOptions.map((opt) => (
@@ -121,12 +121,12 @@ export function InventoryPage() {
                 })
               }
             >
-              Set: {opt.label}
+              {t('inventory.setStatus', { label: opt.label })}
             </DropdownMenuItem>
           ))}
           <DropdownMenuSeparator />
           <DropdownMenuItem className="text-destructive" onClick={() => setDeleting(record)}>
-            Delete
+            {t('common.action.delete')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -139,29 +139,21 @@ export function InventoryPage() {
 
   return (
     <div className="space-y-5">
-      <PageHeader
-        title="Inventory Items"
-        description="Track your rental inventory by serial code and condition."
-        actions={
-          <Button onClick={() => setFormOpen(true)}>
-            <Plus className="size-4" />
-            New item
-          </Button>
-        }
-      />
-
-      <ListToolbar
+      <ListPageHeader
+        title={t('inventory.title')}
+        description={t('inventory.subtitle')}
         search={pagination.search}
         onSearchChange={pagination.setSearch}
-        searchPlaceholder="Search serial or barcode…"
+        searchPlaceholder={t('inventory.searchPlaceholder')}
         filters={
           <>
             <NativeSelect
               value={pagination.filters.branchId ?? ''}
               onChange={(e) => pagination.setFilter('branchId', e.target.value || undefined)}
-              aria-label="Branch filter"
+              aria-label={t('inventory.branch')}
+              className="bg-card"
             >
-              <NativeSelectOption value="">All branches</NativeSelectOption>
+              <NativeSelectOption value="">{t('inventory.allBranches')}</NativeSelectOption>
               {branchOptions.map((b) => (
                 <NativeSelectOption key={b.value} value={b.value}>
                   {b.label}
@@ -171,9 +163,10 @@ export function InventoryPage() {
             <NativeSelect
               value={pagination.filters.productId ?? ''}
               onChange={(e) => pagination.setFilter('productId', e.target.value || undefined)}
-              aria-label="Product filter"
+              aria-label={t('inventory.product')}
+              className="bg-card"
             >
-              <NativeSelectOption value="">All products</NativeSelectOption>
+              <NativeSelectOption value="">{t('inventory.allProducts')}</NativeSelectOption>
               {productOptions.map((p) => (
                 <NativeSelectOption key={p.value} value={p.value}>
                   {p.label}
@@ -183,9 +176,10 @@ export function InventoryPage() {
             <NativeSelect
               value={pagination.filters.sizeId ?? ''}
               onChange={(e) => pagination.setFilter('sizeId', e.target.value || undefined)}
-              aria-label="Size filter"
+              aria-label={t('inventory.size')}
+              className="bg-card"
             >
-              <NativeSelectOption value="">All sizes</NativeSelectOption>
+              <NativeSelectOption value="">{t('inventory.allSizes')}</NativeSelectOption>
               {sizeOptions.map((s) => (
                 <NativeSelectOption key={s.value} value={s.value}>
                   {s.label}
@@ -195,9 +189,10 @@ export function InventoryPage() {
             <NativeSelect
               value={pagination.filters.status ?? ''}
               onChange={(e) => pagination.setFilter('status', e.target.value || undefined)}
-              aria-label="Status filter"
+              aria-label={t('inventory.status')}
+              className="bg-card"
             >
-              <NativeSelectOption value="">All statuses</NativeSelectOption>
+              <NativeSelectOption value="">{t('inventory.allStatuses')}</NativeSelectOption>
               {statusOptions.map((opt) => (
                 <NativeSelectOption key={opt.value} value={opt.value}>
                   {opt.label}
@@ -207,9 +202,10 @@ export function InventoryPage() {
             <NativeSelect
               value={pagination.filters.conditionStatus ?? ''}
               onChange={(e) => pagination.setFilter('conditionStatus', e.target.value || undefined)}
-              aria-label="Condition filter"
+              aria-label={t('inventory.condition')}
+              className="bg-card"
             >
-              <NativeSelectOption value="">All conditions</NativeSelectOption>
+              <NativeSelectOption value="">{t('inventory.allConditions')}</NativeSelectOption>
               {conditionOptions.map((opt) => (
                 <NativeSelectOption key={opt.value} value={opt.value}>
                   {opt.label}
@@ -218,55 +214,29 @@ export function InventoryPage() {
             </NativeSelect>
           </>
         }
+        actions={
+          <Button onClick={() => setFormOpen(true)}>
+            <Plus className="size-4" />
+            {t('inventory.newItem')}
+          </Button>
+        }
       />
 
-      <ListView
+      <DataTableView
         columns={columns}
         rows={data?.items ?? []}
-        getRowId={(r) => r.id}
         isLoading={list.isLoading}
         isError={list.isError}
         error={list.error}
         onRetry={() => list.refetch()}
-        emptyTitle="No inventory items yet"
-        emptyDescription="Create your first inventory item to get started."
-        emptyAction={
-          <Button onClick={() => setFormOpen(true)} size="sm">
-            <Plus className="size-4" />
-            New item
-          </Button>
-        }
+        emptyTitle={t('inventory.emptyTitle')}
         onRowClick={(r) => router.push(`/inventory-items/${r.id}`)}
-        mobileCard={(r) => (
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="font-medium">{r.serialCode}</span>
-              <StatusBadge meta={INVENTORY_STATUS_META[r.status]} />
-            </div>
-            <div className="text-muted-foreground text-sm">
-              {productMap[r.productId] ?? r.productId}
-              {sizeMap[r.sizeId] ? ` · ${sizeMap[r.sizeId]}` : ''}
-            </div>
-            <div className="flex items-center gap-2">
-              <StatusBadge meta={CONDITION_STATUS_META[r.conditionStatus]} />
-              {branchMap[r.branchId] ? (
-                <span className="text-muted-foreground text-xs">{branchMap[r.branchId]}</span>
-              ) : null}
-            </div>
-          </div>
-        )}
+        page={data?.page ?? pagination.page}
+        pageSize={data?.pageSize ?? pagination.pageSize}
+        total={data?.total ?? 0}
+        onPageChange={pagination.setPage}
+        onPageSizeChange={pagination.setPageSize}
       />
-
-      {data ? (
-        <PaginationBar
-          page={data.page}
-          pageSize={data.pageSize}
-          total={data.total}
-          totalPages={data.totalPages}
-          onPageChange={pagination.setPage}
-          onPageSizeChange={pagination.setPageSize}
-        />
-      ) : null}
 
       <InventoryForm
         open={formOpen}
@@ -281,17 +251,14 @@ export function InventoryPage() {
       <ConfirmDialog
         open={Boolean(deleting)}
         onOpenChange={(open) => !open && setDeleting(null)}
-        title="Delete inventory item?"
+        title={t('common.confirm.deleteTitle', { item: t('inventory.title') })}
         description={
-          deleting ? (
-            <>
-              Item <strong>{deleting.serialCode}</strong> will be permanently removed. This cannot
-              be undone.
-            </>
-          ) : null
+          deleting
+            ? t('inventory.deleteDesc', { serial: deleting.serialCode })
+            : null
         }
         destructive
-        confirmText="Delete"
+        confirmText={t('common.action.delete')}
         loading={deleteMutation.isPending}
         onConfirm={() => {
           if (!deleting) return;

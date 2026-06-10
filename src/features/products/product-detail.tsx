@@ -11,6 +11,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Separator } from '@/components/ui/separator';
 import { ACTIVE_STATUS_META } from '@/constants/enum-labels';
 import { formatCurrency, formatDateTime } from '@/lib/format';
+import { useT } from '@/i18n/locale-provider';
 import { useProduct, useProductLookups } from './use-products';
 
 interface ProductDetailProps {
@@ -19,6 +20,7 @@ interface ProductDetailProps {
 
 export function ProductDetail({ id }: ProductDetailProps) {
   const router = useRouter();
+  const { t } = useT();
   const { data: product, isLoading, isError, error, refetch } = useProduct(id);
   const lookups = useProductLookups();
 
@@ -60,11 +62,11 @@ export function ProductDetail({ id }: ProductDetailProps) {
           <div className="flex items-center gap-2">
             <Button variant="outline" onClick={() => router.back()}>
               <ArrowLeft className="size-4" />
-              Back
+              {t('common.action.back')}
             </Button>
             <Button onClick={() => router.push(`/products/${product.id}/edit`)}>
               <Edit className="size-4" />
-              Edit
+              {t('common.action.edit')}
             </Button>
           </div>
         }
@@ -89,7 +91,7 @@ export function ProductDetail({ id }: ProductDetailProps) {
               />
               {img.isPrimary && (
                 <span className="absolute bottom-1 left-1 rounded bg-black/60 px-1.5 py-0.5 text-[10px] text-white">
-                  Primary
+                  {t('products.primary')}
                 </span>
               )}
             </div>
@@ -101,31 +103,31 @@ export function ProductDetail({ id }: ProductDetailProps) {
         {/* Main details */}
         <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle className="text-base">Product details</CardTitle>
+            <CardTitle className="text-base">{t('products.detail.title')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid gap-4 sm:grid-cols-2">
-              <DetailField label="Code" value={product.code} />
-              <DetailField label="Name" value={product.name} />
-              <DetailField label="Product type" value={typeName} />
-              <DetailField label="Product group" value={groupName} />
-              <DetailField label="Unit" value={unitName} />
+              <DetailField label={t('products.code')} value={product.code} />
+              <DetailField label={t('products.name')} value={product.name} />
+              <DetailField label={t('products.productType')} value={typeName} />
+              <DetailField label={t('products.productGroup')} value={groupName} />
+              <DetailField label={t('products.unit')} value={unitName} />
               <DetailField
-                label="Status"
+                label={t('common.table.status')}
                 value={<StatusBadge meta={ACTIVE_STATUS_META[product.status]} />}
               />
             </div>
             {product.description && (
               <>
                 <Separator />
-                <DetailField label="Description" value={product.description} />
+                <DetailField label={t('products.description')} value={product.description} />
               </>
             )}
             {sizeNames.length > 0 && (
               <>
                 <Separator />
                 <DetailField
-                  label="Sizes"
+                  label={t('products.sizes')}
                   value={
                     <div className="flex flex-wrap gap-1.5">
                       {sizeNames.map((name) => (
@@ -148,21 +150,21 @@ export function ProductDetail({ id }: ProductDetailProps) {
         <div className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">Pricing</CardTitle>
+              <CardTitle className="text-base">{t('products.detail.pricing')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              <DetailField label="Rental price" value={formatCurrency(product.rentalPrice)} />
-              <DetailField label="Deposit price" value={formatCurrency(product.depositPrice)} />
+              <DetailField label={t('products.rentalPrice')} value={formatCurrency(product.rentalPrice)} />
+              <DetailField label={t('products.depositPrice')} value={formatCurrency(product.depositPrice)} />
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">Timestamps</CardTitle>
+              <CardTitle className="text-base">{t('products.detail.timestamps')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              <DetailField label="Created" value={formatDateTime(product.createdAt)} />
-              <DetailField label="Updated" value={formatDateTime(product.updatedAt)} />
+              <DetailField label={t('common.table.created')} value={formatDateTime(product.createdAt)} />
+              <DetailField label={t('common.table.updated')} value={formatDateTime(product.updatedAt)} />
             </CardContent>
           </Card>
         </div>

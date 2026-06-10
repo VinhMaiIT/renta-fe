@@ -6,10 +6,9 @@ import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useLogin } from './use-auth';
-import { DEFAULT_TENANT_ID } from '@/constants/config';
+import { useT } from '@/i18n/locale-provider';
 
 const schema = z.object({
-  tenantId: z.string().min(1, 'Tenant ID is required'),
   username: z.string().min(1, 'Username is required'),
   password: z.string().min(1, 'Password is required'),
 });
@@ -18,13 +17,14 @@ type LoginValues = z.infer<typeof schema>;
 
 export function LoginForm() {
   const login = useLogin();
+  const { t } = useT();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<LoginValues>({
     resolver: zodResolver(schema),
-    defaultValues: { tenantId: DEFAULT_TENANT_ID, username: '', password: '' },
+    defaultValues: { username: '', password: '' },
   });
 
   return (
@@ -34,29 +34,25 @@ export function LoginForm() {
       noValidate
     >
       <Input
-        label="Tenant ID"
+        label={t('auth.username')}
         required
-        error={errors.tenantId?.message}
-        {...register('tenantId')}
-      />
-      <Input
-        label="Username"
-        required
+        size="lg"
         autoComplete="username"
-        placeholder="staff01"
+        placeholder="admin"
         error={errors.username?.message}
         {...register('username')}
       />
       <Input
-        label="Password"
+        label={t('auth.password')}
         required
+        size="lg"
         type="password"
         autoComplete="current-password"
         error={errors.password?.message}
         {...register('password')}
       />
-      <Button type="submit" className="w-full" loading={login.isPending}>
-        Sign in
+      <Button type="submit" size="lg" className="mt-1 w-full" loading={login.isPending}>
+        {t('auth.signIn')}
       </Button>
     </form>
   );

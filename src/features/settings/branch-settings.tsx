@@ -5,6 +5,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { StatusBadge } from '@/components/common/status-badge';
 import { ACTIVE_STATUS_META } from '@/constants/enum-labels';
 import { useBranchContext } from '@/features/branches/use-branches';
+import { useT } from '@/i18n/locale-provider';
 import { cn } from '@/lib/utils';
 import type { Branch } from '@/types/models';
 
@@ -12,10 +13,12 @@ function BranchItem({
   branch,
   isActive,
   onSelect,
+  mainLabel,
 }: {
   branch: Branch;
   isActive: boolean;
   onSelect: (id: string) => void;
+  mainLabel: string;
 }) {
   return (
     <button
@@ -41,7 +44,7 @@ function BranchItem({
           <span className="text-muted-foreground text-xs">({branch.code})</span>
           {branch.isMain ? (
             <span className="bg-primary/10 text-primary rounded px-1.5 py-0.5 text-xs font-medium">
-              Main
+              {mainLabel}
             </span>
           ) : null}
           <StatusBadge meta={ACTIVE_STATUS_META[branch.status]} />
@@ -54,6 +57,7 @@ function BranchItem({
 
 export function BranchSettings() {
   const { branches, activeBranchId, isLoading, setBranch } = useBranchContext();
+  const { t } = useT();
 
   if (isLoading) {
     return (
@@ -66,14 +70,12 @@ export function BranchSettings() {
   }
 
   if (branches.length === 0) {
-    return <p className="text-muted-foreground text-sm">No branches found for your account.</p>;
+    return <p className="text-muted-foreground text-sm">{t('settings.branch.notFound')}</p>;
   }
 
   return (
     <div className="space-y-3">
-      <p className="text-muted-foreground text-sm">
-        Select the branch you want to work in. Your active branch affects which data you see.
-      </p>
+      <p className="text-muted-foreground text-sm">{t('settings.branch.selectDesc')}</p>
       <div className="space-y-2">
         {branches.map((branch) => (
           <BranchItem
@@ -81,6 +83,7 @@ export function BranchSettings() {
             branch={branch}
             isActive={branch.id === activeBranchId}
             onSelect={setBranch}
+            mainLabel={t('settings.branch.main')}
           />
         ))}
       </div>

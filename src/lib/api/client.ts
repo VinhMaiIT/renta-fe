@@ -35,7 +35,7 @@ async function runRefresh(): Promise<string | null> {
   if (!refreshToken) return null;
   try {
     const { data } = await axios.post<ApiResponse<AuthTokens>>(
-      `${API_BASE_URL}/tenant/auth/refresh`,
+      `${API_BASE_URL}/auth/refresh`,
       { refreshToken },
       { adapter: USE_MOCKS ? mockAdapter : undefined },
     );

@@ -10,6 +10,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Spinner } from '@/components/ui/spinner';
 import { EmptyState, ErrorState } from '@/components/common/states';
 import { formatCurrency } from '@/lib/format';
+import { useT } from '@/i18n/locale-provider';
 import { cn } from '@/lib/utils';
 import type { InventoryItem, Product } from '@/types/models';
 import type { PaginatedResponse } from '@/types/api';
@@ -21,6 +22,7 @@ interface StepInventoryProps {
 }
 
 export function StepInventory({ state, update }: StepInventoryProps) {
+  const { t } = useT();
   const { tenantId, branchId } = useTenantContext();
   const [search, setSearch] = useState('');
 
@@ -87,8 +89,8 @@ export function StepInventory({ state, update }: StepInventoryProps) {
   if (!branchId) {
     return (
       <ErrorState
-        title="No active branch"
-        description="Select an active branch before adding inventory items."
+        title={t('rentalOrders.wizard.noBranch')}
+        description={t('rentalOrders.wizard.noBranchDesc')}
       />
     );
   }
@@ -109,21 +111,23 @@ export function StepInventory({ state, update }: StepInventoryProps) {
       <div className="flex items-center justify-between gap-3">
         <Input
           className="max-w-xs"
-          placeholder="Search serial or barcode…"
+          placeholder={t('rentalOrders.wizard.selectItems')}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <span className="text-muted-foreground text-sm">{state.items.length} selected</span>
+        <span className="text-muted-foreground text-sm">
+          {t('rentalOrders.wizard.selected', { count: state.items.length })}
+        </span>
       </div>
 
       {inventoryQuery.isLoading || productsQuery.isLoading ? (
         <div className="text-muted-foreground flex items-center gap-2 p-4 text-sm">
-          <Spinner /> Loading inventory…
+          <Spinner /> {t('rentalOrders.wizard.loadingInventory')}
         </div>
       ) : filtered.length === 0 ? (
         <EmptyState
-          title="No available items"
-          description="No available inventory items match this branch and search."
+          title={t('rentalOrders.wizard.noAvailable')}
+          description={t('rentalOrders.wizard.noAvailableDesc')}
         />
       ) : (
         <div className="flex max-h-[420px] flex-col gap-2 overflow-y-auto">
@@ -142,13 +146,14 @@ export function StepInventory({ state, update }: StepInventoryProps) {
                 <Checkbox
                   checked={Boolean(selected)}
                   onCheckedChange={() => toggle(inv)}
-                  aria-label={`Select ${inv.serialCode}`}
+                  aria-label={t('rentalOrders.wizard.selectAriaLabel', { serialCode: inv.serialCode })}
                 />
                 <button type="button" onClick={() => toggle(inv)} className="flex-1 text-left">
                   <p className="font-medium">{inv.serialCode}</p>
                   <p className="text-muted-foreground text-xs">
                     {product?.name ?? inv.productId}
-                    {' · default '}
+                    {' · '}
+                    {t('rentalOrders.wizard.defaultPrice')}{' '}
                     {formatCurrency(product?.rentalPrice ?? 0)}
                   </p>
                 </button>
@@ -158,7 +163,7 @@ export function StepInventory({ state, update }: StepInventoryProps) {
                     min={0}
                     size="sm"
                     className="w-32"
-                    aria-label={`Price for ${inv.serialCode}`}
+                    aria-label={t('rentalOrders.wizard.priceAriaLabel', { serialCode: inv.serialCode })}
                     value={selected.price}
                     onChange={(e) => setPrice(inv.id, Number(e.target.value) || 0)}
                   />

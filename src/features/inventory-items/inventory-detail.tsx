@@ -8,7 +8,9 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select';
 import { StatusBadge } from '@/components/common/status-badge';
 import { ErrorState } from '@/components/common/states';
-import { INVENTORY_STATUS_META, CONDITION_STATUS_META, toOptions } from '@/constants/enum-labels';
+import { useEnumOptions } from '@/hooks/use-enum-options';
+import { INVENTORY_STATUS_META, CONDITION_STATUS_META } from '@/constants/enum-labels';
+import { useT } from '@/i18n/locale-provider';
 import { formatDateTime } from '@/lib/format';
 import type { InventoryItemStatus, InventoryItemConditionStatus } from '@/types/enums';
 import {
@@ -18,19 +20,20 @@ import {
   useInventoryLookups,
 } from './use-inventory';
 
-const statusOptions = toOptions(INVENTORY_STATUS_META);
-const conditionOptions = toOptions(CONDITION_STATUS_META);
-
 interface InventoryDetailProps {
   id: string;
 }
 
 export function InventoryDetail({ id }: InventoryDetailProps) {
+  const { t } = useT();
   const router = useRouter();
   const { data: item, isLoading, isError, error, refetch } = useInventoryItem(id);
   const setStatusMutation = useSetInventoryStatus();
   const setConditionMutation = useSetInventoryCondition();
   const { productMap, sizeMap, branchMap } = useInventoryLookups();
+
+  const statusOptions = useEnumOptions(INVENTORY_STATUS_META);
+  const conditionOptions = useEnumOptions(CONDITION_STATUS_META);
 
   if (isLoading) {
     return (
@@ -61,7 +64,7 @@ export function InventoryDetail({ id }: InventoryDetailProps) {
       <div className="space-y-5">
         <Button variant="ghost" onClick={() => router.back()}>
           <ArrowLeft className="size-4" />
-          Back
+          {t('common.action.back')}
         </Button>
         <ErrorState
           description={error instanceof Error ? error.message : undefined}
@@ -76,7 +79,7 @@ export function InventoryDetail({ id }: InventoryDetailProps) {
       <div className="flex items-center gap-3">
         <Button variant="ghost" size="sm" onClick={() => router.back()}>
           <ArrowLeft className="size-4" />
-          Back
+          {t('common.action.back')}
         </Button>
         <h1 className="text-xl font-semibold">{item.serialCode}</h1>
       </div>
@@ -85,40 +88,40 @@ export function InventoryDetail({ id }: InventoryDetailProps) {
         {/* Main details */}
         <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle>Item Details</CardTitle>
+            <CardTitle>{t('inventory.detail')}</CardTitle>
           </CardHeader>
           <CardContent>
             <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <dt className="text-muted-foreground text-sm">Serial Code</dt>
+                <dt className="text-muted-foreground text-sm">{t('inventory.serial')}</dt>
                 <dd className="mt-1 font-medium">{item.serialCode}</dd>
               </div>
               <div>
-                <dt className="text-muted-foreground text-sm">Barcode</dt>
+                <dt className="text-muted-foreground text-sm">{t('inventory.barcode')}</dt>
                 <dd className="mt-1">{item.barcode ?? '—'}</dd>
               </div>
               <div>
-                <dt className="text-muted-foreground text-sm">Product</dt>
+                <dt className="text-muted-foreground text-sm">{t('inventory.product')}</dt>
                 <dd className="mt-1">{productMap[item.productId] ?? item.productId}</dd>
               </div>
               <div>
-                <dt className="text-muted-foreground text-sm">Size</dt>
+                <dt className="text-muted-foreground text-sm">{t('inventory.size')}</dt>
                 <dd className="mt-1">{sizeMap[item.sizeId] ?? item.sizeId}</dd>
               </div>
               <div>
-                <dt className="text-muted-foreground text-sm">Branch</dt>
+                <dt className="text-muted-foreground text-sm">{t('inventory.branch')}</dt>
                 <dd className="mt-1">{branchMap[item.branchId] ?? item.branchId}</dd>
               </div>
               <div>
-                <dt className="text-muted-foreground text-sm">Note</dt>
+                <dt className="text-muted-foreground text-sm">{t('inventory.note')}</dt>
                 <dd className="mt-1">{item.note ?? '—'}</dd>
               </div>
               <div>
-                <dt className="text-muted-foreground text-sm">Created</dt>
+                <dt className="text-muted-foreground text-sm">{t('common.table.created')}</dt>
                 <dd className="mt-1">{formatDateTime(item.createdAt)}</dd>
               </div>
               <div>
-                <dt className="text-muted-foreground text-sm">Updated</dt>
+                <dt className="text-muted-foreground text-sm">{t('common.table.updated')}</dt>
                 <dd className="mt-1">{formatDateTime(item.updatedAt)}</dd>
               </div>
             </dl>
@@ -129,14 +132,16 @@ export function InventoryDetail({ id }: InventoryDetailProps) {
         <div className="space-y-5">
           <Card>
             <CardHeader>
-              <CardTitle>Status</CardTitle>
+              <CardTitle>{t('inventory.status')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center gap-2">
                 <StatusBadge meta={INVENTORY_STATUS_META[item.status]} />
               </div>
               <div>
-                <label className="text-muted-foreground mb-1.5 block text-sm">Change status</label>
+                <label className="text-muted-foreground mb-1.5 block text-sm">
+                  {t('inventory.changeStatus')}
+                </label>
                 <NativeSelect
                   value={item.status}
                   disabled={setStatusMutation.isPending}
@@ -146,7 +151,7 @@ export function InventoryDetail({ id }: InventoryDetailProps) {
                       setStatusMutation.mutate({ id: item.id, status: newStatus });
                     }
                   }}
-                  aria-label="Change inventory status"
+                  aria-label={t('inventory.changeStatus')}
                 >
                   {statusOptions.map((opt) => (
                     <NativeSelectOption key={opt.value} value={opt.value}>
@@ -160,7 +165,7 @@ export function InventoryDetail({ id }: InventoryDetailProps) {
 
           <Card>
             <CardHeader>
-              <CardTitle>Condition</CardTitle>
+              <CardTitle>{t('inventory.condition')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center gap-2">
@@ -168,7 +173,7 @@ export function InventoryDetail({ id }: InventoryDetailProps) {
               </div>
               <div>
                 <label className="text-muted-foreground mb-1.5 block text-sm">
-                  Change condition
+                  {t('inventory.changeCondition')}
                 </label>
                 <NativeSelect
                   value={item.conditionStatus}
@@ -179,7 +184,7 @@ export function InventoryDetail({ id }: InventoryDetailProps) {
                       setConditionMutation.mutate({ id: item.id, conditionStatus: newCondition });
                     }
                   }}
-                  aria-label="Change inventory condition"
+                  aria-label={t('inventory.changeCondition')}
                 >
                   {conditionOptions.map((opt) => (
                     <NativeSelectOption key={opt.value} value={opt.value}>

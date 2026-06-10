@@ -8,6 +8,9 @@ export interface StoredSession {
   userId: string;
   branchId: string | null;
   username: string;
+  fullName: string;
+  userType: string;
+  isAdmin: boolean;
 }
 
 export interface JwtPayload {

@@ -16,9 +16,11 @@ import {
 } from '@/components/ui/sidebar';
 import { NAV_SECTIONS } from '@/constants/navigation';
 import { APP_NAME, APP_TAGLINE } from '@/constants/config';
+import { useT } from '@/i18n/locale-provider';
 
 export function AppSidebar() {
   const pathname = usePathname();
+  const { t } = useT();
 
   return (
     <Sidebar collapsible="icon">
@@ -35,21 +37,22 @@ export function AppSidebar() {
       </SidebarHeader>
       <SidebarContent>
         {NAV_SECTIONS.map((section) => (
-          <SidebarGroup key={section.label}>
-            <SidebarGroupLabel>{section.label}</SidebarGroupLabel>
+          <SidebarGroup key={section.labelKey}>
+            <SidebarGroupLabel>{t(section.labelKey)}</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 {section.items.map((item) => {
                   const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
+                  const label = t(item.labelKey);
                   return (
                     <SidebarMenuItem key={item.href}>
                       <SidebarMenuButton
                         isActive={active}
-                        tooltip={item.label}
+                        tooltip={label}
                         render={<Link href={item.href} />}
                       >
                         <item.icon />
-                        <span>{item.label}</span>
+                        <span>{label}</span>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                   );

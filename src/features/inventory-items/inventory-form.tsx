@@ -16,19 +16,21 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { SelectField } from '@/components/forms/select-field';
-import { INVENTORY_STATUS_META, CONDITION_STATUS_META, toOptions } from '@/constants/enum-labels';
+import { useEnumOptions } from '@/hooks/use-enum-options';
+import { INVENTORY_STATUS_META, CONDITION_STATUS_META } from '@/constants/enum-labels';
+import { useT } from '@/i18n/locale-provider';
 import { useTenantContext } from '@/hooks/use-tenant-context';
 import type { InventoryCreateInput } from './api';
 import type { SelectOption } from '@/components/forms/select-field';
 
 const schema = z.object({
-  branchId: z.string().min(1, 'Branch is required'),
-  productId: z.string().min(1, 'Product is required'),
-  sizeId: z.string().min(1, 'Size is required'),
-  serialCode: z.string().min(1, 'Serial code is required').max(255),
+  branchId: z.string().min(1),
+  productId: z.string().min(1),
+  sizeId: z.string().min(1),
+  serialCode: z.string().min(1).max(255),
   barcode: z.string().max(255).optional().or(z.literal('')),
-  status: z.string().min(1, 'Status is required'),
-  conditionStatus: z.string().min(1, 'Condition is required'),
+  status: z.string().min(1),
+  conditionStatus: z.string().min(1),
   note: z.string().optional().or(z.literal('')),
 });
 
@@ -44,9 +46,6 @@ interface InventoryFormProps {
   onSubmit: (input: Omit<InventoryCreateInput, 'tenantId'>) => void;
 }
 
-const statusOptions = toOptions(INVENTORY_STATUS_META);
-const conditionOptions = toOptions(CONDITION_STATUS_META);
-
 export function InventoryForm({
   open,
   onOpenChange,
@@ -56,7 +55,11 @@ export function InventoryForm({
   sizeOptions,
   onSubmit,
 }: InventoryFormProps) {
+  const { t } = useT();
   const { branchId: activeBranchId } = useTenantContext();
+
+  const statusOptions = useEnumOptions(INVENTORY_STATUS_META);
+  const conditionOptions = useEnumOptions(CONDITION_STATUS_META);
 
   const {
     register,
@@ -109,52 +112,52 @@ export function InventoryForm({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>New inventory item</DialogTitle>
-          <DialogDescription>Add a new inventory item to track.</DialogDescription>
+          <DialogTitle>{t('inventory.form.createTitle')}</DialogTitle>
+          <DialogDescription>{t('inventory.form.createDesc')}</DialogDescription>
         </DialogHeader>
         <form id="inventory-form" onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
           <SelectField
-            label="Branch"
+            label={t('inventory.branch')}
             required
             error={errors.branchId?.message}
             options={branchOptions}
-            placeholder="Select branch…"
+            placeholder={t('inventory.form.selectBranch')}
             id="branchId"
             {...register('branchId')}
           />
           <SelectField
-            label="Product"
+            label={t('inventory.product')}
             required
             error={errors.productId?.message}
             options={productOptions}
-            placeholder="Select product…"
+            placeholder={t('inventory.form.selectProduct')}
             id="productId"
             {...register('productId')}
           />
           <SelectField
-            label="Size"
+            label={t('inventory.size')}
             required
             error={errors.sizeId?.message}
             options={sizeOptions}
-            placeholder="Select size…"
+            placeholder={t('inventory.form.selectSize')}
             id="sizeId"
             {...register('sizeId')}
           />
           <Input
-            label="Serial code"
+            label={t('inventory.serial')}
             required
             error={errors.serialCode?.message}
-            placeholder="e.g. SN-001"
+            placeholder={t('inventory.form.serialPlaceholder')}
             {...register('serialCode')}
           />
           <Input
-            label="Barcode"
+            label={t('inventory.barcode')}
             error={errors.barcode?.message}
-            placeholder="Optional barcode"
+            placeholder={t('inventory.form.barcodePlaceholder')}
             {...register('barcode')}
           />
           <SelectField
-            label="Status"
+            label={t('inventory.status')}
             required
             error={errors.status?.message}
             options={statusOptions}
@@ -162,7 +165,7 @@ export function InventoryForm({
             {...register('status')}
           />
           <SelectField
-            label="Condition"
+            label={t('inventory.condition')}
             required
             error={errors.conditionStatus?.message}
             options={conditionOptions}
@@ -170,19 +173,19 @@ export function InventoryForm({
             {...register('conditionStatus')}
           />
           <Textarea
-            label="Note"
+            label={t('inventory.note')}
             error={errors.note?.message}
-            placeholder="Optional note…"
+            placeholder={t('inventory.form.notePlaceholder')}
             rows={3}
             {...register('note')}
           />
         </form>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)} disabled={loading}>
-            Cancel
+            {t('common.action.cancel')}
           </Button>
           <Button type="submit" form="inventory-form" loading={loading}>
-            Create
+            {t('common.action.create')}
           </Button>
         </DialogFooter>
       </DialogContent>

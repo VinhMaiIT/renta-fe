@@ -6,9 +6,12 @@ import type {
   RentalOrderStatus,
 } from '@/types/enums';
 
-/** Tailwind classes for a status pill (works in light + dark). */
+/**
+ * Status display metadata. `key` is an i18n path (resolved by `t()` in
+ * {@link StatusBadge} / {@link useEnumOptions}); `className` is the pill styling.
+ */
 export interface StatusMeta {
-  label: string;
+  key: string;
   className: string;
 }
 
@@ -22,47 +25,40 @@ const TONE = {
 } as const;
 
 export const ACTIVE_STATUS_META: Record<ActiveStatus, StatusMeta> = {
-  ACTIVE: { label: 'Active', className: TONE.green },
-  INACTIVE: { label: 'Inactive', className: TONE.neutral },
+  ACTIVE: { key: 'enums.activeStatus.ACTIVE', className: TONE.green },
+  INACTIVE: { key: 'enums.activeStatus.INACTIVE', className: TONE.neutral },
 };
 
 export const INVENTORY_STATUS_META: Record<InventoryItemStatus, StatusMeta> = {
-  AVAILABLE: { label: 'Available', className: TONE.green },
-  RENTED: { label: 'Rented', className: TONE.blue },
-  MAINTENANCE: { label: 'Maintenance', className: TONE.amber },
-  LOST: { label: 'Lost', className: TONE.red },
-  DISABLED: { label: 'Disabled', className: TONE.neutral },
+  AVAILABLE: { key: 'enums.inventoryStatus.AVAILABLE', className: TONE.green },
+  RENTED: { key: 'enums.inventoryStatus.RENTED', className: TONE.blue },
+  MAINTENANCE: { key: 'enums.inventoryStatus.MAINTENANCE', className: TONE.amber },
+  LOST: { key: 'enums.inventoryStatus.LOST', className: TONE.red },
+  DISABLED: { key: 'enums.inventoryStatus.DISABLED', className: TONE.neutral },
 };
 
 export const CONDITION_STATUS_META: Record<InventoryItemConditionStatus, StatusMeta> = {
-  NEW: { label: 'New', className: TONE.green },
-  GOOD: { label: 'Good', className: TONE.green },
-  FAIR: { label: 'Fair', className: TONE.slate },
-  NEEDS_CLEANING: { label: 'Needs Cleaning', className: TONE.amber },
-  NEEDS_REPAIR: { label: 'Needs Repair', className: TONE.amber },
-  DAMAGED: { label: 'Damaged', className: TONE.red },
+  NEW: { key: 'enums.condition.NEW', className: TONE.green },
+  GOOD: { key: 'enums.condition.GOOD', className: TONE.green },
+  FAIR: { key: 'enums.condition.FAIR', className: TONE.slate },
+  NEEDS_CLEANING: { key: 'enums.condition.NEEDS_CLEANING', className: TONE.amber },
+  NEEDS_REPAIR: { key: 'enums.condition.NEEDS_REPAIR', className: TONE.amber },
+  DAMAGED: { key: 'enums.condition.DAMAGED', className: TONE.red },
 };
 
 export const RENTAL_ORDER_STATUS_META: Record<RentalOrderStatus, StatusMeta> = {
-  DRAFT: { label: 'Draft', className: TONE.neutral },
-  RENTING: { label: 'Renting', className: TONE.blue },
-  PARTIALLY_RETURNED: { label: 'Partially Returned', className: TONE.amber },
-  RETURNED: { label: 'Returned', className: TONE.green },
-  OVERDUE: { label: 'Overdue', className: TONE.red },
-  CANCELLED: { label: 'Cancelled', className: TONE.slate },
+  DRAFT: { key: 'enums.orderStatus.DRAFT', className: TONE.neutral },
+  RENTING: { key: 'enums.orderStatus.RENTING', className: TONE.blue },
+  PARTIALLY_RETURNED: { key: 'enums.orderStatus.PARTIALLY_RETURNED', className: TONE.amber },
+  RETURNED: { key: 'enums.orderStatus.RETURNED', className: TONE.green },
+  OVERDUE: { key: 'enums.orderStatus.OVERDUE', className: TONE.red },
+  CANCELLED: { key: 'enums.orderStatus.CANCELLED', className: TONE.slate },
 };
 
 export const RENTAL_ORDER_ITEM_STATUS_META: Record<RentalOrderItemStatus, StatusMeta> = {
-  RENTED: { label: 'Rented', className: TONE.blue },
-  RETURNED: { label: 'Returned', className: TONE.green },
-  LOST: { label: 'Lost', className: TONE.red },
-  DAMAGED: { label: 'Damaged', className: TONE.red },
-  CANCELLED: { label: 'Cancelled', className: TONE.slate },
+  RENTED: { key: 'enums.orderItemStatus.RENTED', className: TONE.blue },
+  RETURNED: { key: 'enums.orderItemStatus.RETURNED', className: TONE.green },
+  LOST: { key: 'enums.orderItemStatus.LOST', className: TONE.red },
+  DAMAGED: { key: 'enums.orderItemStatus.DAMAGED', className: TONE.red },
+  CANCELLED: { key: 'enums.orderItemStatus.CANCELLED', className: TONE.slate },
 };
-
-/** Build `{ value, label }` option lists for selects/filters. */
-export function toOptions<T extends string>(
-  meta: Record<T, StatusMeta>,
-): { value: T; label: string }[] {
-  return (Object.keys(meta) as T[]).map((value) => ({ value, label: meta[value].label }));
-}

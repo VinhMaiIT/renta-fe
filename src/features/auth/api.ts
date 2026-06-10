@@ -1,9 +1,8 @@
 import { http } from '@/lib/api/http';
-import type { AuthTokens, Branch, TenantUserBranch } from '@/types/models';
+import type { AuthTokens, AuthUser, Branch, TenantUserBranch } from '@/types/models';
 import type { PaginatedResponse } from '@/types/api';
 
-export interface TenantLoginInput {
-  tenantId: string;
+export interface LoginInput {
   username: string;
   password: string;
 }
@@ -14,14 +13,18 @@ export interface ChangePasswordInput {
 }
 
 export const authApi = {
-  login(input: TenantLoginInput): Promise<AuthTokens> {
-    return http.post<AuthTokens>('/tenant/auth/login', input);
+  login(input: LoginInput): Promise<AuthTokens> {
+    return http.post<AuthTokens>('/auth/login', input);
+  },
+  /** Current authenticated user + tenant context. */
+  me(): Promise<AuthUser> {
+    return http.get<AuthUser>('/auth/me');
   },
   refresh(refreshToken: string): Promise<AuthTokens> {
-    return http.post<AuthTokens>('/tenant/auth/refresh', { refreshToken });
+    return http.post<AuthTokens>('/auth/refresh', { refreshToken });
   },
   changePassword(input: ChangePasswordInput): Promise<void> {
-    return http.post<void>('/tenant/auth/change-password', input);
+    return http.post<void>('/auth/change-password', input);
   },
   /** Branch assignments for a tenant user (used to pick the default branch). */
   getUserBranches(userId: string): Promise<TenantUserBranch[]> {

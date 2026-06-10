@@ -34,7 +34,8 @@ component library.
 - **UX** — every screen has loading skeletons, empty states, error states with
   retry, success toasts, and confirmation dialogs. Fully responsive (desktop
   table → tablet compact → mobile cards + drawer sidebar + sticky actions).
-- **Dark / light mode** via `next-themes`.
+- **Dark / light mode** via `next-themes` (defaults to light; toggle on the login page, header, or Settings).
+- **Bilingual (Vietnamese / English)** — Vietnamese by default. Cookie-based locale so the server renders the right `<html lang>` and copy with no hydration flash; switch from the header or Settings → Appearance. Messages live in `src/i18n/messages/{en,vi}/<namespace>.ts`; use `const { t } = useT()` and `t('namespace.key', { vars })`.
 
 ## Quick start
 

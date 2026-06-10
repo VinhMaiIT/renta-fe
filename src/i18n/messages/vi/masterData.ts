@@ -1,0 +1,19 @@
+const masterData = {
+  sizes: { title: 'Kích cỡ', description: 'Quản lý các kích cỡ của sản phẩm cho thuê.', singular: 'kích cỡ' },
+  units: { title: 'Đơn vị', description: 'Quản lý đơn vị tính của sản phẩm.', singular: 'đơn vị' },
+  productTypes: { title: 'Loại sản phẩm', description: 'Phân loại sản phẩm theo loại.', singular: 'loại sản phẩm' },
+  productGroups: { title: 'Nhóm sản phẩm', description: 'Gom nhóm các sản phẩm liên quan.', singular: 'nhóm sản phẩm' },
+  newItem: 'Thêm {item}',
+  editItem: 'Sửa {item}',
+  createDesc: 'Tạo mới {item}.',
+  editDesc: 'Cập nhật thông tin bên dưới.',
+  name: 'Tên',
+  sortOrder: 'Thứ tự',
+  emptyTitle: 'Chưa có {items}',
+  emptyDesc: 'Tạo {item} đầu tiên để bắt đầu.',
+  searchPlaceholder: 'Tìm {items}…',
+  deleteDesc: '{name} sẽ bị xóa vĩnh viễn. Không thể hoàn tác.',
+  activate: 'Kích hoạt',
+  deactivate: 'Ngừng',
+} as const;
+export default masterData;
