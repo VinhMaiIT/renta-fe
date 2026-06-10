@@ -1,5 +1,5 @@
 import axios, { type AxiosRequestConfig, type InternalAxiosRequestConfig } from 'axios';
-import { API_BASE_URL, USE_MOCKS } from '@/constants/config';
+import { API_BASE_URL } from '@/constants/config';
 import {
   clearStoredSession,
   getAccessToken,
@@ -7,13 +7,10 @@ import {
   patchStoredSession,
 } from '@/lib/auth/tokens';
 import type { ApiResponse, AuthTokens } from '@/types';
-import { mockAdapter } from '@/mocks/adapter';
 
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,
   headers: { 'Content-Type': 'application/json' },
-  // Route through the in-memory mock backend unless a real API is configured.
-  adapter: USE_MOCKS ? mockAdapter : undefined,
 });
 
 // --- Request interceptor: attach the bearer token ----------------------------
@@ -37,7 +34,6 @@ async function runRefresh(): Promise<string | null> {
     const { data } = await axios.post<ApiResponse<AuthTokens>>(
       `${API_BASE_URL}/auth/refresh`,
       { refreshToken },
-      { adapter: USE_MOCKS ? mockAdapter : undefined },
     );
     const tokens = data.data;
     patchStoredSession({

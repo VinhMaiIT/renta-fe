@@ -4,7 +4,7 @@ import { BadgeCheck, Boxes, Package2, Receipt, ShieldCheck } from 'lucide-react'
 import { LoginForm } from '@/features/auth/login-form';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { LanguageSwitcher } from '@/components/layout/language-switcher';
-import { APP_NAME, DEFAULT_TENANT_ID, USE_MOCKS } from '@/constants/config';
+import { APP_NAME } from '@/constants/config';
 import { useT } from '@/i18n/locale-provider';
 
 // High-impact editorial photo (boutique / fashion rental vibe).
@@ -102,13 +102,6 @@ export function LoginScreen() {
           </div>
 
           <LoginForm />
-
-          {USE_MOCKS ? (
-            <div className="bg-muted/50 text-muted-foreground rounded-lg border border-dashed p-3 text-center text-xs">
-              <span className="text-foreground font-medium">{t('auth.demoMode')}</span> —{' '}
-              {t('auth.demoHint', { tenant: DEFAULT_TENANT_ID, user: 'staff01' })}
-            </div>
-          ) : null}
 
           <p className="text-muted-foreground text-center text-xs">{t('auth.terms')}</p>
         </div>

@@ -3,15 +3,6 @@
 export const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/$/, '') ?? 'http://localhost:3000/api';
 
-/**
- * When true, the API client routes through the in-memory mock adapter instead
- * of hitting the network. Enabled by default so the app runs without a backend.
- */
-export const USE_MOCKS = (process.env.NEXT_PUBLIC_USE_MOCKS ?? 'true') !== 'false';
-
-/** Fallback tenant id used to prefill the login form. */
-export const DEFAULT_TENANT_ID = process.env.NEXT_PUBLIC_DEFAULT_TENANT_ID ?? '1';
-
 export const APP_NAME = 'RENTA';
 export const APP_TAGLINE = 'Rental Management';
 export const APP_VERSION = '0.1.0';

@@ -14,13 +14,16 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { NAV_SECTIONS } from '@/constants/navigation';
+import { getNavSections } from '@/constants/navigation';
 import { APP_NAME, APP_TAGLINE } from '@/constants/config';
 import { useT } from '@/i18n/locale-provider';
+import { useSession } from '@/stores/auth-store';
 
 export function AppSidebar() {
   const pathname = usePathname();
   const { t } = useT();
+  const session = useSession();
+  const sections = getNavSections(session?.userType);
 
   return (
     <Sidebar collapsible="icon">
@@ -36,7 +39,7 @@ export function AppSidebar() {
         </Link>
       </SidebarHeader>
       <SidebarContent>
-        {NAV_SECTIONS.map((section) => (
+        {sections.map((section) => (
           <SidebarGroup key={section.labelKey}>
             <SidebarGroupLabel>{t(section.labelKey)}</SidebarGroupLabel>
             <SidebarGroupContent>

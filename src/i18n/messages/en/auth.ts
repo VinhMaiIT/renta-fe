@@ -5,8 +5,6 @@ const auth = {
   username: 'Username',
   password: 'Password',
   signIn: 'Sign in',
-  demoMode: 'Demo mode',
-  demoHint: 'tenant {tenant}, username {user}, any password.',
   terms: 'By signing in you agree to the acceptable-use policy.',
   loginSuccess: 'Welcome back',
   loginSuccessDesc: 'You are now signed in.',

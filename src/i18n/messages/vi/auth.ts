@@ -5,8 +5,6 @@ const auth = {
   username: 'Tên đăng nhập',
   password: 'Mật khẩu',
   signIn: 'Đăng nhập',
-  demoMode: 'Chế độ demo',
-  demoHint: 'đơn vị {tenant}, tài khoản {user}, mật khẩu bất kỳ.',
   terms: 'Bằng việc đăng nhập, bạn đồng ý với chính sách sử dụng.',
   loginSuccess: 'Chào mừng trở lại',
   loginSuccessDesc: 'Bạn đã đăng nhập thành công.',

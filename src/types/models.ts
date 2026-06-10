@@ -13,6 +13,7 @@ import type {
   TenantUserStatus,
   UnitStatus,
 } from './enums';
+import type { TenantPackageSummary } from './billing';
 
 /** All ids are strings (DB bigint exposed as string). */
 export type Id = string;
@@ -30,6 +31,12 @@ export interface Tenant extends Timestamped {
   email: string | null;
   address: string | null;
   status: TenantStatus;
+  /**
+   * Denormalized summary fields for the admin grid/detail. Optional until the
+   * BE adds them (see `docs/FE-BUILD-SPEC.md` — Tenant API gaps).
+   */
+  branchCount?: number;
+  subscription?: TenantPackageSummary | null;
 }
 
 export interface Branch extends Timestamped {

@@ -12,6 +12,8 @@ import enProducts from './en/products';
 import enInventory from './en/inventory';
 import enRentalOrders from './en/rentalOrders';
 import enReturns from './en/returns';
+import enBilling from './en/billing';
+import enTenants from './en/tenants';
 
 import viCommon from './vi/common';
 import viNav from './vi/nav';
@@ -25,6 +27,8 @@ import viProducts from './vi/products';
 import viInventory from './vi/inventory';
 import viRentalOrders from './vi/rentalOrders';
 import viReturns from './vi/returns';
+import viBilling from './vi/billing';
+import viTenants from './vi/tenants';
 
 export type MessageTree = { [key: string]: string | MessageTree };
 
@@ -41,6 +45,8 @@ const en = {
   inventory: enInventory,
   rentalOrders: enRentalOrders,
   returns: enReturns,
+  billing: enBilling,
+  tenants: enTenants,
 };
 
 const vi = {
@@ -56,6 +62,8 @@ const vi = {
   inventory: viInventory,
   rentalOrders: viRentalOrders,
   returns: viReturns,
+  billing: viBilling,
+  tenants: viTenants,
 };
 
 export const MESSAGES: Record<Locale, MessageTree> = {

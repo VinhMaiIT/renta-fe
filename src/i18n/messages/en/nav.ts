@@ -5,6 +5,8 @@ const nav = {
     catalog: 'Catalog',
     masterData: 'Master Data',
     system: 'System',
+    billing: 'Billing',
+    tenants: 'Tenant Management',
   },
   item: {
     dashboard: 'Dashboard',
@@ -18,6 +20,10 @@ const nav = {
     productTypes: 'Product Types',
     productGroups: 'Product Groups',
     settings: 'Settings',
+    packages: 'Packages',
+    subscriptions: 'Subscriptions',
+    invoices: 'Invoices',
+    tenants: 'Tenants',
   },
 } as const;
 export default nav;

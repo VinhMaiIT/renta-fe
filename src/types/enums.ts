@@ -56,7 +56,7 @@ export const RENTAL_ORDER_ITEM_STATUS_VALUES = [
   'CANCELLED',
 ] as const;
 
-export type PrincipalType = 'ADMIN' | 'TENANT';
+export type PrincipalType = 'SAAS_ADMIN' | 'TENANT';
 
 // Aliases so domain models read naturally.
 export type TenantStatus = ActiveStatus;

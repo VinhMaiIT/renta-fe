@@ -30,5 +30,22 @@ const enums = {
     DAMAGED: 'Damaged',
     CANCELLED: 'Cancelled',
   },
+  subscriptionStatus: {
+    ACTIVE: 'Active',
+    TRIAL: 'Trial',
+    PENDING_PAYMENT: 'Pending Payment',
+    EXPIRED: 'Expired',
+    CANCELLED: 'Cancelled',
+  },
+  invoiceStatus: {
+    PENDING: 'Pending',
+    PAID: 'Paid',
+    OVERDUE: 'Overdue',
+    CANCELLED: 'Cancelled',
+  },
+  paymentCycle: {
+    MONTHLY: 'Monthly',
+    YEARLY: 'Yearly',
+  },
 } as const;
 export default enums;

@@ -30,5 +30,22 @@ const enums = {
     DAMAGED: 'Hư hỏng',
     CANCELLED: 'Đã hủy',
   },
+  subscriptionStatus: {
+    ACTIVE: 'Đang hoạt động',
+    TRIAL: 'Dùng thử',
+    PENDING_PAYMENT: 'Chờ thanh toán',
+    EXPIRED: 'Hết hạn',
+    CANCELLED: 'Đã hủy',
+  },
+  invoiceStatus: {
+    PENDING: 'Chờ thanh toán',
+    PAID: 'Đã thanh toán',
+    OVERDUE: 'Quá hạn',
+    CANCELLED: 'Đã hủy',
+  },
+  paymentCycle: {
+    MONTHLY: 'Hàng tháng',
+    YEARLY: 'Hàng năm',
+  },
 } as const;
 export default enums;

@@ -5,6 +5,7 @@ import type {
   RentalOrderItemStatus,
   RentalOrderStatus,
 } from '@/types/enums';
+import type { InvoiceStatus, PaymentCycle, SubscriptionStatus } from '@/types/billing';
 
 /**
  * Status display metadata. `key` is an i18n path (resolved by `t()` in
@@ -61,4 +62,24 @@ export const RENTAL_ORDER_ITEM_STATUS_META: Record<RentalOrderItemStatus, Status
   LOST: { key: 'enums.orderItemStatus.LOST', className: TONE.red },
   DAMAGED: { key: 'enums.orderItemStatus.DAMAGED', className: TONE.red },
   CANCELLED: { key: 'enums.orderItemStatus.CANCELLED', className: TONE.slate },
+};
+
+export const SUBSCRIPTION_STATUS_META: Record<SubscriptionStatus, StatusMeta> = {
+  ACTIVE: { key: 'enums.subscriptionStatus.ACTIVE', className: TONE.green },
+  TRIAL: { key: 'enums.subscriptionStatus.TRIAL', className: TONE.blue },
+  PENDING_PAYMENT: { key: 'enums.subscriptionStatus.PENDING_PAYMENT', className: TONE.amber },
+  EXPIRED: { key: 'enums.subscriptionStatus.EXPIRED', className: TONE.red },
+  CANCELLED: { key: 'enums.subscriptionStatus.CANCELLED', className: TONE.slate },
+};
+
+export const INVOICE_STATUS_META: Record<InvoiceStatus, StatusMeta> = {
+  PENDING: { key: 'enums.invoiceStatus.PENDING', className: TONE.amber },
+  PAID: { key: 'enums.invoiceStatus.PAID', className: TONE.green },
+  OVERDUE: { key: 'enums.invoiceStatus.OVERDUE', className: TONE.red },
+  CANCELLED: { key: 'enums.invoiceStatus.CANCELLED', className: TONE.slate },
+};
+
+export const PAYMENT_CYCLE_META: Record<PaymentCycle, StatusMeta> = {
+  MONTHLY: { key: 'enums.paymentCycle.MONTHLY', className: TONE.slate },
+  YEARLY: { key: 'enums.paymentCycle.YEARLY', className: TONE.blue },
 };
