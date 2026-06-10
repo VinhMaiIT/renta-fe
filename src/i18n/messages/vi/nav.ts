@@ -6,7 +6,7 @@ const nav = {
     masterData: 'Dữ liệu nền',
     system: 'Hệ thống',
     billing: 'Thanh toán',
-    tenants: 'Quản lý Tenant',
+    tenants: 'Quản trị',
   },
   item: {
     dashboard: 'Bảng điều khiển',
@@ -23,7 +23,7 @@ const nav = {
     packages: 'Gói dịch vụ',
     subscriptions: 'Đăng ký',
     invoices: 'Hóa đơn',
-    tenants: 'Tenant',
+    tenants: 'Quản lý Tenant',
   },
 } as const;
 export default nav;

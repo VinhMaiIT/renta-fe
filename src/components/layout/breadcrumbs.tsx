@@ -44,7 +44,9 @@ export function Breadcrumbs() {
           <Fragment key={crumb.href}>
             <BreadcrumbItem>
               {crumb.isLast ? (
-                <BreadcrumbPage>{crumb.label}</BreadcrumbPage>
+                <BreadcrumbPage className="text-base font-semibold sm:text-lg">
+                  {crumb.label}
+                </BreadcrumbPage>
               ) : (
                 <BreadcrumbLink render={<Link href={crumb.href} />}>{crumb.label}</BreadcrumbLink>
               )}

@@ -82,20 +82,23 @@ export function TenantsPage() {
       cell: (r) => {
         const next = r.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
         return (
-          <DropdownMenu>
-            <DropdownMenuTrigger
-              render={
-                <Button variant="ghost" size="icon-sm" aria-label={t('common.table.actions')}>
-                  <MoreHorizontal className="size-4" />
-                </Button>
-              }
-            />
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => setStatus.mutate({ id: r.id, status: next })}>
-                {r.status === 'ACTIVE' ? t('masterData.deactivate') : t('masterData.activate')}
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          // Stop row navigation from firing when interacting with the menu.
+          <div className="flex justify-end" onClick={(e) => e.stopPropagation()}>
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                render={
+                  <Button variant="ghost" size="icon-sm" aria-label={t('common.table.actions')}>
+                    <MoreHorizontal className="size-4" />
+                  </Button>
+                }
+              />
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => setStatus.mutate({ id: r.id, status: next })}>
+                  {r.status === 'ACTIVE' ? t('masterData.deactivate') : t('masterData.activate')}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         );
       },
     },
@@ -104,8 +107,11 @@ export function TenantsPage() {
   return (
     <div className="space-y-5">
       <ListPageHeader
-        title={t('tenants.title')}
-        description={t('tenants.subtitle')}
+        title={t('tenants.countSummary', {
+          count: data?.items.length ?? 0,
+          total: data?.total ?? 0,
+        })}
+        titleClassName="text-base font-semibold sm:text-base"
         search={pagination.search}
         onSearchChange={pagination.setSearch}
         searchPlaceholder={t('tenants.searchPlaceholder')}

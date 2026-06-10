@@ -6,7 +6,7 @@ const nav = {
     masterData: 'Master Data',
     system: 'System',
     billing: 'Billing',
-    tenants: 'Tenant Management',
+    tenants: 'Administration',
   },
   item: {
     dashboard: 'Dashboard',
@@ -23,7 +23,7 @@ const nav = {
     packages: 'Packages',
     subscriptions: 'Subscriptions',
     invoices: 'Invoices',
-    tenants: 'Tenants',
+    tenants: 'Tenant Management',
   },
 } as const;
 export default nav;

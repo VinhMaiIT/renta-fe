@@ -3,10 +3,13 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
+import { cn } from '@/lib/utils';
 import { useT } from '@/i18n/locale-provider';
 
 interface ListPageHeaderProps {
   title: string;
+  /** Override the default title styling (e.g. to render a smaller heading). */
+  titleClassName?: string;
   description?: string;
   /** When provided, renders a debounced search box on the right. */
   search?: string;
@@ -24,6 +27,7 @@ interface ListPageHeaderProps {
  */
 export function ListPageHeader({
   title,
+  titleClassName,
   description,
   search,
   onSearchChange,
@@ -50,7 +54,9 @@ export function ListPageHeader({
   return (
     <div className="grid gap-4 lg:grid-cols-2 lg:items-center">
       <div className="space-y-1">
-        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">{title}</h1>
+        <h1 className={cn('text-2xl font-bold tracking-tight sm:text-3xl', titleClassName)}>
+          {title}
+        </h1>
         {description ? <p className="text-muted-foreground text-sm">{description}</p> : null}
       </div>
 

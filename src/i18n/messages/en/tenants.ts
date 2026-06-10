@@ -1,6 +1,7 @@
 const tenants = {
   title: 'Tenant Management',
   subtitle: 'Manage tenants across the platform.',
+  countSummary: 'All ({count}/{total})',
   searchPlaceholder: 'Search by code or name…',
   emptyTitle: 'No tenants yet',
   back: 'Back to tenants',

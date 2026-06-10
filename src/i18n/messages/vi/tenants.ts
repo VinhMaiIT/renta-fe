@@ -1,6 +1,7 @@
 const tenants = {
   title: 'Quản lý Tenant',
   subtitle: 'Quản lý các tenant trên toàn hệ thống.',
+  countSummary: 'Tất cả ({count}/{total})',
   searchPlaceholder: 'Tìm theo mã hoặc tên…',
   emptyTitle: 'Chưa có tenant nào',
   back: 'Quay lại danh sách',
