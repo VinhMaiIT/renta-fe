@@ -43,6 +43,9 @@ const common = {
     inactive: 'Ngừng',
   },
   status: { active: 'Hoạt động', inactive: 'Ngừng' },
+  yes: 'Có',
+  no: 'Không',
+  comingSoon: 'Tính năng đang được phát triển.',
   pagination: {
     rows: 'Số dòng',
     showing: 'Hiển thị {from}–{to} trong {total}',

@@ -1,11 +1,9 @@
-import { http } from '@/lib/api/http';
+import { branchHeader, http } from '@/lib/api/http';
 import type { PaginatedResponse } from '@/types/api';
 import type { Id, RentalOrder } from '@/types/models';
 import type { RentalOrderStatus } from '@/types/enums';
 
 export interface RentalOrderListParams {
-  tenantId: string;
-  branchId?: string;
   customerId?: string;
   status?: RentalOrderStatus;
   search?: string;
@@ -29,10 +27,7 @@ export interface RentalOrderItemInput {
 }
 
 export interface RentalOrderCreateInput {
-  tenantId: string;
-  branchId: string;
   orderCode: string;
-  createdBy: string;
   customerId?: string;
   customer?: RentalOrderCustomerInput;
   rentDate: string;
@@ -53,30 +48,30 @@ export interface RentalOrderUpdateInput {
 
 export const rentalOrdersApi = {
   list(params: RentalOrderListParams): Promise<PaginatedResponse<RentalOrder>> {
-    return http.get<PaginatedResponse<RentalOrder>>('/rental-orders', { params });
+    return http.get<PaginatedResponse<RentalOrder>>('/tenant/rental-orders', { params });
   },
 
   get(id: Id): Promise<RentalOrder> {
-    return http.get<RentalOrder>(`/rental-orders/${id}`);
+    return http.get<RentalOrder>(`/tenant/rental-orders/${id}`);
   },
 
-  create(input: RentalOrderCreateInput): Promise<RentalOrder> {
-    return http.post<RentalOrder>('/rental-orders', input);
+  create(input: RentalOrderCreateInput, branchId?: string | null): Promise<RentalOrder> {
+    return http.post<RentalOrder>('/tenant/rental-orders', input, branchHeader(branchId));
   },
 
   update(id: Id, input: RentalOrderUpdateInput): Promise<RentalOrder> {
-    return http.put<RentalOrder>(`/rental-orders/${id}`, input);
+    return http.put<RentalOrder>(`/tenant/rental-orders/${id}`, input);
   },
 
   confirm(id: Id): Promise<RentalOrder> {
-    return http.patch<RentalOrder>(`/rental-orders/${id}/confirm`);
+    return http.patch<RentalOrder>(`/tenant/rental-orders/${id}/confirm`);
   },
 
   cancel(id: Id): Promise<RentalOrder> {
-    return http.patch<RentalOrder>(`/rental-orders/${id}/cancel`);
+    return http.patch<RentalOrder>(`/tenant/rental-orders/${id}/cancel`);
   },
 
   remove(id: Id): Promise<void> {
-    return http.delete(`/rental-orders/${id}`);
+    return http.delete(`/tenant/rental-orders/${id}`);
   },
 };

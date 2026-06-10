@@ -28,11 +28,12 @@ export const authApi = {
   },
   /** Branch assignments for a tenant user (used to pick the default branch). */
   getUserBranches(userId: string): Promise<TenantUserBranch[]> {
-    return http.get<TenantUserBranch[]>(`/tenant-users/${userId}/branches`);
+    return http.get<TenantUserBranch[]>(`/tenant/tenant-users/${userId}/branches`);
   },
-  listBranches(tenantId: string): Promise<PaginatedResponse<Branch>> {
+  /** The current tenant's branches (scoped by token); used to pick the default. */
+  listBranches(): Promise<PaginatedResponse<Branch>> {
     return http.get<PaginatedResponse<Branch>>('/branches', {
-      params: { tenantId, status: 'ACTIVE', pageSize: 100 },
+      params: { status: 'ACTIVE', pageSize: 100 },
     });
   },
 };

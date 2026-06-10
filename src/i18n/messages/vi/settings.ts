@@ -6,6 +6,7 @@ const settings = {
     title: 'Hồ sơ',
     desc: 'Thông tin tài khoản của bạn (chỉ đọc).',
     username: 'Tên đăng nhập',
+    role: 'Vai trò',
     tenant: 'Đơn vị',
     readonly: 'Thông tin hồ sơ do quản trị viên quản lý.',
   },

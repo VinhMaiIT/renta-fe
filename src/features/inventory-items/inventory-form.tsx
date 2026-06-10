@@ -20,7 +20,7 @@ import { useEnumOptions } from '@/hooks/use-enum-options';
 import { INVENTORY_STATUS_META, CONDITION_STATUS_META } from '@/constants/enum-labels';
 import { useT } from '@/i18n/locale-provider';
 import { useTenantContext } from '@/hooks/use-tenant-context';
-import type { InventoryCreateInput } from './api';
+import type { InventoryCreateInput, InventoryCreatePayload } from './api';
 import type { SelectOption } from '@/components/forms/select-field';
 
 const schema = z.object({
@@ -43,7 +43,7 @@ interface InventoryFormProps {
   branchOptions: SelectOption[];
   productOptions: SelectOption[];
   sizeOptions: SelectOption[];
-  onSubmit: (input: Omit<InventoryCreateInput, 'tenantId'>) => void;
+  onSubmit: (input: InventoryCreatePayload) => void;
 }
 
 export function InventoryForm({

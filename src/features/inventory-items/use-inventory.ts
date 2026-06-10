@@ -1,7 +1,7 @@
 'use client';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { inventoryApi, type InventoryCreateInput, type InventoryUpdateInput } from './api';
+import { inventoryApi, type InventoryCreatePayload, type InventoryUpdateInput } from './api';
 import { useTenantContext } from '@/hooks/use-tenant-context';
 import { useBranches } from '@/features/branches/use-branches';
 import { toast, toastError } from '@/lib/toast';
@@ -24,7 +24,6 @@ export function useInventoryItems(params: InventoryQueryParams) {
     queryFn: () =>
       inventoryApi.list({
         ...params,
-        tenantId,
         status: params.status as InventoryItemStatus | undefined,
         conditionStatus: params.conditionStatus as InventoryItemConditionStatus | undefined,
       }),
@@ -43,12 +42,12 @@ export function useInventoryItem(id: string) {
 /** Create mutation — injects tenantId + branchId from context. */
 export function useCreateInventoryItem() {
   const queryClient = useQueryClient();
-  const { tenantId, branchId } = useTenantContext();
+  const { branchId } = useTenantContext();
   const { t } = useT();
 
   return useMutation({
-    mutationFn: (input: Omit<InventoryCreateInput, 'tenantId'>) =>
-      inventoryApi.create({ ...input, tenantId, branchId: input.branchId ?? branchId ?? '' }),
+    mutationFn: ({ branchId: picked, ...body }: InventoryCreatePayload) =>
+      inventoryApi.create(body, picked || branchId || undefined),
     onSuccess: () => {
       toast.success(t('inventory.toast.created'));
       queryClient.invalidateQueries({ queryKey: ROOT_KEY });
@@ -141,8 +140,8 @@ export function useInventoryLookups() {
     queryKey: ['products', 'lookup', tenantId],
     enabled: Boolean(tenantId),
     queryFn: () =>
-      http.get<PaginatedResponse<Product>>('/products', {
-        params: { tenantId, status: 'ACTIVE', pageSize: 100 },
+      http.get<PaginatedResponse<Product>>('/tenant/products', {
+        params: { status: 'ACTIVE', pageSize: 100 },
       }),
   });
 
@@ -150,8 +149,8 @@ export function useInventoryLookups() {
     queryKey: ['sizes', 'lookup', tenantId],
     enabled: Boolean(tenantId),
     queryFn: () =>
-      http.get<PaginatedResponse<SizeLookup>>('/sizes', {
-        params: { tenantId, status: 'ACTIVE', pageSize: 100 },
+      http.get<PaginatedResponse<SizeLookup>>('/tenant/sizes', {
+        params: { status: 'ACTIVE', pageSize: 100 },
       }),
   });
 

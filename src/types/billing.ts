@@ -81,6 +81,7 @@ export interface Subscription extends Timestamped {
   endDate: string;
   nextBillingDate: string;
   status: SubscriptionStatus;
+  autoRenew?: boolean;
   statusHistory: SubscriptionStatusEvent[];
 }
 

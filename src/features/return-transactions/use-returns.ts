@@ -32,12 +32,7 @@ export function useReturnTransactions(params: UseReturnTransactionsParams) {
   return useQuery({
     queryKey: [QUERY_KEY, { ...params, tenantId, branchId }],
     enabled: Boolean(tenantId),
-    queryFn: () =>
-      returnsApi.list({
-        tenantId,
-        ...(branchId ? { branchId } : {}),
-        ...params,
-      }),
+    queryFn: () => returnsApi.list(params),
   });
 }
 
@@ -65,32 +60,27 @@ export function useReturnableOrders(params: Omit<ReturnableOrdersParams, 'tenant
   return useQuery({
     queryKey: [RENTAL_ORDERS_KEY, 'returnable', { ...params, tenantId, branchId }],
     enabled: Boolean(tenantId),
-    queryFn: () =>
-      returnsApi.listReturnableOrders({
-        tenantId,
-        ...(branchId ? { branchId } : {}),
-        ...params,
-      }),
+    queryFn: () => returnsApi.listReturnableOrders(params),
   });
 }
 
 export function useCreateReturnTransaction() {
   const queryClient = useQueryClient();
-  const { tenantId, branchId, userId } = useTenantContext();
+  const { branchId } = useTenantContext();
   const { t } = useT();
 
   return useMutation({
     mutationFn: (input: CreateReturnFormInput) =>
-      returnsApi.create({
-        tenantId,
-        branchId: branchId ?? '',
-        createdBy: userId,
-        rentalOrderId: input.rentalOrderId,
-        returnDate: input.returnDate,
-        ...(input.lateFee !== undefined ? { lateFee: input.lateFee } : {}),
-        ...(input.note ? { note: input.note } : {}),
-        items: input.items,
-      }),
+      returnsApi.create(
+        {
+          rentalOrderId: input.rentalOrderId,
+          returnDate: input.returnDate,
+          ...(input.lateFee !== undefined ? { lateFee: input.lateFee } : {}),
+          ...(input.note ? { note: input.note } : {}),
+          items: input.items,
+        },
+        branchId,
+      ),
     onSuccess: () => {
       toast.success(t('returns.toast.created'));
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY] });

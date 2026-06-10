@@ -15,7 +15,7 @@ export function useBranches() {
     enabled: Boolean(tenantId),
     queryFn: () =>
       http.get<PaginatedResponse<Branch>>('/branches', {
-        params: { tenantId, status: 'ACTIVE', pageSize: 100 },
+        params: { status: 'ACTIVE', pageSize: 100 },
       }),
   });
 }

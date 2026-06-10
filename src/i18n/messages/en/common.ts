@@ -43,6 +43,9 @@ const common = {
     inactive: 'Inactive',
   },
   status: { active: 'Active', inactive: 'Inactive' },
+  yes: 'Yes',
+  no: 'No',
+  comingSoon: 'This feature is coming soon.',
   pagination: {
     rows: 'Rows',
     showing: 'Showing {from}–{to} of {total}',

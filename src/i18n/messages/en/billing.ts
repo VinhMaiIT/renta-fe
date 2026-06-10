@@ -32,6 +32,7 @@ const billing = {
   subscriptions: {
     title: 'Subscriptions',
     subtitle: 'Tenant subscriptions and billing cycles.',
+    countSummary: 'All ({count}/{total})',
     searchPlaceholder: 'Search by tenant…',
     emptyTitle: 'No subscriptions',
     emptyDesc: 'Tenant subscriptions will appear here.',
@@ -41,6 +42,7 @@ const billing = {
     startDate: 'Start date',
     endDate: 'End date',
     nextBilling: 'Next billing',
+    autoRenew: 'Auto-renew',
     status: 'Status',
     expiringSoon: 'Expiring soon',
     allPackages: 'All packages',

@@ -80,6 +80,6 @@ export const INVOICE_STATUS_META: Record<InvoiceStatus, StatusMeta> = {
 };
 
 export const PAYMENT_CYCLE_META: Record<PaymentCycle, StatusMeta> = {
-  MONTHLY: { key: 'enums.paymentCycle.MONTHLY', className: TONE.slate },
-  YEARLY: { key: 'enums.paymentCycle.YEARLY', className: TONE.blue },
+  MONTHLY: { key: 'enums.paymentCycle.MONTHLY', className: TONE.blue },
+  YEARLY: { key: 'enums.paymentCycle.YEARLY', className: TONE.green },
 };

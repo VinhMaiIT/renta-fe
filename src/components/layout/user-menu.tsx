@@ -1,13 +1,13 @@
 'use client';
 
-import { LogOut, User } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { LogOut, Settings as SettingsIcon } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
@@ -22,13 +22,13 @@ function initials(name: string): string {
 export function UserMenu() {
   const session = useSession();
   const logout = useLogout();
+  const router = useRouter();
   const { t } = useT();
+
   const name = session?.fullName || session?.username || 'User';
-  const subtitle = session?.isAdmin
-    ? (session?.userType ?? 'Admin')
-    : session?.tenantId
-      ? `${t('settings.profile.tenant')} #${session.tenantId}`
-      : (session?.userType ?? '');
+  const role = session?.isAdmin
+    ? (session?.userType ?? 'SAAS_ADMIN')
+    : (session?.userType ?? 'TENANT');
 
   return (
     <DropdownMenu>
@@ -41,24 +41,43 @@ export function UserMenu() {
           </Button>
         }
       />
-      <DropdownMenuContent align="end" className="w-56">
-        <DropdownMenuLabel>
-          <div className="flex flex-col">
-            <span className="font-medium">{name}</span>
-            {subtitle ? <span className="text-muted-foreground text-xs">{subtitle}</span> : null}
-          </div>
-        </DropdownMenuLabel>
+      <DropdownMenuContent align="end" className="w-64">
+        <div className="flex flex-col gap-0.5 px-2 py-1.5">
+          <span className="text-sm font-medium">{name}</span>
+          {session?.username ? (
+            <span className="text-muted-foreground text-xs">@{session.username}</span>
+          ) : null}
+        </div>
         <DropdownMenuSeparator />
-        <DropdownMenuItem render={<a href="/settings" />}>
-          <User className="size-4" />
+
+        {/* Account info (read-only) */}
+        <div className="space-y-1.5 px-2 py-1.5 text-xs">
+          <InfoRow label={t('settings.profile.role')} value={role} />
+          {session?.tenantId ? (
+            <InfoRow label={t('settings.profile.tenant')} value={`#${session.tenantId}`} />
+          ) : null}
+        </div>
+
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={() => router.push('/settings')}>
+          <SettingsIcon className="size-4" />
           {t('nav.item.settings')}
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={logout} className="text-destructive">
+        <DropdownMenuItem onClick={logout} variant="destructive">
           <LogOut className="size-4" />
           {t('common.action.signOut')}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
+  );
+}
+
+function InfoRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex items-center justify-between gap-3">
+      <span className="text-muted-foreground">{label}</span>
+      <span className="font-medium break-all">{value}</span>
+    </div>
   );
 }

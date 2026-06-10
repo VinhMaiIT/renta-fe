@@ -6,6 +6,7 @@ const settings = {
     title: 'Profile',
     desc: 'Your account information (read-only).',
     username: 'Username',
+    role: 'Role',
     tenant: 'Tenant',
     readonly: 'Profile details are managed by your administrator.',
   },

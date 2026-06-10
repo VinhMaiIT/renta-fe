@@ -29,8 +29,8 @@ export function StepCustomer({ state, update }: StepCustomerProps) {
     queryKey: ['wizard-customers', tenantId, search],
     enabled: state.customerMode === 'EXISTING' && Boolean(tenantId),
     queryFn: () =>
-      http.get<PaginatedResponse<Customer>>('/customers', {
-        params: { tenantId, search: search || undefined, pageSize: 20 },
+      http.get<PaginatedResponse<Customer>>('/tenant/customers', {
+        params: { search: search || undefined, pageSize: 20 },
       }),
   });
 

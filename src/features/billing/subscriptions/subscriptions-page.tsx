@@ -4,13 +4,12 @@ import { useRouter } from 'next/navigation';
 import { ListPageHeader } from '@/components/common/list-page-header';
 import { StatusBadge } from '@/components/common/status-badge';
 import { DataTableView, type Column } from '@/components/tables/data-table-view';
-import { Button } from '@/components/ui/button';
 import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select';
 import { usePagination } from '@/hooks/use-pagination';
 import { PAYMENT_CYCLE_META, SUBSCRIPTION_STATUS_META } from '@/constants/enum-labels';
 import { formatDate } from '@/lib/format';
 import { useT } from '@/i18n/locale-provider';
-import { useSubscriptions, useBillingLookups } from '../use-subscriptions';
+import { useSubscriptions } from '../use-subscriptions';
 import type { Subscription, SubscriptionStatus } from '@/types/billing';
 
 const STATUS_OPTIONS: SubscriptionStatus[] = [
@@ -24,23 +23,21 @@ const STATUS_OPTIONS: SubscriptionStatus[] = [
 export function SubscriptionsPage() {
   const { t } = useT();
   const router = useRouter();
-  const pagination = usePagination();
+  const pagination = usePagination({ initialPageSize: 10 });
   const list = useSubscriptions(pagination.queryParams);
-  const { tenants, packages } = useBillingLookups();
   const data = list.data;
-
-  const expiringSoon = pagination.filters.expiringSoon === 'true';
 
   const columns: Column<Subscription>[] = [
     {
       id: 'tenant',
       header: t('billing.subscriptions.tenant'),
-      cell: (s) => <span className="font-medium">{s.tenantName}</span>,
+      className: 'min-w-[14rem]',
+      cell: (s) => <span className="font-medium">{s.tenantName || '—'}</span>,
     },
     {
       id: 'package',
       header: t('billing.subscriptions.package'),
-      cell: (s) => s.packageName,
+      cell: (s) => s.packageName || '—',
     },
     {
       id: 'cycle',
@@ -50,20 +47,23 @@ export function SubscriptionsPage() {
     {
       id: 'startDate',
       header: t('billing.subscriptions.startDate'),
-      hideBelow: 'md',
       cell: (s) => formatDate(s.startDate),
     },
     {
       id: 'endDate',
       header: t('billing.subscriptions.endDate'),
-      hideBelow: 'sm',
       cell: (s) => formatDate(s.endDate),
     },
     {
       id: 'nextBilling',
       header: t('billing.subscriptions.nextBilling'),
-      hideBelow: 'lg',
       cell: (s) => formatDate(s.nextBillingDate),
+    },
+    {
+      id: 'autoRenew',
+      header: t('billing.subscriptions.autoRenew'),
+      cell: (s) =>
+        typeof s.autoRenew === 'boolean' ? t(s.autoRenew ? 'common.yes' : 'common.no') : '—',
     },
     {
       id: 'status',
@@ -75,68 +75,28 @@ export function SubscriptionsPage() {
   return (
     <div className="space-y-5">
       <ListPageHeader
-        title={t('billing.subscriptions.title')}
-        description={t('billing.subscriptions.subtitle')}
+        title={t('billing.subscriptions.countSummary', {
+          count: data?.items.length ?? 0,
+          total: data?.total ?? 0,
+        })}
+        titleClassName="text-base font-semibold sm:text-base"
         search={pagination.search}
         onSearchChange={pagination.setSearch}
         searchPlaceholder={t('billing.subscriptions.searchPlaceholder')}
         filters={
-          <>
-            <NativeSelect
-              value={pagination.filters.tenantId ?? ''}
-              onChange={(e) => pagination.setFilter('tenantId', e.target.value || undefined)}
-              aria-label={t('billing.subscriptions.tenant')}
-              className="bg-card"
-            >
-              <NativeSelectOption value="">
-                {t('billing.subscriptions.allTenants')}
+          <NativeSelect
+            value={pagination.filters.status ?? ''}
+            onChange={(e) => pagination.setFilter('status', e.target.value || undefined)}
+            aria-label={t('billing.subscriptions.status')}
+            className="bg-card"
+          >
+            <NativeSelectOption value="">{t('common.table.allStatuses')}</NativeSelectOption>
+            {STATUS_OPTIONS.map((status) => (
+              <NativeSelectOption key={status} value={status}>
+                {t(`enums.subscriptionStatus.${status}`)}
               </NativeSelectOption>
-              {tenants.map((tenant) => (
-                <NativeSelectOption key={tenant.id} value={tenant.id}>
-                  {tenant.name}
-                </NativeSelectOption>
-              ))}
-            </NativeSelect>
-
-            <NativeSelect
-              value={pagination.filters.packageId ?? ''}
-              onChange={(e) => pagination.setFilter('packageId', e.target.value || undefined)}
-              aria-label={t('billing.subscriptions.package')}
-              className="bg-card"
-            >
-              <NativeSelectOption value="">
-                {t('billing.subscriptions.allPackages')}
-              </NativeSelectOption>
-              {packages.map((pkg) => (
-                <NativeSelectOption key={pkg.id} value={pkg.id}>
-                  {pkg.name}
-                </NativeSelectOption>
-              ))}
-            </NativeSelect>
-
-            <NativeSelect
-              value={pagination.filters.status ?? ''}
-              onChange={(e) => pagination.setFilter('status', e.target.value || undefined)}
-              aria-label={t('billing.subscriptions.status')}
-              className="bg-card"
-            >
-              <NativeSelectOption value="">{t('common.table.allStatuses')}</NativeSelectOption>
-              {STATUS_OPTIONS.map((status) => (
-                <NativeSelectOption key={status} value={status}>
-                  {t(`enums.subscriptionStatus.${status}`)}
-                </NativeSelectOption>
-              ))}
-            </NativeSelect>
-
-            <Button
-              variant={expiringSoon ? 'secondary' : 'outline'}
-              onClick={() =>
-                pagination.setFilter('expiringSoon', expiringSoon ? undefined : 'true')
-              }
-            >
-              {t('billing.subscriptions.expiringSoon')}
-            </Button>
-          </>
+            ))}
+          </NativeSelect>
         }
       />
 

@@ -27,12 +27,7 @@ export function useRentalOrders(params: UseRentalOrdersParams) {
   return useQuery({
     queryKey: [QUERY_KEY, { ...params, tenantId, branchId }],
     enabled: Boolean(tenantId),
-    queryFn: () =>
-      rentalOrdersApi.list({
-        tenantId,
-        ...(branchId ? { branchId } : {}),
-        ...params,
-      }),
+    queryFn: () => rentalOrdersApi.list(params),
   });
 }
 
@@ -46,16 +41,11 @@ export function useRentalOrder(id: Id) {
 
 export function useCreateRentalOrder() {
   const queryClient = useQueryClient();
-  const { tenantId, branchId, userId } = useTenantContext();
+  const { branchId } = useTenantContext();
 
   return useMutation({
     mutationFn: (input: CreateRentalOrderInput) =>
-      rentalOrdersApi.create({
-        ...input,
-        tenantId,
-        branchId: branchId ?? '',
-        createdBy: userId,
-      }),
+      rentalOrdersApi.create(input, branchId),
     onSuccess: () => {
       toast.success('Rental order created');
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY] });

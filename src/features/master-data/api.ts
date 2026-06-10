@@ -14,7 +14,6 @@ export interface MasterRecord {
 }
 
 export interface MasterListParams {
-  tenantId: string;
   status?: ActiveStatus;
   search?: string;
   page?: number;
@@ -35,22 +34,22 @@ export type MasterResource = 'sizes' | 'units' | 'product-types' | 'product-grou
 export function makeMasterApi(resource: MasterResource) {
   return {
     list(params: MasterListParams): Promise<PaginatedResponse<MasterRecord>> {
-      return http.get<PaginatedResponse<MasterRecord>>(`/${resource}`, { params });
+      return http.get<PaginatedResponse<MasterRecord>>(`/tenant/${resource}`, { params });
     },
     get(id: string): Promise<MasterRecord> {
-      return http.get<MasterRecord>(`/${resource}/${id}`);
+      return http.get<MasterRecord>(`/tenant/${resource}/${id}`);
     },
-    create(input: MasterInput & { tenantId: string }): Promise<MasterRecord> {
-      return http.post<MasterRecord>(`/${resource}`, input);
+    create(input: MasterInput): Promise<MasterRecord> {
+      return http.post<MasterRecord>(`/tenant/${resource}`, input);
     },
     update(id: string, input: Partial<MasterInput>): Promise<MasterRecord> {
-      return http.put<MasterRecord>(`/${resource}/${id}`, input);
+      return http.put<MasterRecord>(`/tenant/${resource}/${id}`, input);
     },
     remove(id: string): Promise<void> {
-      return http.delete(`/${resource}/${id}`);
+      return http.delete(`/tenant/${resource}/${id}`);
     },
     setStatus(id: string, status: ActiveStatus): Promise<MasterRecord> {
-      return http.patch<MasterRecord>(`/${resource}/${id}/status`, { status });
+      return http.patch<MasterRecord>(`/tenant/${resource}/${id}/status`, { status });
     },
   };
 }

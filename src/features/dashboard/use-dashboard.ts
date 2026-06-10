@@ -27,48 +27,48 @@ export function useDashboardStats(): DashboardStats {
         queryKey: ['dashboard', 'activeRentals', tenantId],
         enabled: Boolean(tenantId),
         queryFn: () =>
-          http.get<PaginatedResponse<RentalOrder>>('/rental-orders', {
-            params: { tenantId, status: 'RENTING', pageSize: 1 },
+          http.get<PaginatedResponse<RentalOrder>>('/tenant/rental-orders', {
+            params: { status: 'RENTING', pageSize: 1 },
           }),
       },
       {
         queryKey: ['dashboard', 'overdueRentals', tenantId],
         enabled: Boolean(tenantId),
         queryFn: () =>
-          http.get<PaginatedResponse<RentalOrder>>('/rental-orders', {
-            params: { tenantId, status: 'OVERDUE', pageSize: 1 },
+          http.get<PaginatedResponse<RentalOrder>>('/tenant/rental-orders', {
+            params: { status: 'OVERDUE', pageSize: 1 },
           }),
       },
       {
         queryKey: ['dashboard', 'totalCustomers', tenantId],
         enabled: Boolean(tenantId),
         queryFn: () =>
-          http.get<PaginatedResponse<Customer>>('/customers', {
-            params: { tenantId, pageSize: 1 },
+          http.get<PaginatedResponse<Customer>>('/tenant/customers', {
+            params: { pageSize: 1 },
           }),
       },
       {
         queryKey: ['dashboard', 'totalInventory', tenantId],
         enabled: Boolean(tenantId),
         queryFn: () =>
-          http.get<PaginatedResponse<InventoryItem>>('/inventory-items', {
-            params: { tenantId, pageSize: 1 },
+          http.get<PaginatedResponse<InventoryItem>>('/tenant/inventory-items', {
+            params: { pageSize: 1 },
           }),
       },
       {
         queryKey: ['dashboard', 'availableInventory', tenantId],
         enabled: Boolean(tenantId),
         queryFn: () =>
-          http.get<PaginatedResponse<InventoryItem>>('/inventory-items', {
-            params: { tenantId, status: 'AVAILABLE', pageSize: 1 },
+          http.get<PaginatedResponse<InventoryItem>>('/tenant/inventory-items', {
+            params: { status: 'AVAILABLE', pageSize: 1 },
           }),
       },
       {
         queryKey: ['dashboard', 'recentOrders', tenantId],
         enabled: Boolean(tenantId),
         queryFn: () =>
-          http.get<PaginatedResponse<RentalOrder>>('/rental-orders', {
-            params: { tenantId, pageSize: 5, order: 'DESC' },
+          http.get<PaginatedResponse<RentalOrder>>('/tenant/rental-orders', {
+            params: { pageSize: 5, order: 'DESC' },
           }),
       },
     ],

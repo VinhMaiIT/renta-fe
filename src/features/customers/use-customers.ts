@@ -25,17 +25,12 @@ export interface CustomerFormInput {
 }
 
 export function useCustomers(params: UseCustomersParams) {
-  const { tenantId, branchId } = useTenantContext();
+  const { tenantId } = useTenantContext();
 
   return useQuery({
     queryKey: [QUERY_KEY, { ...params, tenantId }],
     enabled: Boolean(tenantId),
-    queryFn: () =>
-      customersApi.list({
-        tenantId,
-        ...(branchId ? { branchId } : {}),
-        ...params,
-      }),
+    queryFn: () => customersApi.list(params),
   });
 }
 
@@ -49,16 +44,10 @@ export function useCustomer(id: Id) {
 
 export function useCreateCustomer() {
   const queryClient = useQueryClient();
-  const { tenantId, branchId } = useTenantContext();
   const { t } = useT();
 
   return useMutation({
-    mutationFn: (input: CustomerFormInput) =>
-      customersApi.create({
-        tenantId,
-        ...(branchId ? { branchId } : {}),
-        ...input,
-      }),
+    mutationFn: (input: CustomerFormInput) => customersApi.create(input),
     onSuccess: () => {
       toast.success(t('common.toast.created'));
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY] });

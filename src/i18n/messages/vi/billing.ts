@@ -32,6 +32,7 @@ const billing = {
   subscriptions: {
     title: 'Đăng ký',
     subtitle: 'Đăng ký và chu kỳ thanh toán của tenant.',
+    countSummary: 'Tất cả ({count}/{total})',
     searchPlaceholder: 'Tìm theo tenant…',
     emptyTitle: 'Chưa có đăng ký',
     emptyDesc: 'Các đăng ký của tenant sẽ hiển thị ở đây.',
@@ -41,6 +42,7 @@ const billing = {
     startDate: 'Ngày bắt đầu',
     endDate: 'Ngày kết thúc',
     nextBilling: 'Kỳ thanh toán tới',
+    autoRenew: 'Gia hạn tự động',
     status: 'Trạng thái',
     expiringSoon: 'Sắp hết hạn',
     allPackages: 'Tất cả gói',

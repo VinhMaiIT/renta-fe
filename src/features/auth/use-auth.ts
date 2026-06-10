@@ -46,7 +46,7 @@ export function useLogin() {
           branchId =
             assignments.find((a) => a.isDefault)?.branchId ?? assignments[0]?.branchId ?? null;
           if (!branchId) {
-            const branches = await authApi.listBranches(tenantId);
+            const branches = await authApi.listBranches();
             branchId = branches.items.find((b) => b.isMain)?.id ?? branches.items[0]?.id ?? null;
           }
         } catch {

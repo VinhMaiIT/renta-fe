@@ -30,7 +30,7 @@ import {
   useInventoryLookups,
 } from './use-inventory';
 import { InventoryForm } from './inventory-form';
-import type { InventoryCreateInput } from './api';
+import type { InventoryCreatePayload } from './api';
 
 export function InventoryPage() {
   const { t } = useT();
@@ -133,7 +133,7 @@ export function InventoryPage() {
     );
   }
 
-  function handleCreate(input: Omit<InventoryCreateInput, 'tenantId'>) {
+  function handleCreate(input: InventoryCreatePayload) {
     createMutation.mutate(input, { onSuccess: () => setFormOpen(false) });
   }
 
@@ -147,19 +147,6 @@ export function InventoryPage() {
         searchPlaceholder={t('inventory.searchPlaceholder')}
         filters={
           <>
-            <NativeSelect
-              value={pagination.filters.branchId ?? ''}
-              onChange={(e) => pagination.setFilter('branchId', e.target.value || undefined)}
-              aria-label={t('inventory.branch')}
-              className="bg-card"
-            >
-              <NativeSelectOption value="">{t('inventory.allBranches')}</NativeSelectOption>
-              {branchOptions.map((b) => (
-                <NativeSelectOption key={b.value} value={b.value}>
-                  {b.label}
-                </NativeSelectOption>
-              ))}
-            </NativeSelect>
             <NativeSelect
               value={pagination.filters.productId ?? ''}
               onChange={(e) => pagination.setFilter('productId', e.target.value || undefined)}

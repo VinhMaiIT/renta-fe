@@ -42,11 +42,7 @@ export function useProducts(params: UseProductsParams) {
   return useQuery({
     queryKey: [QUERY_KEY, { ...params, tenantId }],
     enabled: Boolean(tenantId),
-    queryFn: () =>
-      productsApi.list({
-        tenantId,
-        ...params,
-      }),
+    queryFn: () => productsApi.list(params),
   });
 }
 
@@ -60,15 +56,10 @@ export function useProduct(id: Id) {
 
 export function useCreateProduct() {
   const queryClient = useQueryClient();
-  const { tenantId } = useTenantContext();
   const { t } = useT();
 
   return useMutation({
-    mutationFn: (input: ProductFormInput) =>
-      productsApi.create({
-        tenantId,
-        ...input,
-      }),
+    mutationFn: (input: ProductFormInput) => productsApi.create(input),
     onSuccess: () => {
       toast.success(t('products.toast.created'));
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY] });
@@ -142,7 +133,7 @@ export interface ProductLookups {
 
 export function useProductLookups(): ProductLookups {
   const { tenantId } = useTenantContext();
-  const params = { tenantId, status: 'ACTIVE' as const, pageSize: 100 };
+  const params = { status: 'ACTIVE' as const, pageSize: 100 };
 
   const typesQuery = useQuery({
     queryKey: ['product-types', { tenantId, status: 'ACTIVE', pageSize: 100 }],

@@ -18,6 +18,15 @@ async function unwrap<T>(promise: Promise<{ data: ApiResponse<T> }>): Promise<T>
   }
 }
 
+/**
+ * Build a request config carrying the working-branch header. The backend reads
+ * `X-Branch-Id` for branch-scoped writes (inventory items, rental orders,
+ * return transactions); when omitted it falls back to the user's default branch.
+ */
+export function branchHeader(branchId?: string | null): AxiosRequestConfig | undefined {
+  return branchId ? { headers: { 'X-Branch-Id': branchId } } : undefined;
+}
+
 export const http = {
   get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
     return unwrap<T>(apiClient.get(url, config));

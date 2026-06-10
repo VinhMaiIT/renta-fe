@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { http } from '@/lib/api/http';
+import { branchHeader, http } from '@/lib/api/http';
 import { useTenantContext } from '@/hooks/use-tenant-context';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
@@ -30,8 +30,9 @@ export function StepInventory({ state, update }: StepInventoryProps) {
     queryKey: ['wizard-inventory', tenantId, branchId],
     enabled: Boolean(tenantId) && Boolean(branchId),
     queryFn: () =>
-      http.get<PaginatedResponse<InventoryItem>>('/inventory-items', {
-        params: { tenantId, branchId, status: 'AVAILABLE', pageSize: 100 },
+      http.get<PaginatedResponse<InventoryItem>>('/tenant/inventory-items', {
+        params: { status: 'AVAILABLE', pageSize: 100 },
+        ...branchHeader(branchId),
       }),
   });
 
@@ -39,8 +40,8 @@ export function StepInventory({ state, update }: StepInventoryProps) {
     queryKey: ['wizard-products', tenantId],
     enabled: Boolean(tenantId),
     queryFn: () =>
-      http.get<PaginatedResponse<Product>>('/products', {
-        params: { tenantId, pageSize: 100 },
+      http.get<PaginatedResponse<Product>>('/tenant/products', {
+        params: { pageSize: 100 },
       }),
   });
 

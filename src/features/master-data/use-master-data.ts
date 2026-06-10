@@ -17,17 +17,17 @@ export function useMasterData(resource: MasterResource) {
 
   const invalidate = () => queryClient.invalidateQueries({ queryKey: rootKey });
 
-  function useList(params: Omit<MasterListParams, 'tenantId'>) {
+  function useList(params: MasterListParams) {
     return useQuery({
       queryKey: [resource, { ...params, tenantId }],
       enabled: Boolean(tenantId),
-      queryFn: () => api.list({ ...params, tenantId }),
+      queryFn: () => api.list(params),
     });
   }
 
   function useCreate() {
     return useMutation({
-      mutationFn: (input: MasterInput) => api.create({ ...input, tenantId }),
+      mutationFn: (input: MasterInput) => api.create(input),
       onSuccess: () => {
         toast.success(t('common.toast.created'));
         invalidate();
