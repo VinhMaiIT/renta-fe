@@ -10,7 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
-import { SelectField } from '@/components/forms/select-field';
+import { SelectMenu } from '@/components/forms/select-menu';
 import { MoneyInput } from '@/components/forms/money-input';
 import { FormErrorMessage } from '@/components/ui/form-error-message';
 import { ColorForm } from '@/features/colors/color-form';
@@ -291,43 +291,75 @@ export function ProductForm({ initial, lookups, loading, onSubmit, onCancel }: P
               </div>
             </div>
             <div className="grid gap-4 sm:grid-cols-3">
-              <SelectField
-                label={t('products.productGroup')}
-                required
-                id="productGroupId"
-                options={lookups.productGroupOptions}
-                placeholder={t('products.form.selectGroup')}
-                error={errors.productGroupId?.message}
-                {...register('productGroupId')}
+              <Controller
+                control={control}
+                name="productGroupId"
+                render={({ field }) => (
+                  <SelectMenu
+                    label={t('products.productGroup')}
+                    required
+                    id="productGroupId"
+                    options={lookups.productGroupOptions}
+                    placeholder={t('products.form.selectGroup')}
+                    error={errors.productGroupId?.message}
+                    value={field.value ?? ''}
+                    onChange={field.onChange}
+                    onBlur={field.onBlur}
+                  />
+                )}
               />
-              <SelectField
-                label={t('products.productType')}
-                required
-                id="productTypeId"
-                options={lookups.productTypeOptions}
-                placeholder={t('products.form.selectType')}
-                error={errors.productTypeId?.message}
-                {...register('productTypeId')}
+              <Controller
+                control={control}
+                name="productTypeId"
+                render={({ field }) => (
+                  <SelectMenu
+                    label={t('products.productType')}
+                    required
+                    id="productTypeId"
+                    options={lookups.productTypeOptions}
+                    placeholder={t('products.form.selectType')}
+                    error={errors.productTypeId?.message}
+                    value={field.value ?? ''}
+                    onChange={field.onChange}
+                    onBlur={field.onBlur}
+                  />
+                )}
               />
-              <SelectField
-                label={t('products.unit')}
-                required
-                id="unitId"
-                options={lookups.unitOptions}
-                placeholder={t('products.form.selectUnit')}
-                error={errors.unitId?.message}
-                {...register('unitId')}
+              <Controller
+                control={control}
+                name="unitId"
+                render={({ field }) => (
+                  <SelectMenu
+                    label={t('products.unit')}
+                    required
+                    id="unitId"
+                    options={lookups.unitOptions}
+                    placeholder={t('products.form.selectUnit')}
+                    error={errors.unitId?.message}
+                    value={field.value ?? ''}
+                    onChange={field.onChange}
+                    onBlur={field.onBlur}
+                  />
+                )}
               />
-              <SelectField
-                label={t('common.table.status')}
-                required
-                id="status"
-                options={[
-                  { value: 'ACTIVE', label: t('enums.activeStatus.ACTIVE') },
-                  { value: 'INACTIVE', label: t('enums.activeStatus.INACTIVE') },
-                ]}
-                error={errors.status?.message}
-                {...register('status')}
+              <Controller
+                control={control}
+                name="status"
+                render={({ field }) => (
+                  <SelectMenu
+                    label={t('common.table.status')}
+                    required
+                    id="status"
+                    options={[
+                      { value: 'ACTIVE', label: t('enums.activeStatus.ACTIVE') },
+                      { value: 'INACTIVE', label: t('enums.activeStatus.INACTIVE') },
+                    ]}
+                    error={errors.status?.message}
+                    value={field.value ?? ''}
+                    onChange={field.onChange}
+                    onBlur={field.onBlur}
+                  />
+                )}
               />
             </div>
             <Textarea

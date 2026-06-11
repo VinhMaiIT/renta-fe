@@ -8,10 +8,17 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
-import { SelectField, type SelectOption } from '@/components/forms/select-field';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { type SelectOption } from '@/components/forms/select-field';
 import { FormErrorMessage } from '@/components/ui/form-error-message';
 import { useT } from '@/i18n/locale-provider';
 
@@ -98,17 +105,41 @@ export function AddVariantDialog({
           <DialogTitle>{t('products.form.addVariantTitle')}</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
-          <SelectField
-            label={t('products.form.colorColumn')}
-            required
-            value={colorId}
-            onChange={(e) => {
-              setColorId(e.target.value);
-              setError(null);
-            }}
-            placeholder={t('products.form.selectColor')}
-            options={colorOptions}
-          />
+          <div>
+            <span className="text-foreground mb-1.5 block text-sm font-medium">
+              {t('products.form.colorColumn')} <span className="text-destructive">*</span>
+            </span>
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                render={
+                  <Button type="button" variant="outline" className="w-full justify-between font-normal">
+                    <span className={colorId ? '' : 'text-muted-foreground'}>
+                      {colorOptions.find((o) => o.value === colorId)?.label ??
+                        t('products.form.selectColor')}
+                    </span>
+                    <ChevronDown className="size-4 shrink-0 opacity-50" />
+                  </Button>
+                }
+              />
+              <DropdownMenuContent
+                align="start"
+                className="max-h-64 w-(--anchor-width) min-w-48 overflow-y-auto"
+              >
+                {colorOptions.map((o) => (
+                  <DropdownMenuItem
+                    key={o.value}
+                    className="text-base"
+                    onClick={() => {
+                      setColorId(o.value);
+                      setError(null);
+                    }}
+                  >
+                    {o.label}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
           <div>
             <span className="text-foreground mb-1.5 block text-sm font-medium">
               {t('products.form.selectSizes')} <span className="text-destructive">*</span>
