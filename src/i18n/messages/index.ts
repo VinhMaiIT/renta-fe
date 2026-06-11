@@ -15,6 +15,7 @@ import enReturns from './en/returns';
 import enBilling from './en/billing';
 import enTenants from './en/tenants';
 import enBranches from './en/branches';
+import enColors from './en/colors';
 
 import viCommon from './vi/common';
 import viNav from './vi/nav';
@@ -31,6 +32,7 @@ import viReturns from './vi/returns';
 import viBilling from './vi/billing';
 import viTenants from './vi/tenants';
 import viBranches from './vi/branches';
+import viColors from './vi/colors';
 
 export type MessageTree = { [key: string]: string | MessageTree };
 
@@ -50,6 +52,7 @@ const en = {
   billing: enBilling,
   tenants: enTenants,
   branches: enBranches,
+  colors: enColors,
 };
 
 const vi = {
@@ -68,6 +71,7 @@ const vi = {
   billing: viBilling,
   tenants: viTenants,
   branches: viBranches,
+  colors: viColors,
 };
 
 export const MESSAGES: Record<Locale, MessageTree> = {

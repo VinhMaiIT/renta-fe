@@ -42,12 +42,12 @@ export function useInventoryItem(id: string) {
 /** Create mutation — injects tenantId + branchId from context. */
 export function useCreateInventoryItem() {
   const queryClient = useQueryClient();
-  const { branchId } = useTenantContext();
   const { t } = useT();
 
   return useMutation({
+    // Branch comes straight from the form dropdown (sent as X-Branch-Id).
     mutationFn: ({ branchId: picked, ...body }: InventoryCreatePayload) =>
-      inventoryApi.create(body, picked || branchId || undefined),
+      inventoryApi.create(body, picked || undefined),
     onSuccess: () => {
       toast.success(t('inventory.toast.created'));
       queryClient.invalidateQueries({ queryKey: ROOT_KEY });

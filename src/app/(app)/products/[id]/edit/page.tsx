@@ -2,7 +2,6 @@
 
 import { use } from 'react';
 import { useRouter } from 'next/navigation';
-import { PageHeader } from '@/components/common/page-header';
 import { ErrorState } from '@/components/common/states';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ProductForm } from '@/features/products/product-form';
@@ -40,7 +39,6 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
 
   return (
     <div className="space-y-6">
-      <PageHeader title={`Edit: ${product.name}`} description={product.code} />
       <ProductForm
         initial={product}
         lookups={lookups}
@@ -55,7 +53,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
             },
           );
         }}
-        onCancel={() => router.push(`/products/${product.id}`)}
+        onCancel={() => router.push('/products')}
       />
     </div>
   );

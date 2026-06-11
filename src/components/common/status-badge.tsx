@@ -10,7 +10,7 @@ export function StatusBadge({ meta, className }: { meta: StatusMeta; className?:
   return (
     <span
       className={cn(
-        'inline-flex h-5 w-fit shrink-0 items-center rounded-full px-2 py-0.5 text-xs font-medium',
+        'inline-flex w-fit shrink-0 items-center rounded-full px-2.5 py-1 text-xs font-medium',
         meta.className,
         className,
       )}

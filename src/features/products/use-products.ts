@@ -1,7 +1,7 @@
 'use client';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { productsApi, type ProductUpdateInput } from './api';
+import { productsApi, type ProductCreateInput, type InventoryItemInput } from './api';
 import { makeMasterApi } from '@/features/master-data/api';
 import { useTenantContext } from '@/hooks/use-tenant-context';
 import { toast, toastError } from '@/lib/toast';
@@ -23,18 +23,8 @@ export interface UseProductsParams {
   [key: string]: string | number | undefined;
 }
 
-export interface ProductFormInput {
-  productTypeId: string;
-  productGroupId: string;
-  unitId: string;
-  code: string;
-  name: string;
-  description?: string;
-  rentalPrice: number;
-  depositPrice: number;
-  sizeIds?: string[];
-  images?: { url: string; sortOrder?: number; isPrimary?: boolean }[];
-}
+/** The form emits the create-style payload: `{ product, inventoryItems }`. */
+export type ProductFormInput = ProductCreateInput;
 
 export function useProducts(params: UseProductsParams) {
   const { tenantId } = useTenantContext();
@@ -54,6 +44,14 @@ export function useProduct(id: Id) {
   });
 }
 
+export function useUploadProductImages() {
+  const { t } = useT();
+  return useMutation({
+    mutationFn: (files: File[]) => productsApi.uploadImages(files),
+    onError: (error) => toastError(error, t('products.toast.uploadFailed')),
+  });
+}
+
 export function useCreateProduct() {
   const queryClient = useQueryClient();
   const { t } = useT();
@@ -68,18 +66,53 @@ export function useCreateProduct() {
   });
 }
 
+/** Save a product edit — only the product body (inventory is managed separately). */
 export function useUpdateProduct() {
   const queryClient = useQueryClient();
   const { t } = useT();
 
   return useMutation({
-    mutationFn: ({ id, input }: { id: Id; input: ProductUpdateInput }) =>
-      productsApi.update(id, input),
-    onSuccess: () => {
+    mutationFn: ({ id, input }: { id: Id; input: ProductFormInput }) =>
+      productsApi.update(id, { product: input.product }),
+    onSuccess: (_data, { id }) => {
       toast.success(t('products.toast.updated'));
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY, id] });
     },
     onError: (error) => toastError(error, t('products.toast.updateFailed')),
+  });
+}
+
+/** Add stock lines to an existing product (immediate, used by the edit screen). */
+export function useAddInventoryItems(productId: Id) {
+  const queryClient = useQueryClient();
+  const { t } = useT();
+
+  return useMutation({
+    mutationFn: (items: InventoryItemInput[]) => productsApi.addInventoryItems(productId, items),
+    onSuccess: () => {
+      toast.success(t('products.toast.inventoryAdded'));
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY, productId] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY] });
+    },
+    onError: (error) => toastError(error, t('products.toast.inventoryAddFailed')),
+  });
+}
+
+/** Delete one or more inventory items (immediate). RENTED items return 409. */
+export function useDeleteInventoryItems(productId: Id) {
+  const queryClient = useQueryClient();
+  const { t } = useT();
+
+  return useMutation({
+    mutationFn: (itemIds: Id[]) =>
+      Promise.all(itemIds.map((itemId) => productsApi.deleteInventoryItem(itemId))),
+    onSuccess: () => {
+      toast.success(t('products.toast.inventoryDeleted'));
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY, productId] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY] });
+    },
+    onError: (error) => toastError(error, t('products.toast.inventoryDeleteFailed')),
   });
 }
 

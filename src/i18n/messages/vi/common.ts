@@ -65,6 +65,10 @@ const common = {
     deleteTitle: 'Xóa {item}?',
     deleteDesc: 'Hành động này không thể hoàn tác.',
   },
+  breadcrumb: {
+    create: 'Tạo mới {item}',
+    edit: 'Chỉnh sửa {item}',
+  },
   footer: {
     rights: 'Bản quyền đã được bảo hộ.',
     version: 'Phiên bản',

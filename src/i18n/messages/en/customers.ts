@@ -1,6 +1,7 @@
 const customers = {
   title: 'Customers',
   subtitle: 'Manage your customer records.',
+  countSummary: 'All ({count}/{total})',
   newCustomer: 'New customer',
   searchPlaceholder: 'Search by name or phone…',
   emptyTitle: 'No customers yet',

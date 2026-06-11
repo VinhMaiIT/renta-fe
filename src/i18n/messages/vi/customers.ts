@@ -1,6 +1,7 @@
 const customers = {
   title: 'Khách hàng',
   subtitle: 'Quản lý danh sách khách hàng.',
+  countSummary: 'Tất cả ({count}/{total})',
   newCustomer: 'Thêm khách hàng',
   searchPlaceholder: 'Tìm theo tên hoặc số điện thoại…',
   emptyTitle: 'Chưa có khách hàng',

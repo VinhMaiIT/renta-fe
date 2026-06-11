@@ -65,6 +65,10 @@ const common = {
     deleteTitle: 'Delete {item}?',
     deleteDesc: 'This action cannot be undone.',
   },
+  breadcrumb: {
+    create: 'Create {item}',
+    edit: 'Edit {item}',
+  },
   footer: {
     rights: 'All rights reserved.',
     version: 'Version',

@@ -110,11 +110,57 @@ export interface ProductGroup extends Timestamped {
   status: ProductGroupStatus;
 }
 
-export interface ProductImage {
+/** A reusable color (pre-created under the Colors screen, picked on products). */
+export interface Color extends Timestamped {
   id: Id;
+  tenantId: Id;
+  name: string;
+  hex: string;
+  status: ActiveStatus;
+}
+
+export interface ProductImage {
   url: string;
-  sortOrder: number;
-  isPrimary: boolean;
+  storedName?: string;
+  originalName?: string;
+  mimeType?: string;
+  size?: number;
+  sortOrder?: number;
+  isPrimary?: boolean;
+}
+
+/** A color a product is offered in (name + optional hex for the swatch). */
+export interface ProductColor {
+  name: string;
+  hex?: string | null;
+}
+
+/** Aggregate stock counts for a product (denormalized from inventory items). */
+export interface ProductStockSummary {
+  total: number;
+  available: number;
+  rented: number;
+}
+
+/** Per-variant (size × color) stock counts — drives the "đang cho thuê" breakdown. */
+export interface ProductVariantSummary {
+  sizeId?: Id | null;
+  sizeName?: string | null;
+  color?: string | null;
+  total: number;
+  available: number;
+  rented: number;
+}
+
+/** A physical stock unit returned with the product detail (one row per item). */
+export interface ProductInventoryItem {
+  id: Id;
+  serialCode: string;
+  status: InventoryItemStatus;
+  conditionStatus: InventoryItemConditionStatus;
+  branch?: { id: Id; code: string; name: string } | null;
+  color?: { id: Id; name: string } | null;
+  size?: { id: Id; name: string } | null;
 }
 
 export interface Product extends Timestamped {
@@ -131,6 +177,15 @@ export interface Product extends Timestamped {
   status: ProductStatus;
   sizeIds: Id[];
   images: ProductImage[];
+  /** Physical stock units (product detail endpoint). */
+  inventoryItems?: ProductInventoryItem[];
+  /**
+   * Denormalized fields for the catalog grid — optional until the BE adds them
+   * (see `FE-BUILD-SPEC.md` — Product list API gaps).
+   */
+  colors?: ProductColor[];
+  stock?: ProductStockSummary;
+  variants?: ProductVariantSummary[];
 }
 
 export interface InventoryItem extends Timestamped {
@@ -139,11 +194,16 @@ export interface InventoryItem extends Timestamped {
   branchId: Id;
   productId: Id;
   sizeId: Id;
+  colorId?: Id | null;
   serialCode: string;
-  barcode: string | null;
   status: InventoryItemStatus;
   conditionStatus: InventoryItemConditionStatus;
   note: string | null;
+  /** Nested objects returned by the detail endpoint (preferred over the flat ids). */
+  product?: { id: Id; name: string; code?: string } | null;
+  branch?: { id: Id; code: string; name: string } | null;
+  color?: { id: Id; name: string } | null;
+  size?: { id: Id; name: string } | null;
 }
 
 export interface RentalOrderItem extends Timestamped {

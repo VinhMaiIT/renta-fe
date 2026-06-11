@@ -1,18 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { MoreHorizontal, Plus } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { ListPageHeader } from '@/components/common/list-page-header';
 import { ConfirmDialog } from '@/components/common/confirm-dialog';
+import { RowActions } from '@/components/common/row-actions';
 import { DataTableView, type Column } from '@/components/tables/data-table-view';
 import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { usePagination } from '@/hooks/use-pagination';
 import { formatDate } from '@/lib/format';
 import { useT } from '@/i18n/locale-provider';
@@ -27,7 +21,7 @@ import type { Customer } from '@/types/models';
 
 export function CustomersPage() {
   const { t } = useT();
-  const pagination = usePagination();
+  const pagination = usePagination({ initialPageSize: 10 });
   const list = useCustomers(pagination.queryParams);
   const create = useCreateCustomer();
   const update = useUpdateCustomer();
@@ -76,39 +70,22 @@ export function CustomersPage() {
     {
       id: 'actions',
       header: '',
-      headerClassName: 'w-10',
-      cell: (r) => <RowActions customer={r} />,
+      headerClassName: 'text-right',
+      className: 'text-right',
+      cell: (r) => (
+        <RowActions onEdit={() => openEdit(r)} onDelete={() => setDeleting(r)} />
+      ),
     },
   ];
-
-  function RowActions({ customer }: { customer: Customer }) {
-    return (
-      <DropdownMenu>
-        <DropdownMenuTrigger
-          render={
-            <Button variant="ghost" size="icon-sm" aria-label={t('common.table.actions')}>
-              <MoreHorizontal className="size-4" />
-            </Button>
-          }
-        />
-        <DropdownMenuContent align="end">
-          <DropdownMenuItem onClick={() => openEdit(customer)}>
-            {t('common.action.edit')}
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem className="text-destructive" onClick={() => setDeleting(customer)}>
-            {t('common.action.delete')}
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    );
-  }
 
   return (
     <div className="space-y-5">
       <ListPageHeader
-        title={t('customers.title')}
-        description={t('customers.subtitle')}
+        title={t('customers.countSummary', {
+          count: data?.items.length ?? 0,
+          total: data?.total ?? 0,
+        })}
+        titleClassName="text-base font-semibold sm:text-base"
         search={pagination.search}
         onSearchChange={pagination.setSearch}
         searchPlaceholder={t('customers.searchPlaceholder')}

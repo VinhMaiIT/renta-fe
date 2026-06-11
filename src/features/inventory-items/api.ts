@@ -18,8 +18,9 @@ export interface InventoryListParams {
 export interface InventoryCreateInput {
   productId: string;
   sizeId: string;
-  serialCode: string;
-  barcode?: string;
+  colorId: string;
+  /** Optional — the backend generates the serial code. */
+  serialCode?: string;
   status?: InventoryItemStatus;
   conditionStatus?: InventoryItemConditionStatus;
   note?: string;
@@ -30,7 +31,6 @@ export type InventoryCreatePayload = InventoryCreateInput & { branchId?: string 
 
 export interface InventoryUpdateInput {
   branchId?: string;
-  barcode?: string;
   note?: string;
 }
 

@@ -11,7 +11,7 @@ import { ErrorState } from '@/components/common/states';
 import { useEnumOptions } from '@/hooks/use-enum-options';
 import { INVENTORY_STATUS_META, CONDITION_STATUS_META } from '@/constants/enum-labels';
 import { useT } from '@/i18n/locale-provider';
-import { formatDateTime } from '@/lib/format';
+import { formatDate } from '@/lib/format';
 import type { InventoryItemStatus, InventoryItemConditionStatus } from '@/types/enums';
 import {
   useInventoryItem,
@@ -97,20 +97,24 @@ export function InventoryDetail({ id }: InventoryDetailProps) {
                 <dd className="mt-1 font-medium">{item.serialCode}</dd>
               </div>
               <div>
-                <dt className="text-muted-foreground text-sm">{t('inventory.barcode')}</dt>
-                <dd className="mt-1">{item.barcode ?? '—'}</dd>
+                <dt className="text-muted-foreground text-sm">{t('inventory.product')}</dt>
+                <dd className="mt-1">
+                  {item.product?.name ?? productMap[item.productId] ?? item.productId}
+                </dd>
               </div>
               <div>
-                <dt className="text-muted-foreground text-sm">{t('inventory.product')}</dt>
-                <dd className="mt-1">{productMap[item.productId] ?? item.productId}</dd>
+                <dt className="text-muted-foreground text-sm">{t('inventory.color')}</dt>
+                <dd className="mt-1">{item.color?.name ?? '—'}</dd>
               </div>
               <div>
                 <dt className="text-muted-foreground text-sm">{t('inventory.size')}</dt>
-                <dd className="mt-1">{sizeMap[item.sizeId] ?? item.sizeId}</dd>
+                <dd className="mt-1">{item.size?.name ?? sizeMap[item.sizeId] ?? item.sizeId}</dd>
               </div>
               <div>
                 <dt className="text-muted-foreground text-sm">{t('inventory.branch')}</dt>
-                <dd className="mt-1">{branchMap[item.branchId] ?? item.branchId}</dd>
+                <dd className="mt-1">
+                  {item.branch?.name ?? branchMap[item.branchId] ?? item.branchId}
+                </dd>
               </div>
               <div>
                 <dt className="text-muted-foreground text-sm">{t('inventory.note')}</dt>
@@ -118,11 +122,11 @@ export function InventoryDetail({ id }: InventoryDetailProps) {
               </div>
               <div>
                 <dt className="text-muted-foreground text-sm">{t('common.table.created')}</dt>
-                <dd className="mt-1">{formatDateTime(item.createdAt)}</dd>
+                <dd className="mt-1">{formatDate(item.createdAt)}</dd>
               </div>
               <div>
                 <dt className="text-muted-foreground text-sm">{t('common.table.updated')}</dt>
-                <dd className="mt-1">{formatDateTime(item.updatedAt)}</dd>
+                <dd className="mt-1">{formatDate(item.updatedAt)}</dd>
               </div>
             </dl>
           </CardContent>

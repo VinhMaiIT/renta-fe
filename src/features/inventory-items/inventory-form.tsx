@@ -12,10 +12,10 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { SelectField } from '@/components/forms/select-field';
 import { useEnumOptions } from '@/hooks/use-enum-options';
+import { useColorOptions } from '@/features/colors/use-colors';
 import { INVENTORY_STATUS_META, CONDITION_STATUS_META } from '@/constants/enum-labels';
 import { useT } from '@/i18n/locale-provider';
 import { useTenantContext } from '@/hooks/use-tenant-context';
@@ -26,8 +26,7 @@ const schema = z.object({
   branchId: z.string().min(1),
   productId: z.string().min(1),
   sizeId: z.string().min(1),
-  serialCode: z.string().min(1).max(255),
-  barcode: z.string().max(255).optional().or(z.literal('')),
+  colorId: z.string().min(1),
   status: z.string().min(1),
   conditionStatus: z.string().min(1),
   note: z.string().optional().or(z.literal('')),
@@ -59,6 +58,7 @@ export function InventoryForm({
 
   const statusOptions = useEnumOptions(INVENTORY_STATUS_META);
   const conditionOptions = useEnumOptions(CONDITION_STATUS_META);
+  const colorOptions = useColorOptions().map((c) => ({ value: c.id, label: c.name }));
 
   const {
     register,
@@ -71,8 +71,7 @@ export function InventoryForm({
       branchId: activeBranchId ?? '',
       productId: '',
       sizeId: '',
-      serialCode: '',
-      barcode: '',
+      colorId: '',
       status: 'AVAILABLE',
       conditionStatus: 'NEW',
       note: '',
@@ -85,8 +84,7 @@ export function InventoryForm({
         branchId: activeBranchId ?? '',
         productId: '',
         sizeId: '',
-        serialCode: '',
-        barcode: '',
+        colorId: '',
         status: 'AVAILABLE',
         conditionStatus: 'NEW',
         note: '',
@@ -99,8 +97,7 @@ export function InventoryForm({
       branchId: values.branchId,
       productId: values.productId,
       sizeId: values.sizeId,
-      serialCode: values.serialCode,
-      barcode: values.barcode || undefined,
+      colorId: values.colorId,
       status: values.status as InventoryCreateInput['status'],
       conditionStatus: values.conditionStatus as InventoryCreateInput['conditionStatus'],
       note: values.note || undefined,
@@ -109,67 +106,65 @@ export function InventoryForm({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent className="sm:max-w-xl">
         <DialogHeader>
           <DialogTitle>{t('inventory.form.createTitle')}</DialogTitle>
         </DialogHeader>
         <form id="inventory-form" onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
-          <SelectField
-            label={t('inventory.branch')}
-            required
-            error={errors.branchId?.message}
-            options={branchOptions}
-            placeholder={t('inventory.form.selectBranch')}
-            id="branchId"
-            {...register('branchId')}
-          />
-          <SelectField
-            label={t('inventory.product')}
-            required
-            error={errors.productId?.message}
-            options={productOptions}
-            placeholder={t('inventory.form.selectProduct')}
-            id="productId"
-            {...register('productId')}
-          />
-          <SelectField
-            label={t('inventory.size')}
-            required
-            error={errors.sizeId?.message}
-            options={sizeOptions}
-            placeholder={t('inventory.form.selectSize')}
-            id="sizeId"
-            {...register('sizeId')}
-          />
-          <Input
-            label={t('inventory.serial')}
-            required
-            error={errors.serialCode?.message}
-            placeholder={t('inventory.form.serialPlaceholder')}
-            {...register('serialCode')}
-          />
-          <Input
-            label={t('inventory.barcode')}
-            error={errors.barcode?.message}
-            placeholder={t('inventory.form.barcodePlaceholder')}
-            {...register('barcode')}
-          />
-          <SelectField
-            label={t('inventory.status')}
-            required
-            error={errors.status?.message}
-            options={statusOptions}
-            id="status"
-            {...register('status')}
-          />
-          <SelectField
-            label={t('inventory.condition')}
-            required
-            error={errors.conditionStatus?.message}
-            options={conditionOptions}
-            id="conditionStatus"
-            {...register('conditionStatus')}
-          />
+          <div className="grid gap-4 sm:grid-cols-2">
+            <SelectField
+              label={t('inventory.branch')}
+              required
+              error={errors.branchId?.message}
+              options={branchOptions}
+              placeholder={t('inventory.form.selectBranch')}
+              id="branchId"
+              {...register('branchId')}
+            />
+            <SelectField
+              label={t('inventory.product')}
+              required
+              error={errors.productId?.message}
+              options={productOptions}
+              placeholder={t('inventory.form.selectProduct')}
+              id="productId"
+              {...register('productId')}
+            />
+            <SelectField
+              label={t('inventory.size')}
+              required
+              error={errors.sizeId?.message}
+              options={sizeOptions}
+              placeholder={t('inventory.form.selectSize')}
+              id="sizeId"
+              {...register('sizeId')}
+            />
+            <SelectField
+              label={t('inventory.color')}
+              required
+              error={errors.colorId?.message}
+              options={colorOptions}
+              placeholder={t('inventory.form.selectColor')}
+              id="colorId"
+              {...register('colorId')}
+            />
+            <SelectField
+              label={t('inventory.status')}
+              required
+              error={errors.status?.message}
+              options={statusOptions}
+              id="status"
+              {...register('status')}
+            />
+            <SelectField
+              label={t('inventory.condition')}
+              required
+              error={errors.conditionStatus?.message}
+              options={conditionOptions}
+              id="conditionStatus"
+              {...register('conditionStatus')}
+            />
+          </div>
           <Textarea
             label={t('inventory.note')}
             error={errors.note?.message}

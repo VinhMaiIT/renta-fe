@@ -62,7 +62,7 @@ export function StepInventory({ state, update }: StepInventoryProps) {
     ? items.filter(
         (i) =>
           i.serialCode.toLowerCase().includes(search.toLowerCase()) ||
-          (i.barcode ?? '').toLowerCase().includes(search.toLowerCase()),
+          (i.color?.name ?? '').toLowerCase().includes(search.toLowerCase()),
       )
     : items;
 

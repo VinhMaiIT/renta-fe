@@ -1,7 +1,6 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { PageHeader } from '@/components/common/page-header';
 import { ProductForm } from '@/features/products/product-form';
 import { useCreateProduct, useProductLookups } from '@/features/products/use-products';
 
@@ -12,7 +11,6 @@ export default function Page() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="New product" description="Create a new product in your rental catalog." />
       <ProductForm
         lookups={lookups}
         loading={create.isPending}

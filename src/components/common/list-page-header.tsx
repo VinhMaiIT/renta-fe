@@ -52,17 +52,17 @@ export function ListPageHeader({
   }, [value]);
 
   return (
-    <div className="grid gap-4 lg:grid-cols-2 lg:items-center">
-      <div className="space-y-1">
+    <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+      <div className="shrink-0 space-y-1">
         <h1 className={cn('text-2xl font-bold tracking-tight sm:text-3xl', titleClassName)}>
           {title}
         </h1>
         {description ? <p className="text-muted-foreground text-sm">{description}</p> : null}
       </div>
 
-      <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center lg:justify-end">
+      <div className="flex flex-1 flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center md:justify-end">
         {onSearchChange ? (
-          <div className="relative w-full sm:w-56">
+          <div className="relative w-full sm:w-80">
             <Search className="text-muted-foreground pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2" />
             <Input
               value={value}

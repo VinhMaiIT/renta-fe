@@ -14,13 +14,19 @@ export interface ProductListParams {
   [key: string]: string | number | undefined;
 }
 
+/** An image carried on the product payload — the uploaded file plus ordering. */
 export interface ProductImageInput {
   url: string;
+  storedName?: string;
+  originalName?: string;
+  mimeType?: string;
+  size?: number;
   sortOrder?: number;
   isPrimary?: boolean;
 }
 
-export interface ProductCreateInput {
+/** The product core fields. */
+export interface ProductBodyInput {
   productTypeId: string;
   productGroupId: string;
   unitId: string;
@@ -29,24 +35,46 @@ export interface ProductCreateInput {
   description?: string;
   rentalPrice: number;
   depositPrice: number;
-  sizeIds?: string[];
   images?: ProductImageInput[];
+  status?: ActiveStatus;
 }
 
+/** A single stock line: a color × size in a branch, with its quantity. */
+export interface InventoryItemInput {
+  branchId: string;
+  colorId: string;
+  sizeId: string;
+  quantity: number;
+}
+
+export interface ProductCreateInput {
+  product: ProductBodyInput;
+  inventoryItems: InventoryItemInput[];
+}
+
+/** Update only carries the product body — inventory is managed via its own endpoints. */
 export interface ProductUpdateInput {
-  productTypeId?: string;
-  productGroupId?: string;
-  unitId?: string;
-  code?: string;
-  name?: string;
-  description?: string;
-  rentalPrice?: number;
-  depositPrice?: number;
-  sizeIds?: string[];
-  images?: ProductImageInput[];
+  product: ProductBodyInput;
+}
+
+/** A file returned by the upload endpoint (`{ data: { files: [...] } }`). */
+export interface UploadedFile {
+  url: string;
+  storedName: string;
+  originalName: string;
+  mimeType: string;
+  size: number;
 }
 
 export const productsApi = {
+  /** Upload image files; the backend responds with `{ data: { files: [...] } }`. */
+  async uploadImages(files: File[]): Promise<UploadedFile[]> {
+    const form = new FormData();
+    files.forEach((file) => form.append('files', file));
+    const res = await http.upload<{ files: UploadedFile[] }>('/tenant/uploads', form);
+    return res.files ?? [];
+  },
+
   list(params: ProductListParams): Promise<PaginatedResponse<Product>> {
     return http.get<PaginatedResponse<Product>>('/tenant/products', { params });
   },
@@ -69,5 +97,15 @@ export const productsApi = {
 
   setStatus(id: Id, status: ActiveStatus): Promise<Product> {
     return http.patch<Product>(`/tenant/products/${id}/status`, { status });
+  },
+
+  /** Add stock to an existing product. Each line spawns `quantity` serial-coded items. */
+  addInventoryItems(productId: Id, items: InventoryItemInput[]): Promise<unknown> {
+    return http.post(`/tenant/products/${productId}/inventory-items`, items);
+  },
+
+  /** Delete one inventory item (a RENTED item returns 409). */
+  deleteInventoryItem(itemId: Id): Promise<void> {
+    return http.delete(`/tenant/inventory-items/${itemId}`);
   },
 };

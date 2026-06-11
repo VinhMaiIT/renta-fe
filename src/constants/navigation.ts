@@ -12,6 +12,7 @@ import {
   Mail,
   Package,
   PackageOpen,
+  Palette,
   Percent,
   Receipt,
   RotateCcw,
@@ -74,6 +75,7 @@ export const NAV_SECTIONS: NavSection[] = [
       { labelKey: 'nav.item.productGroups', href: '/product-groups', icon: Tags },
       { labelKey: 'nav.item.sizes', href: '/sizes', icon: Ruler },
       { labelKey: 'nav.item.units', href: '/units', icon: Boxes },
+      { labelKey: 'nav.item.colors', href: '/colors', icon: Palette },
     ],
   },
   {

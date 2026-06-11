@@ -25,6 +25,7 @@ const nav = {
     productGroups: 'Product Groups',
     sizes: 'Sizes',
     units: 'Units',
+    colors: 'Colors',
     customers: 'Customers',
     users: 'Users',
     reportRevenue: 'Revenue',

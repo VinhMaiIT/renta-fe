@@ -1,5 +1,5 @@
 const masterData = {
-  sizes: { title: 'Kích cỡ', description: 'Quản lý các kích cỡ của sản phẩm cho thuê.', singular: 'kích cỡ' },
+  sizes: { title: 'Size', description: 'Quản lý các Size của sản phẩm cho thuê.', singular: 'Size' },
   units: { title: 'Đơn vị', description: 'Quản lý đơn vị tính của sản phẩm.', singular: 'đơn vị' },
   productTypes: { title: 'Loại sản phẩm', description: 'Phân loại sản phẩm theo loại.', singular: 'loại sản phẩm' },
   productGroups: { title: 'Nhóm sản phẩm', description: 'Gom nhóm các sản phẩm liên quan.', singular: 'nhóm sản phẩm' },

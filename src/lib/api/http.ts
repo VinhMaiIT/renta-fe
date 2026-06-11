@@ -43,4 +43,18 @@ export const http = {
   delete<T = void>(url: string, config?: AxiosRequestConfig): Promise<T> {
     return unwrap<T>(apiClient.delete(url, config));
   },
+  /**
+   * Multipart upload. We must NOT set `Content-Type` ourselves — setting
+   * `multipart/form-data` without a boundary produces an unparseable request
+   * (the server rejects it, e.g. with 401). Passing `undefined` clears the
+   * instance's JSON default so axios/the browser set the boundary-aware header.
+   */
+  upload<T>(url: string, formData: FormData, config?: AxiosRequestConfig): Promise<T> {
+    return unwrap<T>(
+      apiClient.post(url, formData, {
+        ...config,
+        headers: { ...config?.headers, 'Content-Type': undefined },
+      }),
+    );
+  },
 };

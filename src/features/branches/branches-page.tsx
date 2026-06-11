@@ -1,18 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { MoreHorizontal, Plus } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { ListPageHeader } from '@/components/common/list-page-header';
 import { StatusBadge } from '@/components/common/status-badge';
+import { RowActions } from '@/components/common/row-actions';
 import { DataTableView, type Column } from '@/components/tables/data-table-view';
 import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select';
 import { usePagination } from '@/hooks/use-pagination';
 import { ACTIVE_STATUS_META } from '@/constants/enum-labels';
@@ -102,38 +96,18 @@ export function BranchesPage() {
     {
       id: 'actions',
       header: '',
-      headerClassName: 'w-10 text-right',
+      headerClassName: 'text-right',
       className: 'text-right',
-      cell: (r) => {
-        const next = r.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
-        return (
-          <div className="flex justify-end" onClick={(e) => e.stopPropagation()}>
-            <DropdownMenu>
-              <DropdownMenuTrigger
-                render={
-                  <Button variant="ghost" size="icon-sm" aria-label={t('common.table.actions')}>
-                    <MoreHorizontal className="size-4" />
-                  </Button>
-                }
-              />
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => openEdit(r)}>
-                  {t('common.action.edit')}
-                </DropdownMenuItem>
-                {!r.isMain ? (
-                  <DropdownMenuItem onClick={() => setMain.mutate(r.id)}>
-                    {t('branches.setMain')}
-                  </DropdownMenuItem>
-                ) : null}
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => setStatus.mutate({ id: r.id, status: next })}>
-                  {r.status === 'ACTIVE' ? t('masterData.deactivate') : t('masterData.activate')}
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-        );
-      },
+      cell: (r) => (
+        <RowActions
+          onEdit={() => openEdit(r)}
+          onSetMain={r.isMain ? undefined : () => setMain.mutate(r.id)}
+          onToggleStatus={() =>
+            setStatus.mutate({ id: r.id, status: r.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE' })
+          }
+          isActive={r.status === 'ACTIVE'}
+        />
+      ),
     },
   ];
 

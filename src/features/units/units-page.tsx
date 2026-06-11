@@ -8,12 +8,12 @@ import { DataTableView, type Column } from '@/components/tables/data-table-view'
 import { Button } from '@/components/ui/button';
 import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select';
 import { MasterDataForm } from '@/features/master-data/master-data-form';
+import { RowActions } from '@/components/common/row-actions';
 import type { MasterRecord } from '@/features/master-data/api';
 import { ACTIVE_STATUS_META } from '@/constants/enum-labels';
 import { formatDate } from '@/lib/format';
 import { useT } from '@/i18n/locale-provider';
 import { useUnits } from './use-units';
-import { UnitRowActions } from './unit-row-actions';
 
 /** Units screen: data hook + header + design-system DataTable + dialogs. */
 export function UnitsPage() {
@@ -44,14 +44,14 @@ export function UnitsPage() {
     {
       id: 'actions',
       header: '',
-      headerClassName: 'w-10 text-right',
+      headerClassName: 'text-right',
       className: 'text-right',
       cell: (unit) => (
-        <UnitRowActions
-          unit={unit}
-          onEdit={u.openEdit}
-          onToggleStatus={u.toggleStatus}
-          onDelete={u.setDeleting}
+        <RowActions
+          onEdit={() => u.openEdit(unit)}
+          onToggleStatus={() => u.toggleStatus(unit)}
+          isActive={unit.status === 'ACTIVE'}
+          onDelete={() => u.setDeleting(unit)}
         />
       ),
     },
