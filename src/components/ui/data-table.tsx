@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 
 import {
   flexRender,
@@ -54,6 +54,8 @@ declare module '@tanstack/react-table' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface ColumnMeta<TData, TValue> {
     className?: string;
+    /** Label shown beside the value in the mobile card layout. */
+    cardLabel?: ReactNode;
   }
 }
 
@@ -244,6 +246,8 @@ interface DataTableProps<TData> {
   emptyMessage?: string;
   emptyFilterMessage?: string;
   pageSizeLabel?: (size: number) => string;
+  /** Render rows as stacked label/value cards on phones (table from md up). */
+  mobileCards?: boolean;
 }
 
 export function DataTable<TData>({
@@ -264,6 +268,7 @@ export function DataTable<TData>({
   emptyMessage,
   emptyFilterMessage,
   pageSizeLabel = (size) => `${size}/trang`,
+  mobileCards = false,
 }: DataTableProps<TData>) {
   const selectionColumn: ColumnDef<TData> = {
     id: 'select',
@@ -312,7 +317,9 @@ export function DataTable<TData>({
 
   return (
     <div className="flex min-h-0 w-full flex-col gap-3">
-      <Table containerClassName={cn('flex-1', containerClassName)}>
+      <Table
+        containerClassName={cn('flex-1', mobileCards && 'hidden md:block', containerClassName)}
+      >
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
@@ -356,6 +363,44 @@ export function DataTable<TData>({
         </TableBody>
       </Table>
 
+      {mobileCards && data.length > 0 && (
+        <div className="flex flex-col gap-3 md:hidden">
+          {table.getRowModel().rows.map((row) => {
+            const cells = row.getVisibleCells().filter((c) => c.column.id !== 'select');
+            const actionCell = cells.find((c) => c.column.id === 'actions');
+            const fieldCells = cells.filter((c) => c.column.id !== 'actions');
+            return (
+              <div
+                key={row.id}
+                className={cn(
+                  'bg-card rounded-lg border p-3 shadow-sm',
+                  onRowClick && 'cursor-pointer',
+                )}
+                onClick={onRowClick ? () => onRowClick(row.original) : undefined}
+              >
+                <dl className="divide-border divide-y">
+                  {fieldCells.map((cell) => (
+                    <div key={cell.id} className="flex items-start justify-between gap-3 py-1.5">
+                      <dt className="text-muted-foreground shrink-0 text-xs font-medium">
+                        {cell.column.columnDef.meta?.cardLabel}
+                      </dt>
+                      <dd className="min-w-0 text-right text-sm font-medium">
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+                {actionCell ? (
+                  <div className="border-border mt-1 flex justify-end border-t pt-2">
+                    {flexRender(actionCell.column.columnDef.cell, actionCell.getContext())}
+                  </div>
+                ) : null}
+              </div>
+            );
+          })}
+        </div>
+      )}
+
       {data.length === 0 && !loading && (
         <EmptyState
           hasFilters={columnFilters.length > 0}
@@ -365,8 +410,8 @@ export function DataTable<TData>({
       )}
 
       {hasValue(totalCount) && totalCount > DEFAULT_PAGE_SIZE_OPTIONS[0] && (
-        <div className="flex items-center justify-end gap-4">
-          <Pagination>
+        <div className="flex flex-wrap items-center justify-end gap-2 sm:gap-4">
+          <Pagination className="w-auto">
             <PaginationContent>
               <PaginationItem>
                 <PaginationPrevious

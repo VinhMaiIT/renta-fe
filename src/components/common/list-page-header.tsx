@@ -53,16 +53,16 @@ export function ListPageHeader({
 
   return (
     <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-      <div className="shrink-0 space-y-1">
+      <div className="min-w-0 space-y-1">
         <h1 className={cn('text-2xl font-bold tracking-tight sm:text-3xl', titleClassName)}>
           {title}
         </h1>
         {description ? <p className="text-muted-foreground text-sm">{description}</p> : null}
       </div>
 
-      <div className="flex flex-1 flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center md:justify-end">
+      <div className="flex w-full flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center md:w-auto md:justify-end">
         {onSearchChange ? (
-          <div className="relative w-full sm:w-80">
+          <div className="relative w-full sm:w-64 md:w-72">
             <Search className="text-muted-foreground pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2" />
             <Input
               value={value}
@@ -72,8 +72,18 @@ export function ListPageHeader({
             />
           </div>
         ) : null}
-        {filters}
-        {actions}
+        {/* Filters: full-width stacked on phones, inline & wrapping from sm up. */}
+        {filters ? (
+          <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center [&>*]:w-full sm:[&>*]:w-auto">
+            {filters}
+          </div>
+        ) : null}
+        {/* Actions: full-width buttons on phones for a comfortable tap target. */}
+        {actions ? (
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center [&>*]:w-full sm:[&>*]:w-auto">
+            {actions}
+          </div>
+        ) : null}
       </div>
     </div>
   );

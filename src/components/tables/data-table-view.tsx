@@ -83,6 +83,7 @@ export function DataTableView<T>({
             col.headerClassName,
             col.className,
           ),
+          cardLabel: col.header,
         },
       })),
     [columns],
@@ -121,6 +122,7 @@ export function DataTableView<T>({
         emptyMessage={emptyTitle}
         emptyFilterMessage={emptyTitle}
         pageSizeLabel={(size) => t('common.pagination.perPage', { size })}
+        mobileCards
       />
     </div>
   );

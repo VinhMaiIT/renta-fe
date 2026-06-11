@@ -476,11 +476,11 @@ export function ProductForm({ initial, lookups, loading, onSubmit, onCancel }: P
         />
       ) : (
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between gap-2 space-y-0">
+          <CardHeader className="flex flex-col gap-2 space-y-0 sm:flex-row sm:items-center sm:justify-between">
             <CardTitle className="text-primary">
               {t('products.form.colorsSizes')} <span className="text-destructive">*</span>
             </CardTitle>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <Button
                 type="button"
                 variant="outline"
