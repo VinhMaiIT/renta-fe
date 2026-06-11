@@ -38,7 +38,7 @@ export function MasterDataPage({ resource }: { resource: MasterResource }) {
   const singular = t(`masterData.${ns}.singular`);
 
   const { useList, useCreate, useUpdate, useRemove, useSetStatus } = useMasterData(resource);
-  const pagination = usePagination();
+  const pagination = usePagination({ initialPageSize: 10 });
   const list = useList(pagination.queryParams);
   const create = useCreate();
   const update = useUpdate();
@@ -67,7 +67,6 @@ export function MasterDataPage({ resource }: { resource: MasterResource }) {
       header: t('common.table.name'),
       cell: (r) => <span className="font-medium">{r.name}</span>,
     },
-    { id: 'order', header: t('common.table.order'), hideBelow: 'sm', cell: (r) => r.order },
     {
       id: 'status',
       header: t('common.table.status'),
@@ -117,8 +116,11 @@ export function MasterDataPage({ resource }: { resource: MasterResource }) {
   return (
     <div className="space-y-5">
       <ListPageHeader
-        title={title}
-        description={t(`masterData.${ns}.description`)}
+        title={t('masterData.countSummary', {
+          count: data?.items.length ?? 0,
+          total: data?.total ?? 0,
+        })}
+        titleClassName="text-base font-semibold sm:text-base"
         search={pagination.search}
         onSearchChange={pagination.setSearch}
         searchPlaceholder={t('masterData.searchPlaceholder', { items: title.toLowerCase() })}

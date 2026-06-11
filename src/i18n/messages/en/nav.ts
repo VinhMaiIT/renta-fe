@@ -21,7 +21,6 @@ const nav = {
     overdueOrders: 'Overdue Orders',
     products: 'Products',
     inventoryItems: 'Inventory',
-    categories: 'Catalog',
     productTypes: 'Product Types',
     productGroups: 'Product Groups',
     sizes: 'Sizes',

@@ -13,7 +13,7 @@ import type { ActiveStatus } from '@/types/enums';
  */
 export function useUnits() {
   const { useList, useCreate, useUpdate, useRemove, useSetStatus } = useMasterData('units');
-  const pagination = usePagination();
+  const pagination = usePagination({ initialPageSize: 10 });
   const list = useList(pagination.queryParams);
   const create = useCreate();
   const update = useUpdate();

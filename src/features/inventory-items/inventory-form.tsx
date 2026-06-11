@@ -7,7 +7,6 @@ import { z } from 'zod';
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -113,7 +112,6 @@ export function InventoryForm({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{t('inventory.form.createTitle')}</DialogTitle>
-          <DialogDescription>{t('inventory.form.createDesc')}</DialogDescription>
         </DialogHeader>
         <form id="inventory-form" onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
           <SelectField

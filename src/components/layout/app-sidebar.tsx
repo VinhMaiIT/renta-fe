@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Package2 } from 'lucide-react';
 import {
   Sidebar,
   SidebarContent,
@@ -15,7 +14,7 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { getNavSections } from '@/constants/navigation';
-import { APP_NAME, APP_TAGLINE } from '@/constants/config';
+import { APP_NAME } from '@/constants/config';
 import { useT } from '@/i18n/locale-provider';
 import { useSession } from '@/stores/auth-store';
 
@@ -28,14 +27,13 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
-        <Link href="/dashboard" className="flex items-center gap-2.5 px-1.5 py-1">
-          <span className="bg-primary text-primary-foreground flex size-8 shrink-0 items-center justify-center rounded-lg">
-            <Package2 className="size-5" />
-          </span>
-          <span className="flex flex-col group-data-[collapsible=icon]:hidden">
-            <span className="text-sm leading-tight font-semibold">{APP_NAME}</span>
-            <span className="text-muted-foreground text-xs leading-tight">{APP_TAGLINE}</span>
-          </span>
+        <Link href="/dashboard" className="flex items-center justify-center py-1">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logo.png"
+            alt={APP_NAME}
+            className="h-20 w-auto max-w-full object-contain group-data-[collapsible=icon]:h-8"
+          />
         </Link>
       </SidebarHeader>
       <SidebarContent>

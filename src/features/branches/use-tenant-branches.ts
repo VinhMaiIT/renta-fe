@@ -1,7 +1,7 @@
 'use client';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { branchesApi, type BranchCreateInput, type BranchUpdateInput } from './api';
+import { tenantBranchesApi, type BranchCreateInput, type BranchUpdateInput } from './api';
 import { useTenantContext } from '@/hooks/use-tenant-context';
 import { toast, toastError } from '@/lib/toast';
 import { useT } from '@/i18n/locale-provider';
@@ -25,7 +25,7 @@ export function useTenantBranchList(params: UseTenantBranchesParams) {
   return useQuery({
     queryKey: [QUERY_KEY, { ...params, tenantId }],
     enabled: Boolean(tenantId),
-    queryFn: () => branchesApi.list(params),
+    queryFn: () => tenantBranchesApi.list(params),
   });
 }
 
@@ -40,7 +40,7 @@ export function useTenantBranchMutations() {
 
   const create = useMutation({
     // Token provides the tenant; no tenantId in the body.
-    mutationFn: (input: Omit<BranchCreateInput, 'tenantId'>) => branchesApi.create(input),
+    mutationFn: (input: Omit<BranchCreateInput, 'tenantId'>) => tenantBranchesApi.create(input),
     onSuccess: () => {
       toast.success(t('common.toast.created'));
       invalidate();
@@ -50,7 +50,7 @@ export function useTenantBranchMutations() {
 
   const update = useMutation({
     mutationFn: ({ id, input }: { id: Id; input: BranchUpdateInput }) =>
-      branchesApi.update(id, input),
+      tenantBranchesApi.update(id, input),
     onSuccess: () => {
       toast.success(t('common.toast.updated'));
       invalidate();
@@ -60,7 +60,7 @@ export function useTenantBranchMutations() {
 
   const setStatus = useMutation({
     mutationFn: ({ id, status }: { id: Id; status: ActiveStatus }) =>
-      branchesApi.setStatus(id, status),
+      tenantBranchesApi.setStatus(id, status),
     onSuccess: () => {
       toast.success(t('common.toast.statusUpdated'));
       invalidate();
@@ -69,7 +69,7 @@ export function useTenantBranchMutations() {
   });
 
   const setMain = useMutation({
-    mutationFn: (id: Id) => branchesApi.setMain(id),
+    mutationFn: (id: Id) => tenantBranchesApi.setMain(id),
     onSuccess: () => {
       toast.success(t('common.toast.updated'));
       invalidate();

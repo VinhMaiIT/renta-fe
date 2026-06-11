@@ -8,7 +8,6 @@ import { Plus, X } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -100,9 +99,6 @@ export function PackageForm({ open, onOpenChange, initial, loading, onSubmit }: 
           <DialogTitle>
             {initial ? t('billing.packages.editPackage') : t('billing.packages.newPackage')}
           </DialogTitle>
-          <DialogDescription>
-            {initial ? t('billing.packages.editDesc') : t('billing.packages.createDesc')}
-          </DialogDescription>
         </DialogHeader>
 
         <form

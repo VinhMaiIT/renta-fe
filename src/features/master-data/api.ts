@@ -24,7 +24,6 @@ export interface MasterListParams {
 
 export interface MasterInput {
   name: string;
-  order: number;
 }
 
 /** Supported master-data resource paths. */

@@ -30,7 +30,6 @@ export function UnitsPage() {
       header: t('common.table.name'),
       cell: (unit) => <span className="font-medium">{unit.name}</span>,
     },
-    { id: 'order', header: t('common.table.order'), hideBelow: 'sm', cell: (unit) => unit.order },
     {
       id: 'status',
       header: t('common.table.status'),
@@ -61,8 +60,11 @@ export function UnitsPage() {
   return (
     <div className="space-y-5">
       <ListPageHeader
-        title={title}
-        description={t('masterData.units.description')}
+        title={t('masterData.countSummary', {
+          count: data?.items.length ?? 0,
+          total: data?.total ?? 0,
+        })}
+        titleClassName="text-base font-semibold sm:text-base"
         search={pagination.search}
         onSearchChange={pagination.setSearch}
         searchPlaceholder={t('masterData.searchPlaceholder', { items: title.toLowerCase() })}

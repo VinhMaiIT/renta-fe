@@ -7,7 +7,6 @@ import { z } from 'zod';
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -19,7 +18,6 @@ import type { MasterInput, MasterRecord } from './api';
 
 const schema = z.object({
   name: z.string().min(1).max(255),
-  order: z.coerce.number().int().min(0),
 });
 
 type FormValues = z.input<typeof schema>;
@@ -50,11 +48,11 @@ export function MasterDataForm({
     formState: { errors },
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
-    defaultValues: { name: '', order: 0 },
+    defaultValues: { name: '' },
   });
 
   useEffect(() => {
-    if (open) reset({ name: initial?.name ?? '', order: initial?.order ?? 0 });
+    if (open) reset({ name: initial?.name ?? '' });
   }, [open, initial, reset]);
 
   return (
@@ -66,15 +64,10 @@ export function MasterDataForm({
               ? t('masterData.editItem', { item: singular })
               : t('masterData.newItem', { item: singular })}
           </DialogTitle>
-          <DialogDescription>
-            {initial ? t('masterData.editDesc') : t('masterData.createDesc', { item: singular })}
-          </DialogDescription>
         </DialogHeader>
         <form
           id="master-data-form"
-          onSubmit={handleSubmit((values) =>
-            onSubmit({ name: values.name, order: Number(values.order) }),
-          )}
+          onSubmit={handleSubmit((values) => onSubmit({ name: values.name }))}
           className="space-y-4"
         >
           <Input
@@ -82,13 +75,6 @@ export function MasterDataForm({
             required
             error={errors.name ? t('common.field.required') : undefined}
             {...register('name')}
-          />
-          <Input
-            label={t('masterData.sortOrder')}
-            type="number"
-            min={0}
-            error={errors.order?.message}
-            {...register('order')}
           />
         </form>
         <DialogFooter>

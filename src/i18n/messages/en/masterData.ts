@@ -3,6 +3,7 @@ const masterData = {
   units: { title: 'Units', description: 'Manage units of measurement for products.', singular: 'unit' },
   productTypes: { title: 'Product Types', description: 'Categorize products by type.', singular: 'product type' },
   productGroups: { title: 'Product Groups', description: 'Group related products together.', singular: 'product group' },
+  countSummary: 'All ({count}/{total})',
   newItem: 'New {item}',
   editItem: 'Edit {item}',
   createDesc: 'Create a new {item}.',

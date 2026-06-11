@@ -3,6 +3,7 @@ const masterData = {
   units: { title: 'Đơn vị', description: 'Quản lý đơn vị tính của sản phẩm.', singular: 'đơn vị' },
   productTypes: { title: 'Loại sản phẩm', description: 'Phân loại sản phẩm theo loại.', singular: 'loại sản phẩm' },
   productGroups: { title: 'Nhóm sản phẩm', description: 'Gom nhóm các sản phẩm liên quan.', singular: 'nhóm sản phẩm' },
+  countSummary: 'Tất cả ({count}/{total})',
   newItem: 'Thêm {item}',
   editItem: 'Sửa {item}',
   createDesc: 'Tạo mới {item}.',

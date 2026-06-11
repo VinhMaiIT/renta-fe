@@ -6,7 +6,6 @@ import {
   Building2,
   CreditCard,
   FileText,
-  FolderTree,
   LayoutDashboard,
   Layers,
   LogIn,
@@ -71,7 +70,6 @@ export const NAV_SECTIONS: NavSection[] = [
     items: [
       { labelKey: 'nav.item.products', href: '/products', icon: Package },
       { labelKey: 'nav.item.inventoryItems', href: '/inventory-items', icon: PackageOpen },
-      { labelKey: 'nav.item.categories', href: '/catalog', icon: FolderTree },
       { labelKey: 'nav.item.productTypes', href: '/product-types', icon: Shapes },
       { labelKey: 'nav.item.productGroups', href: '/product-groups', icon: Tags },
       { labelKey: 'nav.item.sizes', href: '/sizes', icon: Ruler },

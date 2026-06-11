@@ -7,7 +7,6 @@ import { z } from 'zod';
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -68,9 +67,6 @@ export function BranchForm({ open, onOpenChange, initial, loading, onSubmit }: B
           <DialogTitle>
             {initial ? t('branches.form.editTitle') : t('branches.form.createTitle')}
           </DialogTitle>
-          <DialogDescription>
-            {initial ? t('branches.form.editDesc') : t('branches.form.createDesc')}
-          </DialogDescription>
         </DialogHeader>
         <form
           id="branch-form"

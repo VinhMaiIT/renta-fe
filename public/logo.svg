@@ -1,0 +1,11 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="QLT 365">
+  <defs>
+    <linearGradient id="qlt-g" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#6366F1" />
+      <stop offset="1" stop-color="#4338CA" />
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#qlt-g)" />
+  <text x="32" y="33" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700" fill="#FFFFFF" text-anchor="middle" dominant-baseline="central">QLT</text>
+  <text x="32" y="49" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="600" fill="#E0E7FF" text-anchor="middle" dominant-baseline="central">365</text>
+</svg>

@@ -21,7 +21,6 @@ const nav = {
     overdueOrders: 'Đơn quá hạn',
     products: 'Sản phẩm',
     inventoryItems: 'Kho hàng',
-    categories: 'Danh mục',
     productTypes: 'Loại sản phẩm',
     productGroups: 'Nhóm sản phẩm',
     sizes: 'Kích cỡ',

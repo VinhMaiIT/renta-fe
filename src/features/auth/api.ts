@@ -32,7 +32,7 @@ export const authApi = {
   },
   /** The current tenant's branches (scoped by token); used to pick the default. */
   listBranches(): Promise<PaginatedResponse<Branch>> {
-    return http.get<PaginatedResponse<Branch>>('/branches', {
+    return http.get<PaginatedResponse<Branch>>('/tenant/branches', {
       params: { status: 'ACTIVE', pageSize: 100 },
     });
   },

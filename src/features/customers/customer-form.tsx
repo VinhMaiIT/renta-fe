@@ -7,7 +7,6 @@ import { z } from 'zod';
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -72,9 +71,6 @@ export function CustomerForm({
           <DialogTitle>
             {initial ? t('customers.form.editTitle') : t('customers.form.createTitle')}
           </DialogTitle>
-          <DialogDescription>
-            {initial ? t('customers.form.editDesc') : t('customers.form.createDesc')}
-          </DialogDescription>
         </DialogHeader>
         <form
           id="customer-form"
