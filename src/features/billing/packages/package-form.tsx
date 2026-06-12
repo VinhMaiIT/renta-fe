@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Plus, X } from 'lucide-react';
@@ -16,7 +16,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Separator } from '@/components/ui/separator';
-import { SelectField } from '@/components/forms/select-field';
+import { SelectMenu } from '@/components/forms/select-menu';
 import { useT } from '@/i18n/locale-provider';
 import type { Package, PackageInput } from '@/types/billing';
 
@@ -61,6 +61,7 @@ export function PackageForm({ open, onOpenChange, initial, loading, onSubmit }: 
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors },
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -136,13 +137,21 @@ export function PackageForm({ open, onOpenChange, initial, loading, onSubmit }: 
               />
             </div>
             <Textarea label={t('billing.packages.description')} {...register('description')} />
-            <SelectField
-              label={t('common.table.status')}
-              options={[
-                { value: 'ACTIVE', label: t('enums.activeStatus.ACTIVE') },
-                { value: 'INACTIVE', label: t('enums.activeStatus.INACTIVE') },
-              ]}
-              {...register('status')}
+            <Controller
+              control={control}
+              name="status"
+              render={({ field }) => (
+                <SelectMenu
+                  label={t('common.table.status')}
+                  options={[
+                    { value: 'ACTIVE', label: t('enums.activeStatus.ACTIVE') },
+                    { value: 'INACTIVE', label: t('enums.activeStatus.INACTIVE') },
+                  ]}
+                  value={field.value ?? ''}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
+                />
+              )}
             />
           </Section>
 

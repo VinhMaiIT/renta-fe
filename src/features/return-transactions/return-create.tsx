@@ -11,7 +11,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Textarea } from '@/components/ui/textarea';
-import { SelectField } from '@/components/forms/select-field';
+import { SelectMenu } from '@/components/forms/select-menu';
 import { CONDITION_STATUS_META } from '@/constants/enum-labels';
 import { useEnumOptions } from '@/hooks/use-enum-options';
 import { useT } from '@/i18n/locale-provider';
@@ -122,13 +122,13 @@ function OrderSelector({ onSelect }: { onSelect: (id: string) => void }) {
           />
         ) : (
           <>
-            <SelectField
+            <SelectMenu
               label={t('returns.create.rentalOrder')}
               required
               placeholder={t('returns.create.choosePlaceholder')}
               options={options}
               value={value}
-              onChange={(e) => setValue(e.target.value)}
+              onChange={(v) => setValue(v)}
             />
             <Button disabled={!value} onClick={() => onSelect(value)}>
               {t('returns.create.continue')}
@@ -265,13 +265,13 @@ function ReturnForm({ order, onChangeOrder }: { order: RentalOrder; onChangeOrde
 
                     {row.selected ? (
                       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                        <SelectField
+                        <SelectMenu
                           label={t('returns.create.condition')}
                           options={conditionOptions}
                           value={row.conditionStatus}
-                          onChange={(e) =>
+                          onChange={(v) =>
                             update(item.id, {
-                              conditionStatus: e.target.value as InventoryItemConditionStatus,
+                              conditionStatus: v as InventoryItemConditionStatus,
                             })
                           }
                         />

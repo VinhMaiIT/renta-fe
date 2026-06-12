@@ -24,6 +24,9 @@ interface SelectMenuProps {
   onChange: (value: string) => void;
   onBlur?: () => void;
   disabled?: boolean;
+  /** Extra classes for the trigger button. */
+  triggerClassName?: string;
+  ariaLabel?: string;
 }
 
 /**
@@ -42,6 +45,8 @@ export function SelectMenu({
   onChange,
   onBlur,
   disabled,
+  triggerClassName,
+  ariaLabel,
 }: SelectMenuProps) {
   const selected = options.find((o) => o.value === value);
 
@@ -56,8 +61,12 @@ export function SelectMenu({
               type="button"
               variant="outline"
               id={id}
+              aria-label={ariaLabel}
               aria-invalid={!!error}
-              className="w-full justify-between font-normal aria-invalid:border-destructive aria-invalid:ring-destructive/20"
+              className={cn(
+                'w-full justify-between font-normal aria-invalid:border-destructive aria-invalid:ring-destructive/20',
+                triggerClassName,
+              )}
               onBlur={onBlur}
             >
               <span className={cn('truncate', !selected && 'text-muted-foreground')}>

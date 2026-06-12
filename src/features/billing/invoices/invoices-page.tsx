@@ -5,7 +5,7 @@ import { ListPageHeader } from '@/components/common/list-page-header';
 import { StatusBadge } from '@/components/common/status-badge';
 import { DataTableView, type Column } from '@/components/tables/data-table-view';
 import { Button } from '@/components/ui/button';
-import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select';
+import { FilterSelect } from '@/components/forms/filter-select';
 import { usePagination } from '@/hooks/use-pagination';
 import { INVOICE_STATUS_META } from '@/constants/enum-labels';
 import { formatCurrency, formatDate } from '@/lib/format';
@@ -73,18 +73,19 @@ export function InvoicesPage() {
         searchPlaceholder={t('billing.invoices.searchPlaceholder')}
         filters={
           <>
-            <NativeSelect
-              value={pagination.filters.status ?? ''}
-              onChange={(e) => pagination.setFilter('status', e.target.value || undefined)}
-              aria-label={t('billing.invoices.status')}
+            <FilterSelect
+              value={pagination.filters.status}
+              onChange={(v) => pagination.setFilter('status', v)}
+              ariaLabel={t('billing.invoices.status')}
+              allLabel={t('billing.invoices.allStatuses')}
               className="bg-card"
-            >
-              <NativeSelectOption value="">{t('billing.invoices.allStatuses')}</NativeSelectOption>
-              <NativeSelectOption value="PENDING">{t('enums.invoiceStatus.PENDING')}</NativeSelectOption>
-              <NativeSelectOption value="PAID">{t('enums.invoiceStatus.PAID')}</NativeSelectOption>
-              <NativeSelectOption value="OVERDUE">{t('enums.invoiceStatus.OVERDUE')}</NativeSelectOption>
-              <NativeSelectOption value="CANCELLED">{t('enums.invoiceStatus.CANCELLED')}</NativeSelectOption>
-            </NativeSelect>
+              options={[
+                { value: 'PENDING', label: t('enums.invoiceStatus.PENDING') },
+                { value: 'PAID', label: t('enums.invoiceStatus.PAID') },
+                { value: 'OVERDUE', label: t('enums.invoiceStatus.OVERDUE') },
+                { value: 'CANCELLED', label: t('enums.invoiceStatus.CANCELLED') },
+              ]}
+            />
             <Button
               variant={overdueOnly ? 'default' : 'outline'}
               onClick={() => pagination.setFilter('overdue', overdueOnly ? undefined : 'true')}

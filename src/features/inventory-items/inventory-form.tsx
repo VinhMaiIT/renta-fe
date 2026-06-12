@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import {
@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { SelectField } from '@/components/forms/select-field';
+import { SelectMenu } from '@/components/forms/select-menu';
 import { useEnumOptions } from '@/hooks/use-enum-options';
 import { useColorOptions } from '@/features/colors/use-colors';
 import { INVENTORY_STATUS_META, CONDITION_STATUS_META } from '@/constants/enum-labels';
@@ -64,6 +64,7 @@ export function InventoryForm({
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors },
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -112,58 +113,63 @@ export function InventoryForm({
         </DialogHeader>
         <form id="inventory-form" onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
           <div className="grid gap-4 sm:grid-cols-2">
-            <SelectField
-              label={t('inventory.branch')}
-              required
-              error={errors.branchId?.message}
-              options={branchOptions}
-              placeholder={t('inventory.form.selectBranch')}
-              id="branchId"
-              {...register('branchId')}
-            />
-            <SelectField
-              label={t('inventory.product')}
-              required
-              error={errors.productId?.message}
-              options={productOptions}
-              placeholder={t('inventory.form.selectProduct')}
-              id="productId"
-              {...register('productId')}
-            />
-            <SelectField
-              label={t('inventory.size')}
-              required
-              error={errors.sizeId?.message}
-              options={sizeOptions}
-              placeholder={t('inventory.form.selectSize')}
-              id="sizeId"
-              {...register('sizeId')}
-            />
-            <SelectField
-              label={t('inventory.color')}
-              required
-              error={errors.colorId?.message}
-              options={colorOptions}
-              placeholder={t('inventory.form.selectColor')}
-              id="colorId"
-              {...register('colorId')}
-            />
-            <SelectField
-              label={t('inventory.status')}
-              required
-              error={errors.status?.message}
-              options={statusOptions}
-              id="status"
-              {...register('status')}
-            />
-            <SelectField
-              label={t('inventory.condition')}
-              required
-              error={errors.conditionStatus?.message}
-              options={conditionOptions}
-              id="conditionStatus"
-              {...register('conditionStatus')}
-            />
+            {(
+              [
+                {
+                  name: 'branchId',
+                  label: t('inventory.branch'),
+                  options: branchOptions,
+                  placeholder: t('inventory.form.selectBranch'),
+                },
+                {
+                  name: 'productId',
+                  label: t('inventory.product'),
+                  options: productOptions,
+                  placeholder: t('inventory.form.selectProduct'),
+                },
+                {
+                  name: 'sizeId',
+                  label: t('inventory.size'),
+                  options: sizeOptions,
+                  placeholder: t('inventory.form.selectSize'),
+                },
+                {
+                  name: 'colorId',
+                  label: t('inventory.color'),
+                  options: colorOptions,
+                  placeholder: t('inventory.form.selectColor'),
+                },
+                {
+                  name: 'status',
+                  label: t('inventory.status'),
+                  options: statusOptions,
+                },
+                {
+                  name: 'conditionStatus',
+                  label: t('inventory.condition'),
+                  options: conditionOptions,
+                },
+              ] as const
+            ).map((f) => (
+              <Controller
+                key={f.name}
+                control={control}
+                name={f.name}
+                render={({ field }) => (
+                  <SelectMenu
+                    label={f.label}
+                    required
+                    id={f.name}
+                    options={f.options}
+                    placeholder={'placeholder' in f ? f.placeholder : undefined}
+                    error={errors[f.name]?.message}
+                    value={field.value ?? ''}
+                    onChange={field.onChange}
+                    onBlur={field.onBlur}
+                  />
+                )}
+              />
+            ))}
           </div>
           <Textarea
             label={t('inventory.note')}

@@ -14,7 +14,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select';
+import { FilterSelect } from '@/components/forms/filter-select';
 import { usePagination } from '@/hooks/use-pagination';
 import { useEnumOptions } from '@/hooks/use-enum-options';
 import { INVENTORY_STATUS_META, CONDITION_STATUS_META } from '@/constants/enum-labels';
@@ -216,45 +216,30 @@ export function InventoryPage() {
         searchPlaceholder={t('inventory.searchPlaceholder')}
         filters={
           <>
-            <NativeSelect
-              value={pagination.filters.sizeId ?? ''}
-              onChange={(e) => pagination.setFilter('sizeId', e.target.value || undefined)}
-              aria-label={t('inventory.size')}
+            <FilterSelect
+              value={pagination.filters.sizeId}
+              onChange={(v) => pagination.setFilter('sizeId', v)}
+              ariaLabel={t('inventory.size')}
+              allLabel={t('inventory.allSizes')}
               className="bg-card"
-            >
-              <NativeSelectOption value="">{t('inventory.allSizes')}</NativeSelectOption>
-              {sizeOptions.map((s) => (
-                <NativeSelectOption key={s.value} value={s.value}>
-                  {s.label}
-                </NativeSelectOption>
-              ))}
-            </NativeSelect>
-            <NativeSelect
-              value={pagination.filters.status ?? ''}
-              onChange={(e) => pagination.setFilter('status', e.target.value || undefined)}
-              aria-label={t('inventory.status')}
+              options={sizeOptions}
+            />
+            <FilterSelect
+              value={pagination.filters.status}
+              onChange={(v) => pagination.setFilter('status', v)}
+              ariaLabel={t('inventory.status')}
+              allLabel={t('inventory.allStatuses')}
               className="bg-card"
-            >
-              <NativeSelectOption value="">{t('inventory.allStatuses')}</NativeSelectOption>
-              {statusOptions.map((opt) => (
-                <NativeSelectOption key={opt.value} value={opt.value}>
-                  {opt.label}
-                </NativeSelectOption>
-              ))}
-            </NativeSelect>
-            <NativeSelect
-              value={pagination.filters.conditionStatus ?? ''}
-              onChange={(e) => pagination.setFilter('conditionStatus', e.target.value || undefined)}
-              aria-label={t('inventory.condition')}
+              options={statusOptions}
+            />
+            <FilterSelect
+              value={pagination.filters.conditionStatus}
+              onChange={(v) => pagination.setFilter('conditionStatus', v)}
+              ariaLabel={t('inventory.condition')}
+              allLabel={t('inventory.allConditions')}
               className="bg-card"
-            >
-              <NativeSelectOption value="">{t('inventory.allConditions')}</NativeSelectOption>
-              {conditionOptions.map((opt) => (
-                <NativeSelectOption key={opt.value} value={opt.value}>
-                  {opt.label}
-                </NativeSelectOption>
-              ))}
-            </NativeSelect>
+              options={conditionOptions}
+            />
           </>
         }
         actions={

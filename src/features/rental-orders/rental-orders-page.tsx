@@ -7,14 +7,13 @@ import { StatusBadge } from '@/components/common/status-badge';
 import { DataTableView, type Column } from '@/components/tables/data-table-view';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select';
+import { FilterSelect } from '@/components/forms/filter-select';
 import { usePagination } from '@/hooks/use-pagination';
 import { useEnumOptions } from '@/hooks/use-enum-options';
 import { RENTAL_ORDER_STATUS_META } from '@/constants/enum-labels';
 import { formatCurrency, formatDate } from '@/lib/format';
 import { useT } from '@/i18n/locale-provider';
 import type { RentalOrder } from '@/types/models';
-import type { RentalOrderStatus } from '@/types/enums';
 import { useRentalOrders } from './use-rental-orders';
 
 export function RentalOrdersPage() {
@@ -64,21 +63,14 @@ export function RentalOrdersPage() {
         searchPlaceholder={t('rentalOrders.list.searchPlaceholder')}
         filters={
           <>
-            <NativeSelect
+            <FilterSelect
               className="bg-card"
-              value={pagination.filters.status ?? ''}
-              onChange={(e) =>
-                pagination.setFilter('status', (e.target.value as RentalOrderStatus) || undefined)
-              }
-              aria-label={t('rentalOrders.list.status')}
-            >
-              <NativeSelectOption value="">{t('rentalOrders.list.allStatuses')}</NativeSelectOption>
-              {statusOptions.map((opt) => (
-                <NativeSelectOption key={opt.value} value={opt.value}>
-                  {opt.label}
-                </NativeSelectOption>
-              ))}
-            </NativeSelect>
+              value={pagination.filters.status}
+              onChange={(v) => pagination.setFilter('status', v)}
+              ariaLabel={t('rentalOrders.list.status')}
+              allLabel={t('rentalOrders.list.allStatuses')}
+              options={statusOptions}
+            />
             <Input
               className="w-full sm:w-48 bg-card"
               placeholder={t('rentalOrders.list.customerIdPlaceholder')}

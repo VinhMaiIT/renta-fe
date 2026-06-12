@@ -5,7 +5,7 @@ import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select';
+import { SelectMenu } from '@/components/forms/select-menu';
 import { StatusBadge } from '@/components/common/status-badge';
 import { ErrorState } from '@/components/common/states';
 import { useEnumOptions } from '@/hooks/use-enum-options';
@@ -142,28 +142,18 @@ export function InventoryDetail({ id }: InventoryDetailProps) {
               <div className="flex items-center gap-2">
                 <StatusBadge meta={INVENTORY_STATUS_META[item.status]} />
               </div>
-              <div>
-                <label className="text-muted-foreground mb-1.5 block text-sm">
-                  {t('inventory.changeStatus')}
-                </label>
-                <NativeSelect
-                  value={item.status}
-                  disabled={setStatusMutation.isPending}
-                  onChange={(e) => {
-                    const newStatus = e.target.value as InventoryItemStatus;
-                    if (newStatus !== item.status) {
-                      setStatusMutation.mutate({ id: item.id, status: newStatus });
-                    }
-                  }}
-                  aria-label={t('inventory.changeStatus')}
-                >
-                  {statusOptions.map((opt) => (
-                    <NativeSelectOption key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </NativeSelectOption>
-                  ))}
-                </NativeSelect>
-              </div>
+              <SelectMenu
+                label={t('inventory.changeStatus')}
+                ariaLabel={t('inventory.changeStatus')}
+                options={statusOptions}
+                value={item.status}
+                disabled={setStatusMutation.isPending}
+                onChange={(v) => {
+                  if (v !== item.status) {
+                    setStatusMutation.mutate({ id: item.id, status: v as InventoryItemStatus });
+                  }
+                }}
+              />
             </CardContent>
           </Card>
 
@@ -175,28 +165,21 @@ export function InventoryDetail({ id }: InventoryDetailProps) {
               <div className="flex items-center gap-2">
                 <StatusBadge meta={CONDITION_STATUS_META[item.conditionStatus]} />
               </div>
-              <div>
-                <label className="text-muted-foreground mb-1.5 block text-sm">
-                  {t('inventory.changeCondition')}
-                </label>
-                <NativeSelect
-                  value={item.conditionStatus}
-                  disabled={setConditionMutation.isPending}
-                  onChange={(e) => {
-                    const newCondition = e.target.value as InventoryItemConditionStatus;
-                    if (newCondition !== item.conditionStatus) {
-                      setConditionMutation.mutate({ id: item.id, conditionStatus: newCondition });
-                    }
-                  }}
-                  aria-label={t('inventory.changeCondition')}
-                >
-                  {conditionOptions.map((opt) => (
-                    <NativeSelectOption key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </NativeSelectOption>
-                  ))}
-                </NativeSelect>
-              </div>
+              <SelectMenu
+                label={t('inventory.changeCondition')}
+                ariaLabel={t('inventory.changeCondition')}
+                options={conditionOptions}
+                value={item.conditionStatus}
+                disabled={setConditionMutation.isPending}
+                onChange={(v) => {
+                  if (v !== item.conditionStatus) {
+                    setConditionMutation.mutate({
+                      id: item.id,
+                      conditionStatus: v as InventoryItemConditionStatus,
+                    });
+                  }
+                }}
+              />
             </CardContent>
           </Card>
         </div>

@@ -9,7 +9,7 @@ import { StatusBadge } from '@/components/common/status-badge';
 import { RowActions } from '@/components/common/row-actions';
 import { DataTableView, type Column } from '@/components/tables/data-table-view';
 import { Button } from '@/components/ui/button';
-import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select';
+import { FilterSelect } from '@/components/forms/filter-select';
 import { usePagination } from '@/hooks/use-pagination';
 import { ACTIVE_STATUS_META } from '@/constants/enum-labels';
 import { formatCurrency } from '@/lib/format';
@@ -135,42 +135,33 @@ export function ProductsPage() {
         searchPlaceholder={t('products.searchPlaceholder')}
         filters={
           <>
-            <NativeSelect
-              value={pagination.filters.status ?? ''}
-              onChange={(e) => pagination.setFilter('status', e.target.value || undefined)}
-              aria-label={t('common.table.status')}
+            <FilterSelect
+              value={pagination.filters.status}
+              onChange={(v) => pagination.setFilter('status', v)}
+              ariaLabel={t('common.table.status')}
+              allLabel={t('common.table.allStatuses')}
               className="bg-card"
-            >
-              <NativeSelectOption value="">{t('common.table.allStatuses')}</NativeSelectOption>
-              <NativeSelectOption value="ACTIVE">{t('common.table.active')}</NativeSelectOption>
-              <NativeSelectOption value="INACTIVE">{t('common.table.inactive')}</NativeSelectOption>
-            </NativeSelect>
-            <NativeSelect
-              value={pagination.filters.productTypeId ?? ''}
-              onChange={(e) => pagination.setFilter('productTypeId', e.target.value || undefined)}
-              aria-label={t('products.productType')}
+              options={[
+                { value: 'ACTIVE', label: t('common.table.active') },
+                { value: 'INACTIVE', label: t('common.table.inactive') },
+              ]}
+            />
+            <FilterSelect
+              value={pagination.filters.productTypeId}
+              onChange={(v) => pagination.setFilter('productTypeId', v)}
+              ariaLabel={t('products.productType')}
+              allLabel={t('products.allTypes')}
               className="bg-card"
-            >
-              <NativeSelectOption value="">{t('products.allTypes')}</NativeSelectOption>
-              {lookups.productTypeOptions.map((opt) => (
-                <NativeSelectOption key={opt.value} value={opt.value}>
-                  {opt.label}
-                </NativeSelectOption>
-              ))}
-            </NativeSelect>
-            <NativeSelect
-              value={pagination.filters.productGroupId ?? ''}
-              onChange={(e) => pagination.setFilter('productGroupId', e.target.value || undefined)}
-              aria-label={t('products.productGroup')}
+              options={lookups.productTypeOptions}
+            />
+            <FilterSelect
+              value={pagination.filters.productGroupId}
+              onChange={(v) => pagination.setFilter('productGroupId', v)}
+              ariaLabel={t('products.productGroup')}
+              allLabel={t('products.allGroups')}
               className="bg-card"
-            >
-              <NativeSelectOption value="">{t('products.allGroups')}</NativeSelectOption>
-              {lookups.productGroupOptions.map((opt) => (
-                <NativeSelectOption key={opt.value} value={opt.value}>
-                  {opt.label}
-                </NativeSelectOption>
-              ))}
-            </NativeSelect>
+              options={lookups.productGroupOptions}
+            />
           </>
         }
         actions={

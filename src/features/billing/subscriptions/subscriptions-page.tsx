@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { ListPageHeader } from '@/components/common/list-page-header';
 import { StatusBadge } from '@/components/common/status-badge';
 import { DataTableView, type Column } from '@/components/tables/data-table-view';
-import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select';
+import { FilterSelect } from '@/components/forms/filter-select';
 import { usePagination } from '@/hooks/use-pagination';
 import { PAYMENT_CYCLE_META, SUBSCRIPTION_STATUS_META } from '@/constants/enum-labels';
 import { formatDate } from '@/lib/format';
@@ -84,19 +84,17 @@ export function SubscriptionsPage() {
         onSearchChange={pagination.setSearch}
         searchPlaceholder={t('billing.subscriptions.searchPlaceholder')}
         filters={
-          <NativeSelect
-            value={pagination.filters.status ?? ''}
-            onChange={(e) => pagination.setFilter('status', e.target.value || undefined)}
-            aria-label={t('billing.subscriptions.status')}
+          <FilterSelect
+            value={pagination.filters.status}
+            onChange={(v) => pagination.setFilter('status', v)}
+            ariaLabel={t('billing.subscriptions.status')}
+            allLabel={t('common.table.allStatuses')}
             className="bg-card"
-          >
-            <NativeSelectOption value="">{t('common.table.allStatuses')}</NativeSelectOption>
-            {STATUS_OPTIONS.map((status) => (
-              <NativeSelectOption key={status} value={status}>
-                {t(`enums.subscriptionStatus.${status}`)}
-              </NativeSelectOption>
-            ))}
-          </NativeSelect>
+            options={STATUS_OPTIONS.map((status) => ({
+              value: status,
+              label: t(`enums.subscriptionStatus.${status}`),
+            }))}
+          />
         }
       />
 

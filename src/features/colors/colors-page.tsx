@@ -8,7 +8,7 @@ import { StatusBadge } from '@/components/common/status-badge';
 import { RowActions } from '@/components/common/row-actions';
 import { DataTableView, type Column } from '@/components/tables/data-table-view';
 import { Button } from '@/components/ui/button';
-import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select';
+import { FilterSelect } from '@/components/forms/filter-select';
 import { usePagination } from '@/hooks/use-pagination';
 import { ACTIVE_STATUS_META } from '@/constants/enum-labels';
 import { formatDate } from '@/lib/format';
@@ -106,18 +106,17 @@ export function ColorsPage() {
         onSearchChange={pagination.setSearch}
         searchPlaceholder={t('colors.searchPlaceholder')}
         filters={
-          <NativeSelect
-            value={pagination.filters.status ?? ''}
-            onChange={(e) => pagination.setFilter('status', e.target.value || undefined)}
-            aria-label={t('common.table.status')}
+          <FilterSelect
+            value={pagination.filters.status}
+            onChange={(v) => pagination.setFilter('status', v)}
+            ariaLabel={t('common.table.status')}
+            allLabel={t('common.table.allStatuses')}
             className="bg-card"
-          >
-            <NativeSelectOption value="">{t('common.table.allStatuses')}</NativeSelectOption>
-            <NativeSelectOption value="ACTIVE">{t('enums.activeStatus.ACTIVE')}</NativeSelectOption>
-            <NativeSelectOption value="INACTIVE">
-              {t('enums.activeStatus.INACTIVE')}
-            </NativeSelectOption>
-          </NativeSelect>
+            options={[
+              { value: 'ACTIVE', label: t('enums.activeStatus.ACTIVE') },
+              { value: 'INACTIVE', label: t('enums.activeStatus.INACTIVE') },
+            ]}
+          />
         }
         actions={
           <Button onClick={openCreate}>
