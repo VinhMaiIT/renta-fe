@@ -15,7 +15,7 @@ import {
   SidebarRail,
 } from '@/components/ui/sidebar';
 import { getNavSections } from '@/constants/navigation';
-import { APP_NAME, APP_TAGLINE } from '@/constants/config';
+import { APP_NAME } from '@/constants/config';
 import { useT } from '@/i18n/locale-provider';
 import { useSession } from '@/stores/auth-store';
 
@@ -28,20 +28,13 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon" className="border-sidebar-border/60">
       <SidebarHeader className="border-sidebar-border/60 border-b">
-        <Link
-          href="/dashboard"
-          className="flex items-center gap-2.5 rounded-lg px-1.5 py-1.5 transition-colors group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0"
-        >
-          <span className="bg-primary/10 ring-primary/15 flex size-9 shrink-0 items-center justify-center rounded-xl ring-1">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.svg" alt={APP_NAME} className="size-6 object-contain" />
-          </span>
-          <span className="flex min-w-0 flex-col leading-tight group-data-[collapsible=icon]:hidden">
-            <span className="text-sidebar-foreground truncate text-sm font-semibold">
-              {APP_NAME}
-            </span>
-            <span className="text-sidebar-foreground/55 truncate text-[11px]">{APP_TAGLINE}</span>
-          </span>
+        <Link href="/dashboard" className="flex items-center justify-center py-1">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logo.png"
+            alt={APP_NAME}
+            className="h-14 w-auto max-w-full object-contain group-data-[collapsible=icon]:h-8"
+          />
         </Link>
       </SidebarHeader>
 
