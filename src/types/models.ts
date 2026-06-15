@@ -31,6 +31,8 @@ export interface Tenant extends Timestamped {
   email: string | null;
   address: string | null;
   status: TenantStatus;
+  /** Brand color (hex, e.g. `#4F46E5`); null = system default. */
+  brandColor: string | null;
   /**
    * Denormalized summary fields for the admin grid/detail. Optional until the
    * BE adds them (see `docs/FE-BUILD-SPEC.md` — Tenant API gaps).
@@ -280,6 +282,8 @@ export interface AuthUser {
   tenantId: Id | null;
   isAdmin: boolean;
   permissions: string[];
+  /** Tenant brand color (hex, e.g. `#4F46E5`); null = system default. */
+  brandColor: string | null;
 }
 
 export type { ActiveStatus };

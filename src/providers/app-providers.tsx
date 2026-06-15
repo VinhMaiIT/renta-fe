@@ -4,6 +4,8 @@ import { useEffect, useState, type ReactNode } from 'react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { ThemeProvider } from '@/components/providers/theme-provider';
+import { TenantTheme } from '@/components/providers/tenant-theme';
+import { SessionSync } from '@/components/providers/session-sync';
 import { Toaster } from '@/components/ui/sonner';
 import { makeQueryClient } from '@/lib/query/query-client';
 import { useAuthStore } from '@/stores/auth-store';
@@ -28,6 +30,8 @@ export function AppProviders({ children, locale }: { children: ReactNode; locale
         <QueryClientProvider client={queryClient}>
           <NuqsAdapter>
             <AuthHydrator />
+            <SessionSync />
+            <TenantTheme />
             {children}
             <Toaster position="top-right" />
           </NuqsAdapter>

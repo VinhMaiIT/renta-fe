@@ -1,7 +1,18 @@
 const settings = {
   title: 'Cài đặt',
   subtitle: 'Quản lý tùy chọn không gian làm việc.',
-  tabs: { profile: 'Hồ sơ', appearance: 'Giao diện', branch: 'Chi nhánh', security: 'Bảo mật' },
+  tabs: { general: 'Thông tin chung', appearance: 'Giao diện' },
+  general: {
+    title: 'Thông tin đơn vị',
+    desc: 'Thông tin chung của đơn vị bạn.',
+    code: 'Mã đơn vị',
+    name: 'Tên đơn vị',
+    phone: 'Điện thoại',
+    email: 'Email',
+    address: 'Địa chỉ',
+    nameRequired: 'Vui lòng nhập tên đơn vị',
+    readonlyNote: 'Chỉ quản trị viên mới có thể chỉnh sửa.',
+  },
   profile: {
     title: 'Hồ sơ',
     desc: 'Thông tin tài khoản của bạn (chỉ đọc).',
@@ -18,6 +29,10 @@ const settings = {
     dark: 'Tối',
     system: 'Hệ thống',
     languageLabel: 'Ngôn ngữ',
+    brandLabel: 'Màu thương hiệu',
+    brandDesc: 'Chọn màu chủ đạo (primary) áp dụng cho menu, nút và điểm nhấn trên toàn ứng dụng.',
+    brandAuto: 'Theo đơn vị',
+    brandHint: 'Để “Theo đơn vị” sẽ dùng màu mặc định được cấu hình cho đơn vị của bạn.',
   },
   branch: {
     title: 'Chi nhánh làm việc',

@@ -31,6 +31,7 @@ export function useLogin() {
         userType: '',
         isAdmin: false,
         branchId: null,
+        brandColor: null,
       });
 
       // Load the authenticated principal (id, tenant, role, …).
@@ -64,6 +65,7 @@ export function useLogin() {
         userType: me.userType,
         isAdmin: me.isAdmin,
         branchId,
+        brandColor: me.brandColor ?? null,
       });
       return me;
     },

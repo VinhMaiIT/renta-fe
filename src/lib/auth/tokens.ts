@@ -11,6 +11,8 @@ export interface StoredSession {
   fullName: string;
   userType: string;
   isAdmin: boolean;
+  /** Tenant brand color (hex) from `/auth/me`; null = system default. */
+  brandColor: string | null;
 }
 
 export interface JwtPayload {

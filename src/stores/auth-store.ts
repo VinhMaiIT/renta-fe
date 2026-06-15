@@ -14,6 +14,8 @@ interface AuthState {
   setSession: (session: StoredSession) => void;
   /** Update the active branch id. */
   setBranchId: (branchId: string) => void;
+  /** Shallow-merge fields into the current session (no-op if logged out). */
+  patchSession: (patch: Partial<StoredSession>) => void;
   /** Re-read persisted session into memory (called once on mount). */
   hydrate: () => void;
   logout: () => void;
@@ -31,6 +33,13 @@ export const useAuthStore = create<AuthState>((set) => ({
     set((state) => ({
       session: state.session ? { ...state.session, branchId } : state.session,
     }));
+  },
+  patchSession: (patch) => {
+    set((state) => {
+      if (!state.session) return state;
+      patchStoredSession(patch);
+      return { session: { ...state.session, ...patch } };
+    });
   },
   hydrate: () => set({ session: getStoredSession(), hydrated: true }),
   logout: () => {

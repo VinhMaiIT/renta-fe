@@ -17,9 +17,11 @@ export function AppShell({ children }: { children: ReactNode }) {
           {/* Ambient brand glow behind the content for depth. */}
           <div
             aria-hidden
-            className="from-primary/10 pointer-events-none absolute inset-x-0 top-0 -z-0 h-72 bg-gradient-to-b to-transparent"
+            className="pointer-events-none absolute inset-x-0 top-0 -z-0 h-80 bg-[radial-gradient(80%_100%_at_50%_0%,var(--color-primary)_0%,transparent_70%)] opacity-[0.08]"
           />
-          <div className="relative z-[1] w-full min-w-0 space-y-6">{children}</div>
+          <div className="relative z-[1] mx-auto w-full min-w-0 max-w-[1600px] space-y-6">
+            {children}
+          </div>
         </main>
         <AppFooter />
       </SidebarInset>

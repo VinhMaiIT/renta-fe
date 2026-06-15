@@ -1,7 +1,18 @@
 const settings = {
   title: 'Settings',
   subtitle: 'Manage your workspace preferences.',
-  tabs: { profile: 'Profile', appearance: 'Appearance', branch: 'Branch', security: 'Security' },
+  tabs: { general: 'General', appearance: 'Appearance' },
+  general: {
+    title: 'Organization information',
+    desc: "Your organization's general information.",
+    code: 'Organization code',
+    name: 'Organization name',
+    phone: 'Phone',
+    email: 'Email',
+    address: 'Address',
+    nameRequired: 'Please enter the organization name',
+    readonlyNote: 'Only administrators can make changes.',
+  },
   profile: {
     title: 'Profile',
     desc: 'Your account information (read-only).',
@@ -18,6 +29,10 @@ const settings = {
     dark: 'Dark',
     system: 'System',
     languageLabel: 'Language',
+    brandLabel: 'Brand color',
+    brandDesc: 'Pick the primary color applied to the menu, buttons and accents across the app.',
+    brandAuto: 'Tenant default',
+    brandHint: 'Leaving “Tenant default” uses the color configured for your tenant.',
   },
   branch: {
     title: 'Working branch',
