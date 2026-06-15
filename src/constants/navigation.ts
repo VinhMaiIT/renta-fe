@@ -61,8 +61,8 @@ export const NAV_SECTIONS: NavSection[] = [
     userTypes: ['TENANT'],
     items: [
       { labelKey: 'nav.item.rentalOrders', href: '/rental-orders', icon: Receipt },
-      { labelKey: 'nav.item.returnTransactions', href: '/return-transactions', icon: RotateCcw },
-      { labelKey: 'nav.item.overdueOrders', href: '/rental-orders/overdue', icon: AlertTriangle },
+      // { labelKey: 'nav.item.returnTransactions', href: '/return-transactions', icon: RotateCcw },
+      // { labelKey: 'nav.item.overdueOrders', href: '/rental-orders/overdue', icon: AlertTriangle },
     ],
   },
   {
@@ -83,15 +83,15 @@ export const NAV_SECTIONS: NavSection[] = [
     userTypes: ['TENANT'],
     items: [{ labelKey: 'nav.item.customers', href: '/customers', icon: Users }],
   },
-  {
-    labelKey: 'nav.section.reports',
-    userTypes: ['TENANT'],
-    items: [
-      { labelKey: 'nav.item.reportRevenue', href: '/reports/revenue', icon: TrendingUp },
-      { labelKey: 'nav.item.reportRental', href: '/reports/rental-performance', icon: BarChart3 },
-      { labelKey: 'nav.item.reportInventory', href: '/reports/inventory', icon: Warehouse },
-    ],
-  },
+  // {
+  //   labelKey: 'nav.section.reports',
+  //   userTypes: ['TENANT'],
+  //   items: [
+  //     { labelKey: 'nav.item.reportRevenue', href: '/reports/revenue', icon: TrendingUp },
+  //     { labelKey: 'nav.item.reportRental', href: '/reports/rental-performance', icon: BarChart3 },
+  //     { labelKey: 'nav.item.reportInventory', href: '/reports/inventory', icon: Warehouse },
+  //   ],
+  // },
   {
     labelKey: 'nav.section.config',
     userTypes: ['TENANT'],
@@ -99,7 +99,7 @@ export const NAV_SECTIONS: NavSection[] = [
       { labelKey: 'nav.item.branches', href: '/branches', icon: Store },
       { labelKey: 'nav.item.staff', href: '/staff', icon: UserCog },
       { labelKey: 'nav.item.roles', href: '/roles', icon: ShieldCheck },
-      { labelKey: 'nav.item.account', href: '/account', icon: CreditCard },
+      // { labelKey: 'nav.item.account', href: '/account', icon: CreditCard },
       { labelKey: 'nav.item.settings', href: '/settings', icon: Settings },
     ],
   },
