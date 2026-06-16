@@ -1,10 +1,10 @@
 'use client';
 
-import { Check, Lock } from 'lucide-react';
+import { Check, Lock, Palette } from 'lucide-react';
 import { useTheme } from 'next-themes';
-import { BRAND_PRESETS, brandSwatch, DEFAULT_BRAND, type ThemeMode } from '@/lib/theme/tenant-brand';
+import { BRAND_PRESETS, brandSwatch, type ThemeMode } from '@/lib/theme/tenant-brand';
 import { useAuthStore, useSession } from '@/stores/auth-store';
-import { useUpdateTenantProfile } from './use-tenant-settings';
+import { useUpdateBrandColor } from './use-tenant-settings';
 import { useT } from '@/i18n/locale-provider';
 import { cn } from '@/lib/utils';
 
@@ -18,16 +18,18 @@ export function BrandSettings() {
   const { resolvedTheme } = useTheme();
   const mode: ThemeMode = resolvedTheme === 'dark' ? 'dark' : 'light';
   const patchSession = useAuthStore((s) => s.patchSession);
-  const update = useUpdateTenantProfile();
+  const update = useUpdateBrandColor();
 
   const selected = normHex(currentHex);
+  const isPreset = BRAND_PRESETS.some((b) => normHex(b.hex) === selected);
+  const isCustom = selected !== null && !isPreset;
 
   function choose(hex: string | null) {
     if (!isAdmin || update.isPending || normHex(hex) === selected) return;
     const previous = currentHex;
     // Optimistic: apply the new colour live, roll back if the save fails.
     patchSession({ brandColor: hex });
-    update.mutate({ brandColor: hex }, { onError: () => patchSession({ brandColor: previous }) });
+    update.mutate(hex, { onError: () => patchSession({ brandColor: previous }) });
   }
 
   const swatchClass = (active: boolean) =>
@@ -42,25 +44,6 @@ export function BrandSettings() {
       <p className="text-muted-foreground text-sm">{t('settings.appearance.brandDesc')}</p>
 
       <div className="flex flex-wrap gap-3">
-        {/* System default (clears brandColor). */}
-        <button
-          type="button"
-          onClick={() => choose(null)}
-          disabled={!isAdmin || update.isPending}
-          aria-pressed={selected === null}
-          className={swatchClass(selected === null)}
-        >
-          <span
-            className="border-border flex size-9 items-center justify-center rounded-full border-2 border-dashed"
-            style={{ color: brandSwatch(DEFAULT_BRAND, mode) }}
-          >
-            {selected === null ? <Check className="size-4" /> : null}
-          </span>
-          <span className="text-xs leading-tight font-medium">
-            {t('settings.appearance.brandAuto')}
-          </span>
-        </button>
-
         {BRAND_PRESETS.map((brand) => {
           const active = selected === normHex(brand.hex);
           return (
@@ -83,6 +66,30 @@ export function BrandSettings() {
             </button>
           );
         })}
+
+        {/* Custom hex picker — any colour the presets don't cover. */}
+        <label
+          className={cn(swatchClass(isCustom), 'relative')}
+          title={isCustom ? (currentHex ?? undefined) : t('settings.appearance.brandCustom')}
+        >
+          <span
+            className="flex size-9 items-center justify-center rounded-full text-white shadow-sm ring-2 ring-white/40"
+            style={{ backgroundColor: isCustom ? (currentHex ?? undefined) : '#64748b' }}
+          >
+            {isCustom ? <Check className="size-4" /> : <Palette className="size-4" />}
+          </span>
+          <span className="text-xs leading-tight font-medium">
+            {t('settings.appearance.brandCustom')}
+          </span>
+          <input
+            type="color"
+            value={isCustom ? (currentHex ?? '#4f46e5') : '#4f46e5'}
+            onChange={(e) => choose(e.target.value)}
+            disabled={!isAdmin || update.isPending}
+            aria-label={t('settings.appearance.brandCustom')}
+            className="absolute inset-0 cursor-pointer opacity-0 disabled:cursor-default"
+          />
+        </label>
       </div>
 
       {isAdmin ? (

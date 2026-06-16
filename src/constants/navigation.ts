@@ -96,9 +96,7 @@ export const NAV_SECTIONS: NavSection[] = [
     labelKey: 'nav.section.config',
     userTypes: ['TENANT'],
     items: [
-      { labelKey: 'nav.item.branches', href: '/branches', icon: Store },
-      { labelKey: 'nav.item.staff', href: '/staff', icon: UserCog },
-      { labelKey: 'nav.item.roles', href: '/roles', icon: ShieldCheck },
+      // Branches, staff & roles now live inside Settings (Settings → tabs).
       // { labelKey: 'nav.item.account', href: '/account', icon: CreditCard },
       { labelKey: 'nav.item.settings', href: '/settings', icon: Settings },
     ],

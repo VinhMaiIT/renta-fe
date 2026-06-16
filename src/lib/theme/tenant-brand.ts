@@ -102,35 +102,37 @@ export function brandToCssVars(brand: TenantBrand, mode: ThemeMode): Record<stri
   const primary = oklch(base);
   const primaryFg = foregroundFor(base.l);
 
-  // Soft brand-tinted surface used for hover states in the sidebar.
-  const accent =
+  // Deep brand-coloured sidebar surface (derived from the canonical hue/chroma,
+  // not the mode-adjusted base, so it stays a consistent rich tone).
+  const sidebarHue = round(brand.base.h, 1);
+  const sidebar =
     mode === 'dark'
-      ? oklch({ l: 0.28, c: Math.min(base.c * 0.45, 0.05), h: base.h })
-      : oklch({ l: 0.96, c: Math.min(base.c * 0.4, 0.04), h: base.h });
-  const accentFg =
-    mode === 'dark'
-      ? oklch({ l: 0.97, c: 0.01, h: base.h })
-      : oklch({ l: 0.42, c: Math.min(base.c, 0.16), h: base.h });
+      ? oklch({ l: 0.25, c: Math.min(brand.base.c * 0.7, 0.09), h: brand.base.h })
+      : oklch({ l: 0.37, c: Math.min(brand.base.c * 0.85, 0.12), h: brand.base.h });
 
   return {
     '--primary': primary,
     '--primary-foreground': primaryFg,
     '--ring': primary,
 
-    '--sidebar-primary': primary,
-    '--sidebar-primary-foreground': primaryFg,
-    '--sidebar-ring': primary,
-
-    // Solid brand fill for the active nav item.
-    '--sidebar-active': primary,
-    '--sidebar-active-foreground': primaryFg,
-
-    // Subtle brand tint for hover.
-    '--sidebar-accent': accent,
-    '--sidebar-accent-foreground': accentFg,
-
     // Keep the first chart series on-brand.
     '--chart-1': primary,
+
+    // Sidebar: deep brand fill with white text and translucent-white overlays.
+    '--sidebar': sidebar,
+    '--sidebar-foreground': `oklch(0.97 0.012 ${sidebarHue})`,
+    '--sidebar-primary': primary,
+    '--sidebar-primary-foreground': primaryFg,
+    '--sidebar-border': 'oklch(1 0 0 / 0.12)',
+    '--sidebar-ring': 'oklch(1 0 0 / 0.45)',
+
+    // Hover: subtle white overlay.
+    '--sidebar-accent': 'oklch(1 0 0 / 0.1)',
+    '--sidebar-accent-foreground': 'oklch(0.99 0 0)',
+
+    // Active: brighter white overlay.
+    '--sidebar-active': 'oklch(1 0 0 / 0.18)',
+    '--sidebar-active-foreground': 'oklch(1 0 0)',
   };
 }
 

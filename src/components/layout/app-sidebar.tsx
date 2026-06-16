@@ -15,7 +15,7 @@ import {
   SidebarRail,
 } from '@/components/ui/sidebar';
 import { getNavSections } from '@/constants/navigation';
-import { APP_NAME } from '@/constants/config';
+import { BrandLogo } from './brand-logo';
 import { useT } from '@/i18n/locale-provider';
 import { useSession } from '@/stores/auth-store';
 
@@ -28,13 +28,11 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon" className="border-sidebar-border/60">
       <SidebarHeader className="border-sidebar-border/60 border-b">
-        <Link href="/dashboard" className="flex items-center justify-center py-1">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/logo.png"
-            alt={APP_NAME}
-            className="h-14 w-auto max-w-full object-contain group-data-[collapsible=icon]:h-8"
-          />
+        <Link
+          href="/dashboard"
+          className="flex items-center px-1 py-1.5 group-data-[collapsible=icon]:justify-center"
+        >
+          <BrandLogo />
         </Link>
       </SidebarHeader>
 
